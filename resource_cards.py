@@ -1,5 +1,8 @@
-from enum import Enum
 import abc
+import os
+
+from enum import Enum
+from utils import ASSET_DIR
 
 
 class ResourceCard(abc.ABC):
@@ -7,16 +10,13 @@ class ResourceCard(abc.ABC):
     def name(self):
         pass
 
-    def char(self):
-        return f"{self.name()[0]}{self.name()[-1]}"
-
     def asset(self):
-        return f"PATH\\ResourceCard_{self.__class__.__name__}.png"
+        return f"{os.path.join(os.path.join(ASSET_DIR, 'resource'),self.__class__.__name__.lower())}.jpg"
 
 
-class Wood(ResourceCard):
+class Lumber(ResourceCard):
     def name(self):
-        return "Wood"
+        return "Lumber"
 
 
 class Wool(ResourceCard):
@@ -40,7 +40,7 @@ class Ore(ResourceCard):
 
 
 class Resource(Enum):
-    WOOD = Wood()
+    WOOD = Lumber()
     WOOL = Wool()
     GRAIN = Grain()
     BRICK = Brick()
@@ -53,9 +53,6 @@ class Resource(Enum):
 
     def name(self):
         return self.card.name()
-
-    def char(self):
-        return self.card.char()
 
     def asset(self):
         return self.card.asset()

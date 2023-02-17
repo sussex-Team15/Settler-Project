@@ -1,6 +1,9 @@
 import abc
+import os
+
 from enum import Enum
 from resource_cards import Resource
+from utils import ASSET_DIR
 
 
 class Tile(abc.ABC):
@@ -17,7 +20,7 @@ class Tile(abc.ABC):
         pass
 
     def asset(self):
-        return f"PATH\\Tile_{self.__class__.__name__}.png"
+        return f"{os.path.join(os.path.join(ASSET_DIR, 'tiles'),self.__class__.__name__.lower())}.jpg"
 
 
 class Forest(Tile):
