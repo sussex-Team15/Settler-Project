@@ -39,6 +39,11 @@ class Ore(ResourceCard):
         return "Ore"
 
 
+class Null(ResourceCard):
+    def name(self):
+        return None
+
+
 class Resource(Enum):
     WOOD = Lumber()
     WOOL = Wool()
@@ -46,7 +51,7 @@ class Resource(Enum):
     BRICK = Brick()
     ORE = Ore()
 
-    NONE = None
+    NONE = Null()
 
     def __init__(self, card):
         self.card = card

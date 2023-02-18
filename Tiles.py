@@ -1,5 +1,7 @@
+from pprint import pprint
 import abc
 import os
+import hexgrid
 
 from enum import Enum
 from resource_cards import Resource
@@ -114,8 +116,49 @@ class ResourceTile(Enum):
 
 
 class GameTile:
-    def __init__(self, number_label, tile, points, position):
+    def __init__(self, number_label, tile, points, tile_id):
         self.number_label = number_label
         self.tile = tile
         self.points = points
-        self.position = position
+        self.tile_id = tile_id
+
+    def __repr__(self):
+        return f"GameTile({self.tile.name()}, {self.tile_id})"
+
+    def get_tile_info(self):
+
+        def convert_to_number(coord):
+            return int(f"{hexgrid.hex_digit(coord,digit=1)}{hexgrid.hex_digit(coord,digit=2)}")
+        tile_coord = hexgrid.tile_id_to_coord(self.tile_id)
+
+        node_coord_N = hexgrid.from_location(hexgrid.NODE, self.tile_id, 'N')
+        node_coord_NE = hexgrid.from_location(hexgrid.NODE, self.tile_id, 'NE')
+        node_coord_NW = hexgrid.from_location(hexgrid.NODE, self.tile_id, 'NW')
+        node_coord_S = hexgrid.from_location(hexgrid.NODE, self.tile_id, 'S')
+        node_coord_SE = hexgrid.from_location(hexgrid.NODE, self.tile_id, 'SE')
+        node_coord_SW = hexgrid.from_location(hexgrid.NODE, self.tile_id, 'SW')
+
+        edge_NE = hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'NE')
+        edge_NW = hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'NW')
+        edge_SE = hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'SE')
+        edge_SW = hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'SW')
+        edge_E = hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'E')
+        edge_W = hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'W')
+
+        return {
+            'Tile id': self.tile_id,
+            'Coord': convert_to_number(tile_coord),
+            'Node <N>': convert_to_number(node_coord_N),
+            'Node <NE>': convert_to_number(node_coord_NE),
+            'Node <NW>': convert_to_number(node_coord_NW),
+            'Node <S>': convert_to_number(node_coord_S),
+            'Node <SE>': convert_to_number(node_coord_SE),
+            'Node <SW>': convert_to_number(node_coord_SW),
+
+            'Edge <E>': convert_to_number(edge_E),
+            'Edge <NE>': convert_to_number(edge_NE),
+            'Edge <NW>': convert_to_number(edge_NW),
+            'Edge <SE>': convert_to_number(edge_SE),
+            'Edge <SW>': convert_to_number(edge_SW),
+            'Edge <W>': convert_to_number(edge_W),
+        }

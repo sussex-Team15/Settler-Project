@@ -1,8 +1,10 @@
-from Tiles import ResourceTile
+from pprint import pprint
+from Tiles import GameTile, ResourceTile
 import os
+import random
+from hexgrid import legal_tile_ids
 
-
-Resources = [
+resources = [
     ResourceTile.FOREST,
     ResourceTile.PASTURE,
     ResourceTile.FIELDS,
@@ -11,15 +13,25 @@ Resources = [
     ResourceTile.DESERT
 ]
 
-for tile in Resources:
-    Tile_1 = tile
+
+def info(instance):
+
+    print(f"Tile: {instance.tile_id}")
+    print(f"Type: {instance.tile.name()}")
+    print(f"Resource: {instance.tile.generate_resource().name()}")
+    print(f"Label: {instance.number_label}")
+    # print(instance.get_tile_info())
     print()
-    print(Tile_1.name())
-    print(Tile_1.asset())
-    print(os.path.exists(Tile_1.asset()))
-    resource = Tile_1.generate_resource()
-    if resource is not None:
-        print(resource.asset())
-        print(os.path.exists(resource.asset()))
-    else:
-        print(None)
+
+
+available_tiles = list(legal_tile_ids())
+# print(available_tiles)
+
+board = [GameTile(random.randint(0, 12), random.choice(resources), 4, tile_id) for tile_id in available_tiles]
+
+pprint(board)
+print()
+print()
+for tile in board:
+    info(tile)
+    print(tile.get_tile_info())
