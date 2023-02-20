@@ -10,6 +10,6 @@ jobs:
     steps:
       - uses: alex-page/github-project-automation-plus@v0.8.3
         with:
-          project: Backlog
-          column: Triage
+          project: Tasks
+          column: Todo
           repo-token: ${{ secrets.GHPROJECT_TOKEN }}
