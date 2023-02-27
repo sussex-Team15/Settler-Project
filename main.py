@@ -3,6 +3,7 @@ from Tiles import GameTile, ResourceTile
 import os
 import random
 from hexgrid import legal_tile_ids
+from development_cards import DevelopmentCards
 
 resources = [
     ResourceTile.FOREST,
@@ -20,18 +21,27 @@ def info(instance):
     print(f"Type: {instance.tile.name()}")
     print(f"Resource: {instance.tile.generate_resource().name()}")
     print(f"Label: {instance.number_label}")
-    # print(instance.get_tile_info())
     print()
 
 
 available_tiles = list(legal_tile_ids())
-# print(available_tiles)
 
 board = [GameTile(random.randint(0, 12), random.choice(resources), 4, tile_id) for tile_id in available_tiles]
 
 pprint(board)
+
+Development_Cards = [
+    DevelopmentCards.CHAPEL,
+    DevelopmentCards.KNIGHT,
+    DevelopmentCards.LARGEST_ARMY,
+    DevelopmentCards.LIBRARY,
+    DevelopmentCards.LONGEST_ROAD,
+    DevelopmentCards.MARKET,
+    DevelopmentCards.MONOPLY,
+    DevelopmentCards.PALACE,
+    DevelopmentCards.ROAD_BUILDING,
+    DevelopmentCards.UNIVERSITY,
+    DevelopmentCards.YEAR_OF_PLENTY
+]
 print()
-print()
-for tile in board:
-    info(tile)
-    print(tile.get_tile_info())
+pprint({x.name(): os.path.exists(x.asset()) for x in Development_Cards})
