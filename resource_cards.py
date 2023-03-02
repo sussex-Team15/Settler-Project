@@ -2,7 +2,7 @@ import abc
 import os
 
 from enum import Enum
-from utils import ASSET_DIR
+from utils import ASSET_DIR, RESOURCE_CARDS_DIR
 
 
 class ResourceCard(abc.ABC):
@@ -11,7 +11,17 @@ class ResourceCard(abc.ABC):
         pass
 
     def asset(self):
-        return f"{os.path.join(os.path.join(ASSET_DIR, 'resource'),self.__class__.__name__.lower())}.jpg"
+
+        found_files = [file for file in os.listdir(RESOURCE_CARDS_DIR) if self.__class__.__name__.lower() in file]
+        if found_files:
+            for file in found_files:
+                extension = f".{file.split('.')[1]}"
+                if extension in FILE_EXTENSIONS:
+                    return os.path.join(RESOURCE_CARDS_DIR, file)
+
+        raise NotImplementedError(f"no asset files found for "
+                                  f"{self.__class__.__name__.lower()}' "
+                                  f"{self.__class__.__bases__[0].__name__.lower()}")
 
 
 class Lumber(ResourceCard):

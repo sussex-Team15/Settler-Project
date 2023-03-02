@@ -2,7 +2,7 @@ import abc
 import os
 
 from enum import Enum
-from utils import ASSET_DIR
+from utils import ASSET_DIR, FILE_EXTENSIONS, DEVELOPMENT_CARDS_DIR
 
 
 class DevelopmentCard(abc.ABC):
@@ -18,9 +18,17 @@ class DevelopmentCard(abc.ABC):
         return 0  # 0 for false and anyother num for the amount of VP awarded
 
     def asset(self):
-        path = os.path.join(ASSET_DIR, 'development')
 
-        return f"{os.path.join(path, self.__class__.__name__.lower())}.jpg"
+        found_files = [file for file in os.listdir(DEVELOPMENT_CARDS_DIR) if self.__class__.__name__.lower() in file]
+        if found_files:
+            for file in found_files:
+                extension = f".{file.split('.')[1]}"
+                if extension in FILE_EXTENSIONS:
+                    return os.path.join(DEVELOPMENT_CARDS_DIR, file)
+
+        raise NotImplementedError(f"no asset files found for "
+                                  f"{self.__class__.__name__.lower()}' "
+                                  f"{self.__class__.__bases__[0].__name__.lower()}")
 
 
 class Chapel(DevelopmentCard):
