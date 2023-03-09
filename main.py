@@ -77,6 +77,7 @@ def main_game_loop(**kwargs):
 
         pygame.display.update()
     pygame.quit()
+    # this is a comment
 
 
 if __name__ == "__main__":
