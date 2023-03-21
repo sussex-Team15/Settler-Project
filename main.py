@@ -13,10 +13,16 @@ from utils import ASSET_DIR, TILE_CARDS_DIR
 # Initialize pygame
 pygame.init()
 
-DISPLAY_WIDTH, DISPLAY_HEIGHT = 785, 724
+DISPLAY_WIDTH, DISPLAY_HEIGHT = 1900, 1100
+GAME_WIDTH, GAME_HEIGHT = 785, 724
+
+window = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
+screen = pygame.Surface((GAME_WIDTH, GAME_HEIGHT))
 
 
-screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
+# Calculate the x and y coordinates to center the screen on the window
+screen_x = window.get_rect().centerx - screen.get_rect().centerx
+screen_y = window.get_rect().centery - screen.get_rect().centery
 
 
 def setup():
@@ -66,6 +72,7 @@ def main_game_loop(**kwargs):
     GAME_RUNNING = True
 
     while GAME_RUNNING:
+        window.blit(screen, (screen_x, screen_y))
         for event in pygame.event.get():
             if event.type == QUIT:
                 GAME_RUNNING = False
