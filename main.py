@@ -120,7 +120,7 @@ def setup():
         rect.center = board_mapping['tiles'][gametile.tile_id]
         tile_sprites.append((image, rect))
 
-    return tile_sprites
+    return tile_sprites, board, board_mapping
 
 
 def main_game_loop(**kwargs):
@@ -147,7 +147,9 @@ def main_game_loop(**kwargs):
 
 
 if __name__ == "__main__":
-    tile_sprites = setup()
+    tile_sprites, board, board_mapping = setup()
     main_game_loop(
-        tile_sprites=tile_sprites
+        tile_sprites=tile_sprites,
+        board=board,
+        board_mapping=board_mapping
     )
