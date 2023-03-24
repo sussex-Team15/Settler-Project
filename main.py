@@ -141,6 +141,32 @@ def main_game_loop(**kwargs):
             screen.blit(img, rect)
         # screen.blit(bg_img, bg_rect)
 
+        pygame.draw.line(screen, 'red', board_mapping['nodes']
+                         [board[0].node_coord_N], board_mapping['nodes'][board[0].node_coord_NW], 5)
+
+        pygame.draw.line(screen, 'red', board_mapping['nodes']
+                         [board[0].node_coord_NW], board_mapping['nodes'][board[0].node_coord_SW], 5)
+
+        pygame.draw.line(screen, 'red', board_mapping['nodes']
+                         [board[1].node_coord_N], board_mapping['nodes'][board[1].node_coord_NE], 5)
+        pygame.draw.line(screen, 'red', board_mapping['nodes']
+                         [board[1].node_coord_N], board_mapping['nodes'][board[1].node_coord_NE], 5)
+
+        pygame.draw.line(screen, 'red', board_mapping['nodes']
+                         [board[12].node_coord_NW], board_mapping['nodes'][board[12].node_coord_SW], 5)
+
+        pygame.draw.line(screen, 'red', board_mapping['nodes']
+                         [board[12].node_coord_SW], board_mapping['nodes'][board[12].node_coord_S], 5)
+
+        pygame.draw.line(screen, 'green', board_mapping['nodes']
+                         [board[6].node_coord_N], board_mapping['nodes'][board[16].node_coord_S], 5)
+
+        pygame.draw.line(screen, 'green', board_mapping['nodes']
+                         [board[16].node_coord_S], board_mapping['nodes'][board[16].node_coord_SE], 5)
+
+        pygame.draw.line(screen, 'green', board_mapping['nodes']
+                         [board[16].node_coord_SE], board_mapping['nodes'][board[16].node_coord_NE], 5)
+
         pygame.display.update()
     pygame.quit()
     # this is a comment
