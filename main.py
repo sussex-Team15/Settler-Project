@@ -17,6 +17,9 @@ DISPLAY_WIDTH, DISPLAY_HEIGHT = 785, 724
 
 
 screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
+bg_img = pygame.image.load(os.path.join(ASSET_DIR, "tile_order.png"))
+bg_img.convert()
+bg_rect = bg_img.get_rect()
 
 
 def setup():
@@ -65,15 +68,20 @@ def setup():
 def main_game_loop(**kwargs):
     GAME_RUNNING = True
 
+    pprint(board)
+
     while GAME_RUNNING:
         for event in pygame.event.get():
             if event.type == QUIT:
                 GAME_RUNNING = False
+            elif event.type == MOUSEBUTTONDOWN:
+                print(pygame.mouse.get_pos())
 
         screen.fill(Color("grey"))
 
         for img, rect in tile_sprites:
             screen.blit(img, rect)
+        # screen.blit(bg_img, bg_rect)
 
         pygame.display.update()
     pygame.quit()
