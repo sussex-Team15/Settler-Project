@@ -143,7 +143,7 @@ def main_game_loop(**kwargs):
             elif event.type == MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 tile = calc_mouse_pos_tile(mouse_pos)
-                print(tile)
+                
 
         draw()
         pygame.display.update()
