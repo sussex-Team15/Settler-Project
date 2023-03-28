@@ -1,4 +1,6 @@
 import random
+from trade import Trade
+
 
 class Player:
     """
@@ -33,8 +35,6 @@ class Player:
 
     Methods:
 
-    - roll_dice(self)
-        method for the player to the roll dice on their turn
     - build_settlement(self, location)
         builds a settlement at the specified location
     - build_road(self, location1, location2)
@@ -70,10 +70,19 @@ class Player:
         self.tradeOffers = []
 
     def rollDice(self, numberOfDice=2):  # can be used for any number of dice (default =2)
+        """
+        simulates a dice roll
+
+        Args:
+            numberOfDice: number of dice to be rolled
+        
+        Returns: total sum of dice roll
+        """
         return sum(random.randint(1, 6) for _ in range(numberOfDice))
     
     
     def build_settlement(self, location):
+        
         pass
 
     def build_road(self, location1, location2):
@@ -83,7 +92,8 @@ class Player:
         pass
     
     def make_trade(self, resource, player):
-        pass
+        new_trade = Trade(self, resource, player)
+        new_trade.execute_trade()
 
     def end_turn(self):
         pass
