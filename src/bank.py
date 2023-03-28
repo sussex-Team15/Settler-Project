@@ -15,4 +15,4 @@ class Bank:
     def get_trade_ratio(self, num_settlements):
         if num_settlements>0:
             return 3
-        return self.trade_ratios
+        return self.trade_ratio

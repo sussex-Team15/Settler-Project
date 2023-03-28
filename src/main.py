@@ -1,7 +1,7 @@
 import os
 import pygame
 import random
-
+import math
 from colour import Color
 from hexgrid import legal_tile_ids
 from pprint import pprint
@@ -23,6 +23,14 @@ bg_rect = bg_img.get_rect()
 
 
 def setup():
+    """
+    Sets up the initial catan board positions and the ids for each tile
+
+    Returns:
+        board: List of tile objects
+        tile_sprites: list of images for each tile
+        board_mapping: dictionary that maps the tile object to an id and nodes to respective coordinates.
+    """
     # maps the tile_id to the x, y, coordinates for the screen
     board_mapping = {'tiles': {
         1: (236, 98),
@@ -133,14 +141,43 @@ def main_game_loop(**kwargs):
             if event.type == QUIT:
                 GAME_RUNNING = False
             elif event.type == MOUSEBUTTONDOWN:
-                print(pygame.mouse.get_pos())
+                mouse_pos = pygame.mouse.get_pos()
+                tile = calc_mouse_pos_tile(mouse_pos)
+                print(tile)
 
         draw()
         pygame.display.update()
     pygame.quit()
     # this is a comment
 
+def calc_mouse_pos_tile(mouse_pos):
+    """
+    returns the tile that the mouse has clicked in
+
+    Args:
+        mouse_pos: x, y coordinates of the mouse click
+
+    Returns:
+        tile object from the Tiles class
+    """
+    x, y = mouse_pos
+    hex_length = math.dist((621, 318), (699, 187))
+
+    for tile_id in board_mapping['tiles']:
+        coords = board_mapping['tiles'][tile_id]
+        dist = math.sqrt((coords[0] - x)**2 + (coords[1] - y)**2) # dist between mouse click and center of tile
+        radius = hex_length * math.sqrt(3) / 2
+    
+         # if the distance is less than or equal to the radius, the mouse click falls within the tile
+        if dist <= radius:
+            return board[tile_id-1]
+            
+            
+
 def draw():
+    """
+    Draws the pygame display
+    """
     screen.fill(Color("grey"))
 
     for img, rect in tile_sprites:
@@ -170,6 +207,9 @@ def draw():
         draw_scoreboard()
         
 def draw_scoreboard():
+    """
+    Draws the scoreboard as a seperate pygame surface
+    """
     rect_width = 600
     rect_height = DISPLAY_HEIGHT
     rect_x = DISPLAY_WIDTH - rect_width
