@@ -1,5 +1,5 @@
 import pytest
-from development_cards import *
+from src.development_cards import *
 
 
 def test_chapel():

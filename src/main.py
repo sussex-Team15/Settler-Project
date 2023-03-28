@@ -13,7 +13,7 @@ from utils import ASSET_DIR, TILE_CARDS_DIR
 # Initialize pygame
 pygame.init()
 
-DISPLAY_WIDTH, DISPLAY_HEIGHT = 785, 724
+DISPLAY_WIDTH, DISPLAY_HEIGHT = 1450, 800
 
 
 screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
@@ -135,41 +135,56 @@ def main_game_loop(**kwargs):
             elif event.type == MOUSEBUTTONDOWN:
                 print(pygame.mouse.get_pos())
 
-        screen.fill(Color("grey"))
-
-        for img, rect in tile_sprites:
-            screen.blit(img, rect)
-        # screen.blit(bg_img, bg_rect)
-
-        pygame.draw.line(screen, 'red', board_mapping['nodes']
-                         [board[0].node_coord_N], board_mapping['nodes'][board[0].node_coord_NW], 5)
-
-        pygame.draw.line(screen, 'red', board_mapping['nodes']
-                         [board[0].node_coord_NW], board_mapping['nodes'][board[0].node_coord_SW], 5)
-
-        pygame.draw.line(screen, 'red', board_mapping['nodes']
-                         [board[1].node_coord_N], board_mapping['nodes'][board[1].node_coord_NE], 5)
-        pygame.draw.line(screen, 'red', board_mapping['nodes']
-                         [board[1].node_coord_N], board_mapping['nodes'][board[1].node_coord_NE], 5)
-
-        pygame.draw.line(screen, 'red', board_mapping['nodes']
-                         [board[12].node_coord_NW], board_mapping['nodes'][board[12].node_coord_SW], 5)
-
-        pygame.draw.line(screen, 'red', board_mapping['nodes']
-                         [board[12].node_coord_SW], board_mapping['nodes'][board[12].node_coord_S], 5)
-
-        pygame.draw.line(screen, 'green', board_mapping['nodes']
-                         [board[6].node_coord_N], board_mapping['nodes'][board[16].node_coord_S], 5)
-
-        pygame.draw.line(screen, 'green', board_mapping['nodes']
-                         [board[16].node_coord_S], board_mapping['nodes'][board[16].node_coord_SE], 5)
-
-        pygame.draw.line(screen, 'green', board_mapping['nodes']
-                         [board[16].node_coord_SE], board_mapping['nodes'][board[16].node_coord_NE], 5)
-
+        draw()
         pygame.display.update()
     pygame.quit()
     # this is a comment
+
+def draw():
+    screen.fill(Color("grey"))
+
+    for img, rect in tile_sprites:
+            screen.blit(img, rect)
+        # screen.blit(bg_img, bg_rect)
+
+    for index in range(len(board)):
+        
+        pygame.draw.line(screen, 'white', board_mapping['nodes']
+                            [board[index].node_coord_N], board_mapping['nodes'][board[index].node_coord_NW], 5)
+        
+        pygame.draw.line(screen, 'white', board_mapping['nodes']
+                            [board[index].node_coord_N], board_mapping['nodes'][board[index].node_coord_NE], 5)
+        
+        pygame.draw.line(screen, 'white', board_mapping['nodes']
+                            [board[index].node_coord_NW], board_mapping['nodes'][board[index].node_coord_SW], 5)
+
+        pygame.draw.line(screen, 'white', board_mapping['nodes']
+                            [board[index].node_coord_SW], board_mapping['nodes'][board[index].node_coord_S], 5)
+
+        pygame.draw.line(screen, 'white', board_mapping['nodes']
+                            [board[index].node_coord_S], board_mapping['nodes'][board[index].node_coord_SE], 5)
+        
+        pygame.draw.line(screen, 'white', board_mapping['nodes']
+                            [board[index].node_coord_SE], board_mapping['nodes'][board[index].node_coord_NE], 5)
+        
+        draw_scoreboard()
+        
+def draw_scoreboard():
+    rect_width = 600
+    rect_height = DISPLAY_HEIGHT
+    rect_x = DISPLAY_WIDTH - rect_width
+    rect_y = 0
+
+    # create the rectangular surface
+    rect_surf = pygame.Surface((rect_width, rect_height))
+    rect_surf.fill((0, 0, 255))  # fill with blue color
+
+    # draw the rectangular surface onto the window
+    screen.blit(rect_surf, (rect_x, rect_y))
+    
+    rect_outline_width = 3
+    rect_outline_rect = pygame.Rect(rect_x+50, rect_y-100, 300, 300)
+    pygame.draw.rect(rect_surf, (255, 255, 255), rect_outline_rect, rect_outline_width)
 
 
 if __name__ == "__main__":

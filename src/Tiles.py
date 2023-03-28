@@ -4,7 +4,7 @@ import os
 import hexgrid
 
 from enum import Enum
-from resource_cards import Resource
+from resource_ import Resource
 from utils import FILE_EXTENSIONS, TILE_CARDS_DIR
 
 
