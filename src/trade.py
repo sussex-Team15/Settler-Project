@@ -34,5 +34,3 @@ class Trade:
                     self.offering_player.resources.remove(resource)
 
             # add all offered resources to recipient players resources
-
-            self.recieving_player.resources.extend(self.offered_resources)
