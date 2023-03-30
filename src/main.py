@@ -17,7 +17,8 @@ from player import Player
 pygame.init()
 
 DISPLAY_WIDTH, DISPLAY_HEIGHT = 1450, 800
-FONT = pygame.font.SysFont('Palatino', 25)
+NUM_FONT = pygame.font.SysFont('Palatino', 40)
+WORD_FONT = pygame.font.SysFont('Palatino', 25)
 
 
 screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
@@ -123,6 +124,7 @@ def setup():
     }}
     # Create the board as a list of GameTile Objects
     board = [GameTile(random.randint(0, 12),
+                      random.randint(1,12),
                       random.choice(list(ResourceTile)), 4,
                       tile_id) for tile_id in legal_tile_ids()]
 
@@ -137,6 +139,7 @@ def setup():
         rect = image.get_rect()
         rect.center = board_mapping['tiles'][gametile.tile_id]
         tile_sprites.append((image, rect))
+
 
     players = []
 
@@ -206,7 +209,7 @@ def popup():
     # Build road button
     build_road_rect = pygame.Rect(830, 640, 190, 40)
     pygame.draw.rect(screen, (0, 255, 0), build_road_rect)
-    font = FONT
+    font = WORD_FONT
     text = font.render('Build road', True, (0, 0, 0))
     text_rect = text.get_rect()
     text_rect.center = build_road_rect.center
@@ -303,6 +306,21 @@ def draw():
         pygame.draw.line(screen, 'white', board_mapping['nodes']
                             [board[index].node_coord_SE], board_mapping['nodes'][board[index].node_coord_NE], 5)
         
+    for tile_number, coordinates in board_mapping['tiles'].items():
+        # Create text surface
+        text_surface = NUM_FONT.render(str(board[tile_number-1].real_number), True, WHITE)
+    
+        # Get size of text surface
+        text_width, text_height = text_surface.get_size()
+    
+        # Calculate position to center text on tile
+        x = coordinates[0] - text_width // 2
+        y = coordinates[1] - text_height // 2
+    
+        # Draw text on screen
+        screen.blit(text_surface, (x, y))
+
+    
     draw_scoreboard()
     draw_buttons()
 

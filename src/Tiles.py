@@ -126,8 +126,9 @@ class ResourceTile(Enum):
 
 
 class GameTile:
-    def __init__(self, number_label, tile, points, tile_id):
+    def __init__(self, number_label, real_number, tile, points, tile_id):
         self.number_label = number_label
+        self.real_number = real_number #number that will show on GUI
         self.tile = tile
         self.points = points
         self.tile_id = tile_id
