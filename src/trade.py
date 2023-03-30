@@ -1,4 +1,4 @@
-from player import Player
+
 
 class Trade:
 
@@ -36,17 +36,3 @@ class Trade:
             # add all offered resources to recipient players resources
 
             self.recieving_player.resources.extend(self.offered_resources)
-
-
-# tests:
-
-Eddie = Player('Eddie')
-Eddie.resources.extend([1,2,4,5,6,7,8,93]) # integers just for simplicity
-Noah = Player('Noah')
-
-new_trade = Trade(Eddie, Eddie.resources[:5], Noah)
-new_trade.accept_trade()
-new_trade.execute_trade()
-
-print(f'Eddie Resources {Eddie.resources}')
-print(f'Noah resources: {Noah.resources}')

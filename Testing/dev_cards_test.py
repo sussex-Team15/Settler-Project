@@ -1,5 +1,7 @@
 import pytest
-from src.development_cards import *
+import sys
+sys.path.insert(1, 'src')
+from development_cards import *
 
 
 def test_chapel():
@@ -77,6 +79,4 @@ def test_year_of_plenty():
     assert year_of_plenty.description() == ("take any 2 resources from the bank add them to your hand."
                                              " They can be 2 of the same resource or 2 different resources")
     assert year_of_plenty.vp_awarded() == 0
-
-
 

@@ -1,5 +1,8 @@
 import random
 from trade import Trade
+from building import Settlement, City
+from tiles import GameTile
+import hexgrid
 
 
 class Player:
@@ -56,10 +59,10 @@ class Player:
     
     """
 
-    def __init__(self, name):
+    def __init__(self, name, color):
         self.name = name
         self.victory_points = 0
-        # TODO add implementation for self.color initialisation
+        self.color = color
         self.resources = []
         self.settlements = []
         self.cities = []
@@ -69,23 +72,40 @@ class Player:
         self.hasLargestArmy = False
         self.tradeOffers = []
 
-    def rollDice(self, numberOfDice=2):  # can be used for any number of dice (default =2)
+    def roll_dice(self, numberOfDice=2):  # can be used for any number of dice (default =2)
         """
         simulates a dice roll
 
         Args:
             numberOfDice: number of dice to be rolled
         
-        Returns: total sum of dice roll
+        Returns: 1st dice roll, 2nd dice roll
         """
-        return sum(random.randint(1, 6) for _ in range(numberOfDice))
+        return sum(random.randint(1,7) for _ in range(numberOfDice))
     
     
-    def build_settlement(self, location):
+    def build_settlement(self, node):
+        """
+        Builds a settlement at the node specified
+
+        """
+       
         
         pass
 
-    def build_road(self, location1, location2):
+    def build_city(self, node):
+        """
+        Builds a city at specified node
+        only can build if a settlement is on the node
+        """
+        pass
+
+    def build_road(self, node1, node2):
+        """
+        builds a road from node1 to node2. 
+        Road will be set to the color of the player building
+
+        """
         pass
 
     def buy_card(self):
