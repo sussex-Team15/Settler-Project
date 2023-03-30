@@ -17,15 +17,19 @@ from player import Player
 pygame.init()
 
 DISPLAY_WIDTH, DISPLAY_HEIGHT = 1450, 800
+FONT = pygame.font.SysFont('Palatino', 25)
 
 
 screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 bg_img = pygame.image.load(os.path.join(ASSET_DIR, "tile_order.png"))
 bg_img.convert()
 bg_rect = bg_img.get_rect()
-num_players = 4
+num_players = 6
+player_names = ['Eddie', 'Morgan', 'Ryan', 'Noah', 'Nelson', 'Yash']
+
+
 WHITE = (255,255,255)
-colors = [(255,0,0), (25, 255,25) , (255,255,77), (255,153,51)] #colors r g y o
+colors = [(255,0,0), (25, 255,25) , (255,255,77), (255,153,51), (0,0,0), (35, 219, 222)] #colors r g y o b c
 
 
 def setup():
@@ -137,7 +141,7 @@ def setup():
     players = []
 
     for i in range(num_players):
-        player = Player(f'player: {i}', colors[i] )
+        player = Player(f'player: {player_names[i]}', colors[i] )
         print(player.name)
         players.append(player)
 
@@ -151,19 +155,11 @@ def main_game_loop(**kwargs):
 
     while GAME_RUNNING:
         for event in pygame.event.get():
-            
             if event.type == QUIT:
                 GAME_RUNNING = False
-            elif event.type == pygame.MOUSEMOTION:
-                calc_mouse_node(pygame.mouse.get_pos())
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                node = calc_mouse_node(mouse_pos)
-                if node == None:
-                    tile = calc_mouse_pos_tile(mouse_pos)
-                    print((f"Tile {tile.get_tile_info()['Tile id']} clicked!"))
-                else:
-                    print((f"Button {node} clicked!"))
+            click_event(event)
+            
+            
         
         
         draw()
@@ -171,7 +167,69 @@ def main_game_loop(**kwargs):
     pygame.quit()
     # this is a comment)
     
+def click_event(event):
+    
+    if event.type == pygame.MOUSEMOTION:
+        calc_mouse_node(pygame.mouse.get_pos())
+    elif event.type == pygame.MOUSEBUTTONDOWN:
+        mouse_pos = pygame.mouse.get_pos()
+        node = calc_mouse_node(mouse_pos)
+        if node == None:
+            tile = calc_mouse_pos_tile(mouse_pos)
+            print((f"Tile {tile.get_tile_info()['Tile id']} clicked!"))
+        else:
+            # when node is clicked popup will appear in bottom right
+            popup()
+            while True:
+                popup_event = pygame.event.wait()
+                if popup_event.type == pygame.MOUSEBUTTONDOWN:
+                    popup_rect = pygame.Rect(700, 800, 200, 100)
+                    
+                    print((f"Button {node} clicked!"))
+                    if not popup_rect.collidepoint(popup_event.pos):
+                        pygame.draw.rect(screen, (0, 0, 0), popup_rect)
+                        pygame.display.update()
+                        break
+                
+               
+    
 
+def popup():
+    '''
+    popup window that gives options for player when node is clicked
+    '''
+    popup_width = 630
+    popup_height = 160
+    popup_rect = pygame.Rect(810, 620, popup_width, popup_height)
+    pygame.draw.rect(screen, (255, 255, 255), popup_rect)
+
+    # Build road button
+    build_road_rect = pygame.Rect(830, 640, 190, 40)
+    pygame.draw.rect(screen, (0, 255, 0), build_road_rect)
+    font = FONT
+    text = font.render('Build road', True, (0, 0, 0))
+    text_rect = text.get_rect()
+    text_rect.center = build_road_rect.center
+    screen.blit(text, text_rect)
+
+    # Build settlement button
+    build_settlement_rect = pygame.Rect(830, 700, 190, 40)
+    pygame.draw.rect(screen, (0, 0, 255), build_settlement_rect)
+    text = font.render('Build settlement', True, (255, 255, 255))
+    text_rect = text.get_rect()
+    text_rect.center = build_settlement_rect.center
+    screen.blit(text, text_rect)
+
+    # Build city button
+    build_city_rect = pygame.Rect(1030, 640, 190, 40)
+    pygame.draw.rect(screen, (255, 0, 0), build_city_rect)
+    text = font.render('Build city', True, (255, 255, 255))
+    text_rect = text.get_rect()
+    text_rect.center = build_city_rect.center
+    screen.blit(text, text_rect)
+
+
+    pygame.display.update()
     
 def calc_mouse_node(mouse_pos):
     '''
@@ -184,7 +242,7 @@ def calc_mouse_node(mouse_pos):
         Node_id
     '''
     for node_id, node_point in board_mapping['nodes'].items():
-                if ((node_point[0] - mouse_pos[0])**2 + (node_point[1] - mouse_pos[1])**2)**0.5 < 10:
+                if ((node_point[0] - mouse_pos[0])**2 + (node_point[1] - mouse_pos[1])**2)**0.5 < 10 :
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                     return node_id
     else:
@@ -247,8 +305,10 @@ def draw():
         
     draw_scoreboard()
     draw_buttons()
-    
 
+
+
+    
 
 def draw_buttons():
     button_radius = 10
@@ -289,40 +349,17 @@ def draw_scoreboard():
     pygame.draw.rect(rect_surf, WHITE, scoreboard_outline, rect_outline_width)
     pygame.draw.line(rect_surf, WHITE, (10,80), (rect_width-10, 80), 6)
 
+    player_width = scoreboard_width//num_players
+    font_size = 20 if len(players)==6 else 30 if len(players)==5 else 50
+    player_font = pygame.font.SysFont('Palatino',font_size)
+
     for i in range(num_players):
-        line_width = round(scoreboard_width/num_players)
-        pygame.draw.line(rect_surf, WHITE, (10+line_width,80), (10+line_width, 380), 6)
-    
-                         
-    
+        x = 10 + i * player_width
+        pygame.draw.line(rect_surf, WHITE, (x, 10), (x, 610), rect_outline_width)
+        name =  player_font.render(players[i].name, True, WHITE)
+        name_rect = name.get_rect(center=(x + player_width // 2, 40))
+        rect_surf.blit(name, name_rect)
     screen.blit(rect_surf,(rect_x, rect_y))
-
-def draw_scoreboard_2():
-
-    # different scoreboard that looks better sort of
-    surf_width = 650
-    surf_height = DISPLAY_HEIGHT
-
-    rect_surf = pygame.Surface((surf_width, surf_height))
-    rect_surf.fill((0, 120, 255))  # fill with blue color
-    screen.blit(rect_surf, (DISPLAY_WIDTH - surf_width, 0))
-    font = pygame.font.Font(None, 36)
-
-
-    col_width = surf_width//len(players)
-
-    for i in range(len(players)):
-        x = i * col_width
-        pygame.draw.rect(rect_surf, WHITE, (x, 0, col_width - 1, surf_height))
-
-        text = font.render(players[i].name, True, WHITE)
-        text_rect = text.get_rect(center=(x+col_width//2, surf_height//5))
-        rect_surf.blit(text, text_rect)
-
-        text = font.render(f'Victory points: {players[i].victory_points}', True, WHITE)
-        text_rect = text.get_rect(center=(x+col_width//2, surf_height*2//5))
-        rect_surf.blit(text, text_rect)
-
 
 if __name__ == "__main__":
     tile_sprites, board, board_mapping, players = setup()

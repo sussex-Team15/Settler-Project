@@ -1,5 +1,11 @@
+import pytest
+import sys
+sys.path.insert(1, 'src')
+
 from player import *
 from trade import *
+
+
 
 
 def test_trade_init():
