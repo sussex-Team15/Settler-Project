@@ -1,5 +1,8 @@
 import pygame
 
+RED = (255,0,0)
+GRAY = (158, 153, 134)
+
 class ButtonRect:
     def __init__(self, x, y, width, height, text, font, text_color, button_color, highlight_color):
         self.rect = pygame.Rect(x, y, width, height)
@@ -33,6 +36,7 @@ class ButtonRect:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                 self.cursor_set = False
             return False
+    
 
 
 
@@ -56,15 +60,6 @@ class ButtonHex:
                 (self.x - self.radius / 2, self.y - self.radius),
                 (self.x + self.radius / 2, self.y - self.radius)
             ])
-        else:
-            pygame.draw.polygon(surface, self.color, [
-                (self.x + self.radius, self.y),
-                (self.x + self.radius / 2, self.y + self.radius),
-                (self.x - self.radius / 2, self.y + self.radius),
-                (self.x - self.radius, self.y),
-                (self.x - self.radius / 2, self.y - self.radius),
-                (self.x + self.radius / 2, self.y - self.radius)
-            ], width=4) # same as above but with width so its not filled hex
 
     
     def is_hovered_over(self, mouse_pos): # returns true if mouse hovers over button
@@ -73,6 +68,7 @@ class ButtonHex:
             if not self.cursor_set:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 self.cursor_set = True
+
                 return True
         else:
             if self.cursor_set:
@@ -87,7 +83,3 @@ class ButtonHex:
             return True
         else: 
             return False
-    
-        
-class TileButton:
-    pass # button for the center of a board tile

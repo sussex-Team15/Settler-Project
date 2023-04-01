@@ -34,20 +34,10 @@ tile_buttons = [] #list of ButtonHex object for tiles
 
 
 WHITE = (255,255,255)
+RED = (255,0,0)
 colors = [(255,0,0), (25, 255,25) , (255,255,77), (255,153,51), (0,0,0), (35, 219, 222)] #colors r g y o b c
-
-
-def setup():
-    """
-    Sets up the initial catan board positions and the ids for each tile
-
-    Returns:
-        board: List of tile objects
-        tile_sprites: list of images for each tile
-        board_mapping: dictionary that maps the tile object to an id and nodes to respective coordinates.
-    """
-    # maps the tile_id to the x, y, coordinates for the screen
-    board_mapping = {'tiles': {
+# maps the tile_id to the x, y, coordinates for the screen
+board_mapping = {'tiles': {
         1: (236, 98),
         2: (162, 233),
         3: (81, 364),
@@ -126,6 +116,18 @@ def setup():
         89: (467, 317),
 
     }}
+
+def setup():
+    """
+    Sets up the initial catan board positions and the ids for each tile
+
+    Returns:
+        board: List of tile objects
+        tile_sprites: list of images for each tile
+        board_mapping: dictionary that maps the tile object to an id and nodes to respective coordinates.
+    """
+    # maps the tile_id to the x, y, coordinates for the screen
+    
     # Create the board as a list of GameTile Objects
     board = [GameTile(random.randint(0, 12),
                       random.randint(1,12),
@@ -159,6 +161,10 @@ def main_game_loop(**kwargs):
     GAME_RUNNING = True
     player_turn_index= 0
     pprint(board)
+    # GAME LOOP
+    #1 LOOP THROUGH PLAYERS AND INITIALISE STARTING POSITIONS.
+    #2 BEGIN MAIN TURN BASED LOOP.
+    #2.1 PLAYER HAS CHOICE OF BUILDING AND
 
     while GAME_RUNNING:
         for event in pygame.event.get():
@@ -168,6 +174,10 @@ def main_game_loop(**kwargs):
                 click_event(event, players[player_turn_index]) # handles clicking events
             elif event.type == pygame.MOUSEMOTION:
                 mouse_motion_event() # function handles mouse motion events 
+            elif event.type == pygame.K_SPACE:
+                # new turn
+                pass
+
                 
                 
             
@@ -185,12 +195,15 @@ def mouse_motion_event():
     mouse_pos = pygame.mouse.get_pos()
     for button in node_buttons:
         button.is_hovered_over(mouse_pos)
-
     for button in tile_buttons:
         button.is_hovered_over(mouse_pos)
+
     build_road_button.is_hovered_over(mouse_pos)
     build_city_button.is_hovered_over(mouse_pos)
     build_settlement_button.is_hovered_over(mouse_pos)
+    make_trade_button.is_hovered_over(mouse_pos)
+    other_button_1.is_hovered_over(mouse_pos)
+    other_button_2.is_hovered_over(mouse_pos)
 
     
 
@@ -198,23 +211,55 @@ def mouse_motion_event():
     
 def click_event(event, player):
     mouse_pos = pygame.mouse.get_pos()
-
-    for button in node_buttons:
+    
+            
+    for button in tile_buttons:
         if button.is_clicked(mouse_pos):
-            print(f'{button.x}, {button.y} clicked!')
+            print(print(f'{button.x}, {button.y} clicked!'))
             break
     
     if build_road_button.is_clicked(mouse_pos):
-            # do something
-        print('Raod Build!')
+        # do something
+        start_node = build_road()
+        end_node = build_road()
+        pygame.draw.line(screen, player.color,
+                         board_mapping['nodes'][convert_to_nodeid(start_node.x, start_node.y)],
+                         board_mapping['nodes'][convert_to_nodeid(end_node.x, end_node.y)],
+                         5)
+        pygame.display.update()
+        
+        print(f'{player.name} built road from {convert_to_nodeid(start_node.x, start_node.y)} to {convert_to_nodeid(end_node.x, end_node.y)}')
+
+
     elif build_settlement_button.is_clicked(mouse_pos):
             # do something
         print("settlement build!")
     elif build_city_button.is_clicked(mouse_pos):
         print('city build')
+    elif make_trade_button.is_clicked(mouse_pos):
+        print('Trade Clicked')
+    elif other_button_1.is_clicked(mouse_pos):
+        print('other button 1 clicked')
+    elif other_button_2.is_clicked(mouse_pos):
+        print('other button 2 clicked')
+
 
 
     pygame.display.update()
+
+def build_road():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.QUIT
+                exit()
+            elif event.type == MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                for button in node_buttons:
+                    if button.is_clicked(mouse_pos):
+                        return button
+
+    
     
 
 def popup():
@@ -238,10 +283,23 @@ def popup():
                               'Build City', WORD_FONT, WHITE, (181, 186, 43) , WHITE)
     build_city_button.draw(screen)
 
+    make_trade_button = ButtonRect(1030, 700, 190, 40,
+                                   'Make Trade', WORD_FONT, WHITE, (255, 51, 153), WHITE)
+    make_trade_button.draw(screen)
     
-    return build_road_button, build_settlement_button, build_city_button
+    other_button_1 = ButtonRect(1230, 640, 190, 40,
+                                   'Other Button', WORD_FONT, WHITE, (51, 153, 255), WHITE)
+    other_button_1.draw(screen)
+    
+    other_button_2 = ButtonRect(1230, 700, 190, 40,
+                                   'Other Button', WORD_FONT, WHITE, (255, 153, 51), WHITE)
+    other_button_2.draw(screen)
+    make_trade_button.draw(screen)
 
-build_road_button, build_settlement_button, build_city_button = popup()
+    
+    return build_road_button, build_settlement_button, build_city_button, make_trade_button, other_button_1, other_button_2
+
+build_road_button, build_settlement_button, build_city_button, make_trade_button, other_button_1, other_button_2 = popup()
     
 def calc_mouse_node(mouse_pos):
     '''
@@ -283,7 +341,14 @@ def calc_mouse_pos_tile(mouse_pos):
          # if the distance is less than or equal to the radius, the mouse click falls within the tile
         if dist <= radius:
             return board[tile_id-1]
-            
+
+def convert_to_nodeid( x, y):
+        # converts the x, y coords of the node button to the nodeid stored in board_mapping
+        for node_id, node_points in board_mapping['nodes'].items():
+            if node_points[0] == x and node_points[1] == y:
+                return node_id
+        
+        return None          
             
 
 def draw():
