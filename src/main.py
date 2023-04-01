@@ -351,9 +351,8 @@ def draw_buttons():
     
     for node_id, node_point in board_mapping['tiles'].items():
         button = ButtonHex(node_point[0], node_point[1], button_radius[1], WHITE, isFilled=False)
-        button.draw(screen)
         tile_buttons.append(button)
-
+        # invisible buttons at center of tiles
 
         
 def draw_scoreboard():
