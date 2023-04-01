@@ -3,7 +3,8 @@ from trade import Trade
 from building import Settlement, City
 from tiles import GameTile
 import hexgrid
-
+import pygame
+from resource_ import *
 
 class Player:
     """
@@ -89,6 +90,21 @@ class Player:
         Builds a settlement at the node specified
 
         """
+        settlement = Settlement(self, node)
+        num_lumber, num_brick, num_wool, num_grain = 0
+        # cost = 1 lumber 1 brick 1 wool 1 grain
+
+        for i in range(len(self.resources)):
+            if self.resources[i]==Resource.WOOD or self.resources[i]==Resource.BRICK or self.resources[i]==Resource.GRAIN or self.resources[i]==Resource.WOOL :
+                num_lumber +=1
+                num_brick+=1
+                num_grain+=1
+                num_wool+=1
+
+        if num_lumber>=1 or num_grain>=1 or num_brick>=1 or num_wool>=1:
+            self.settlements.append(settlement)
+        else:
+            print('not enough resources')
        
         
         pass
@@ -98,18 +114,53 @@ class Player:
         Builds a city at specified node
         only can build if a settlement is on the node
         """
-        pass
+        city = City(self, node)
+        num_ore = 0
+        num_grain = 0
+
+        # check to see if player has enough resources for city
+        for i in range(len(self.resources)):
+            if self.resources[i] == Resource.GRAIN:
+                num_grain+=1
+            elif self.resources[i] == Resource.ORE:
+                num_ore+=1
+        
+        if num_ore>=3 and num_grain>=2:
+            # player has enough
+            self.cities.append(city)
+        else:
+            print("Not enough resources")
 
     def build_road(self, node1, node2):
         """
         builds a road from node1 to node2. 
         Road will be set to the color of the player building
-
         """
-        pass
+        # cost 1 lumber 1 brick
+        num_lumber = 0
+        num_brick = 0
+       
 
-    def buy_card(self):
-        pass
+        # check to see if player has enough resources
+        for i in range(len(self.resources)):
+            if self.resources[i]==Resource.WOOD:
+                num_lumber+=1
+            elif self.resources[i] == Resource.BRICK:
+                num_brick+=1
+        
+        if num_brick>=1 and num_lumber>=1:
+            # player has enough
+            self.roads.append((node1,node2))
+            print(f'road built from {node1} to {node2}')
+        else:
+            print("Not enough resources")
+
+    def buy_dev_card(self):
+        '''
+        Buys a development card from the bank
+
+            Paramaters: self
+        '''
     
     def make_trade(self, resource, player):
         new_trade = Trade(self, resource, player)

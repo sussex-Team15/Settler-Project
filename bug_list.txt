@@ -1,0 +1,2 @@
+- hexagon tile detection isnt perfect for clicking tiles
+- clicking outside board closes window.

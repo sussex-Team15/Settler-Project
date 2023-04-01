@@ -31,9 +31,3 @@ class City(Building):
         if self.node.has_settlement:
             self.valid_node = True
         self.cost = [Resource.GRAIN, Resource.GRAIN, Resource.ORE, Resource.ORE, Resource.ORE]
-
-
-    def build_city(self, resources):
-        if self.valid_node:
-            enough_resources = all([resource in resources for resource in self.cost])
-            self.node.has_city = True

@@ -10,6 +10,7 @@ from pygame.locals import *
 from tiles import GameTile, ResourceTile
 from utils import ASSET_DIR, TILE_CARDS_DIR
 from player import Player
+from button import *
 
 
 
@@ -25,8 +26,11 @@ screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 bg_img = pygame.image.load(os.path.join(ASSET_DIR, "tile_order.png"))
 bg_img.convert()
 bg_rect = bg_img.get_rect()
-num_players = 6
-player_names = ['Eddie', 'Morgan', 'Ryan', 'Noah', 'Nelson', 'Yash']
+num_players = 4
+player_names = ['Eddie', 'Morgan', 'Ryan', 'Noah']
+node_buttons = [] #list of ButtonHex objects for nodes
+tile_buttons = [] #list of ButtonHex object for tiles
+
 
 
 WHITE = (255,255,255)
@@ -144,7 +148,7 @@ def setup():
     players = []
 
     for i in range(num_players):
-        player = Player(f'player: {player_names[i]}', colors[i] )
+        player = Player(player_names[i], colors[i] )
         print(player.name)
         players.append(player)
 
@@ -153,14 +157,21 @@ def setup():
 
 def main_game_loop(**kwargs):
     GAME_RUNNING = True
-    player_turn = 0
+    player_turn_index= 0
     pprint(board)
 
     while GAME_RUNNING:
         for event in pygame.event.get():
             if event.type == QUIT:
                 GAME_RUNNING = False
-            click_event(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                click_event(event, players[player_turn_index]) # handles clicking events
+            elif event.type == pygame.MOUSEMOTION:
+                mouse_motion_event() # function handles mouse motion events 
+                
+                
+            
+            
             
             
         
@@ -169,70 +180,68 @@ def main_game_loop(**kwargs):
         pygame.display.update()
     pygame.quit()
     # this is a comment)
+
+def mouse_motion_event():
+    mouse_pos = pygame.mouse.get_pos()
+    for button in node_buttons:
+        button.is_hovered_over(mouse_pos)
+
+    for button in tile_buttons:
+        button.is_hovered_over(mouse_pos)
+    build_road_button.is_hovered_over(mouse_pos)
+    build_city_button.is_hovered_over(mouse_pos)
+    build_settlement_button.is_hovered_over(mouse_pos)
+
     
-def click_event(event):
+
+        
     
-    if event.type == pygame.MOUSEMOTION:
-        calc_mouse_node(pygame.mouse.get_pos())
-    elif event.type == pygame.MOUSEBUTTONDOWN:
-        mouse_pos = pygame.mouse.get_pos()
-        node = calc_mouse_node(mouse_pos)
-        if node == None:
-            tile = calc_mouse_pos_tile(mouse_pos)
-            print((f"Tile {tile.get_tile_info()['Tile id']} clicked!"))
-        else:
-            # when node is clicked popup will appear in bottom right
-            popup()
-            while True:
-                popup_event = pygame.event.wait()
-                if popup_event.type == pygame.MOUSEBUTTONDOWN:
-                    popup_rect = pygame.Rect(700, 800, 200, 100)
-                    
-                    print((f"Button {node} clicked!"))
-                    if not popup_rect.collidepoint(popup_event.pos):
-                        pygame.draw.rect(screen, (0, 0, 0), popup_rect)
-                        pygame.display.update()
-                        break
-                
-               
+def click_event(event, player):
+    mouse_pos = pygame.mouse.get_pos()
+
+    for button in node_buttons:
+        if button.is_clicked(mouse_pos):
+            print(f'{button.x}, {button.y} clicked!')
+            break
+    
+    if build_road_button.is_clicked(mouse_pos):
+            # do something
+        print('Raod Build!')
+    elif build_settlement_button.is_clicked(mouse_pos):
+            # do something
+        print("settlement build!")
+    elif build_city_button.is_clicked(mouse_pos):
+        print('city build')
+
+
+    pygame.display.update()
     
 
 def popup():
     '''
     popup window that gives options for player when node is clicked
     '''
+    
     popup_width = 630
     popup_height = 160
+
     popup_rect = pygame.Rect(810, 620, popup_width, popup_height)
     pygame.draw.rect(screen, (255, 255, 255), popup_rect)
 
-    # Build road button
-    build_road_rect = pygame.Rect(830, 640, 190, 40)
-    pygame.draw.rect(screen, (0, 255, 0), build_road_rect)
-    font = WORD_FONT
-    text = font.render('Build road', True, (0, 0, 0))
-    text_rect = text.get_rect()
-    text_rect.center = build_road_rect.center
-    screen.blit(text, text_rect)
+    build_road_button = ButtonRect(830, 640, 190, 40,
+                              'Build Road', WORD_FONT, WHITE, (17, 104, 245), WHITE)
+    build_road_button.draw(screen)
+    build_settlement_button = ButtonRect(830, 700, 190, 40,
+                              'Build Settlement', WORD_FONT, WHITE,  (38, 140, 31), WHITE)
+    build_settlement_button.draw(screen)
+    build_city_button = ButtonRect(1030, 640, 190, 40,
+                              'Build City', WORD_FONT, WHITE, (181, 186, 43) , WHITE)
+    build_city_button.draw(screen)
 
-    # Build settlement button
-    build_settlement_rect = pygame.Rect(830, 700, 190, 40)
-    pygame.draw.rect(screen, (0, 0, 255), build_settlement_rect)
-    text = font.render('Build settlement', True, (255, 255, 255))
-    text_rect = text.get_rect()
-    text_rect.center = build_settlement_rect.center
-    screen.blit(text, text_rect)
+    
+    return build_road_button, build_settlement_button, build_city_button
 
-    # Build city button
-    build_city_rect = pygame.Rect(1030, 640, 190, 40)
-    pygame.draw.rect(screen, (255, 0, 0), build_city_rect)
-    text = font.render('Build city', True, (255, 255, 255))
-    text_rect = text.get_rect()
-    text_rect.center = build_city_rect.center
-    screen.blit(text, text_rect)
-
-
-    pygame.display.update()
+build_road_button, build_settlement_button, build_city_button = popup()
     
 def calc_mouse_node(mouse_pos):
     '''
@@ -250,6 +259,7 @@ def calc_mouse_node(mouse_pos):
                     return node_id
     else:
          pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
 
 
 def calc_mouse_pos_tile(mouse_pos):
@@ -286,6 +296,7 @@ def draw():
             screen.blit(img, rect)
         # screen.blit(bg_img, bg_rect)
 
+    #draws the catan board
     for index in range(len(board)):
         
         pygame.draw.line(screen, 'white', board_mapping['nodes']
@@ -323,24 +334,26 @@ def draw():
     
     draw_scoreboard()
     draw_buttons()
+    popup()
 
 
 
     
 
 def draw_buttons():
-    button_radius = 10
+    button_radius = [10, 22]
     GRAY = (158, 153, 134)
-    for node_id, node_point in board_mapping['nodes'].items():
-        pygame.draw.polygon(screen, GRAY, [
-            (node_point[0] + button_radius, node_point[1]),
-            (node_point[0] + button_radius / 2, node_point[1] + button_radius),
-            (node_point[0] - button_radius / 2, node_point[1] + button_radius),
-            (node_point[0] - button_radius, node_point[1]),
-            (node_point[0] - button_radius / 2, node_point[1] - button_radius),
-            (node_point[0] + button_radius / 2, node_point[1] - button_radius)
-        ])
+    RED = (255,0,0)
+    for node_id, node_point in board_mapping['nodes'].items(): #draw node buttons
+        button  = ButtonHex(node_point[0], node_point[1], button_radius[0], GRAY)
+        button.draw(screen)
+        node_buttons.append(button)
     
+    for node_id, node_point in board_mapping['tiles'].items():
+        button = ButtonHex(node_point[0], node_point[1], button_radius[1], WHITE, isFilled=False)
+        button.draw(screen)
+        tile_buttons.append(button)
+
 
         
 def draw_scoreboard():
@@ -368,7 +381,7 @@ def draw_scoreboard():
     pygame.draw.line(rect_surf, WHITE, (10,80), (rect_width-10, 80), 6)
 
     player_width = scoreboard_width//num_players
-    font_size = 20 if len(players)==6 else 30 if len(players)==5 else 50
+    font_size = 20 if len(players)==6 else 30 if len(players)==5 else 40
     player_font = pygame.font.SysFont('Palatino',font_size)
 
     for i in range(num_players):

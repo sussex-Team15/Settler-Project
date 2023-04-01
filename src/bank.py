@@ -1,4 +1,4 @@
-from trade import Trade
+
 from development_cards import DevelopmentCard
 from resource_ import *
 
