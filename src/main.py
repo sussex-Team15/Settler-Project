@@ -7,7 +7,7 @@ from colour import Color
 from hexgrid import legal_tile_ids
 from pprint import pprint
 from pygame.locals import *
-from tiles import GameTile, ResourceTile
+from Tiles import GameTile, ResourceTile
 from utils import ASSET_DIR, TILE_CARDS_DIR
 from player import Player
 from button import *

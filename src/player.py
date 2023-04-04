@@ -1,7 +1,7 @@
 import random
 from trade import Trade
 from building import Settlement, City
-from tiles import GameTile
+from Tiles import GameTile
 import hexgrid
 import pygame
 from resource_ import *
