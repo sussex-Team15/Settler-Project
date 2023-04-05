@@ -4,11 +4,9 @@ This project is a version of the Settlers "Catan" game written in Python for the
 # Getting Started
 In order to run this on your personal machine be sure to download the repository as a zip file and save on your own machine. Then unzip the folder and open using an IDE of your choice, for example VSCode. Finally run main.py to start the game and display the pygame window from which you can play the game.
 # Installing
-If you receive 'module not found errors' for modules such as hexgrid and Color etc. when running main.py ensure to run these commands in your terminal (pip is interchangeable with whichever package manager you happen to be using).
+In order to install the correct modules run this code in the terminal.
 ```
-pip install pygame
-pip install Color
-pip install pygame
+pip install -r requirements.txt
 ```
 # Testing
 There are several unit tests that have been written for this project stored inside the testing folder. The tests in the aforementioned files are unit tests that test all functionality of the relevant classes , in order to run these tests follow this instruction:
