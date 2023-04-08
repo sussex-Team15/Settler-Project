@@ -83,7 +83,7 @@ class Player:
         
         Returns: 1st dice roll, 2nd dice roll
         """
-        return sum(random.randint(1,7) for _ in range(numberOfDice))
+        return random.randint(1,6), random.randint(1,6)
     
     
     def build_settlement(self, node):
@@ -175,6 +175,8 @@ class Player:
 
     def get_resources(self):
         return self.resources
+    def add_resources(self, resources):
+        self.resources.append(resources)
     
     def get_victory_points(self):
         return self.victory_points

@@ -1,2 +1,4 @@
 - hexagon tile detection isnt perfect for clicking tiles
 - clicking outside board closes window.
+- user can create roads between non-adjacent tiles
+- disappearing images after every iteration of event loop

@@ -20,18 +20,25 @@ pygame.init()
 DISPLAY_WIDTH, DISPLAY_HEIGHT = 1450, 800
 NUM_FONT = pygame.font.SysFont('Palatino', 40)
 WORD_FONT = pygame.font.SysFont('Palatino', 25)
+GAME_LOG_FONT = pygame.font.SysFont('calibri', 25)
+
+
 
 
 screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 bg_img = pygame.image.load(os.path.join(ASSET_DIR, "tile_order.png"))
 bg_img.convert()
 bg_rect = bg_img.get_rect()
-num_players = 4
-player_names = ['Eddie', 'Morgan', 'Ryan', 'Noah']
+num_players = 6
+player_names = ['Eddie', 'Morgan', 'Ryan', 'Noah', 'Yash', 'Nelson']
 node_buttons = [] #list of ButtonHex objects for nodes
 tile_buttons = [] #list of ButtonHex object for tiles
+game_log = [] # list for storing game events as strings
 
-
+settlement_img = pygame.image.load('src\\assets\\buildings\\s_img.png')
+settlement_img = pygame.transform.scale(settlement_img, (50, 50))
+city_img = pygame.image.load('src\\assets\\buildings\\c_img.png')
+city_img = pygame.transform.scale(city_img, (50, 50))
 
 WHITE = (255,255,255)
 RED = (255,0,0)
@@ -160,6 +167,8 @@ def setup():
 def main_game_loop(**kwargs):
     GAME_RUNNING = True
     player_turn_index= 0
+    current_player = players[player_turn_index]
+      
     pprint(board)
     # GAME LOOP
     #1 LOOP THROUGH PLAYERS AND INITIALISE STARTING POSITIONS.
@@ -170,23 +179,41 @@ def main_game_loop(**kwargs):
         for event in pygame.event.get():
             if event.type == QUIT:
                 GAME_RUNNING = False
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                if player_turn_index == len(players)-1:
+                    player_turn_index = 0
+                    current_player = players[player_turn_index]
+                else:
+                    player_turn_index+=1
+                    current_player = players[player_turn_index]
+
+                dice_roll1, dice_roll2 = current_player.roll_dice(2)
+                draw_dice(screen, dice_roll1, dice_roll2)
+                
+
+                for game_tile in board:
+                    if dice_roll1+dice_roll2 == game_tile.real_number:
+                        current_player.add_resources(game_tile)
+                        game_log.append(f'{current_player.name} just rolled a {dice_roll1+dice_roll2}. Added {game_tile.tile.generate_resource().name()} to inventory')
+
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                click_event(event, players[player_turn_index]) # handles clicking events
-            elif event.type == pygame.MOUSEMOTION:
-                mouse_motion_event() # function handles mouse motion events 
-            elif event.type == pygame.K_SPACE:
-                # new turn
-                pass
+                click_event(event, current_player) # handles clicking events
+               
+        
 
                 
                 
+            elif event.type == pygame.MOUSEMOTION:
+                mouse_motion_event() # function handles mouse motion events 
             
             
-            
-            
+
+        if check_player_won():
+            # draw_end_screen() # TODO
+            GAME_RUNNING = False 
         
-        
-        draw()
+        draw(player_turn=current_player)
         pygame.display.update()
     pygame.quit()
     # this is a comment)
@@ -219,7 +246,7 @@ def click_event(event, player):
             break
     
     if build_road_button.is_clicked(mouse_pos):
-        # do something
+       
         start_node = build_road()
         end_node = build_road()
         pygame.draw.line(screen, player.color,
@@ -228,12 +255,22 @@ def click_event(event, player):
                          5)
         pygame.display.update()
         
-        print(f'{player.name} built road from {convert_to_nodeid(start_node.x, start_node.y)} to {convert_to_nodeid(end_node.x, end_node.y)}')
+        game_log.append((f'{player.name} built road!'))
 
 
     elif build_settlement_button.is_clicked(mouse_pos):
-            # do something
+    
+        settlement_img = pygame.image.load('src\\assets\\buildings\\s_img.png')
+        settlement_img = pygame.transform.scale(settlement_img, (50, 50))
+        print(settlement_img)
         print("settlement build!")
+        x, y = build_settlement()
+    
+        screen.blit(settlement_img, (x-30, y-20))
+        game_log.append(f'{player.name} built settlement!')
+        
+
+
     elif build_city_button.is_clicked(mouse_pos):
         print('city build')
     elif make_trade_button.is_clicked(mouse_pos):
@@ -243,9 +280,21 @@ def click_event(event, player):
     elif other_button_2.is_clicked(mouse_pos):
         print('other button 2 clicked')
 
+    pygame.display.flip()
 
+    
 
-    pygame.display.update()
+def build_settlement():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.QUIT
+                exit()
+            elif event.type == MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                for button in node_buttons:
+                    if button.is_clicked(mouse_pos):
+                        return mouse_pos
 
 def build_road():
     while True:
@@ -259,47 +308,13 @@ def build_road():
                     if button.is_clicked(mouse_pos):
                         return button
 
-    
-    
 
-def popup():
-    '''
-    popup window that gives options for player when node is clicked
-    '''
-    
-    popup_width = 630
-    popup_height = 160
-
-    popup_rect = pygame.Rect(810, 620, popup_width, popup_height)
-    pygame.draw.rect(screen, (255, 255, 255), popup_rect)
-
-    build_road_button = ButtonRect(830, 640, 190, 40,
-                              'Build Road', WORD_FONT, WHITE, (17, 104, 245), WHITE)
-    build_road_button.draw(screen)
-    build_settlement_button = ButtonRect(830, 700, 190, 40,
-                              'Build Settlement', WORD_FONT, WHITE,  (38, 140, 31), WHITE)
-    build_settlement_button.draw(screen)
-    build_city_button = ButtonRect(1030, 640, 190, 40,
-                              'Build City', WORD_FONT, WHITE, (181, 186, 43) , WHITE)
-    build_city_button.draw(screen)
-
-    make_trade_button = ButtonRect(1030, 700, 190, 40,
-                                   'Make Trade', WORD_FONT, WHITE, (255, 51, 153), WHITE)
-    make_trade_button.draw(screen)
-    
-    other_button_1 = ButtonRect(1230, 640, 190, 40,
-                                   'Other Button', WORD_FONT, WHITE, (51, 153, 255), WHITE)
-    other_button_1.draw(screen)
-    
-    other_button_2 = ButtonRect(1230, 700, 190, 40,
-                                   'Other Button', WORD_FONT, WHITE, (255, 153, 51), WHITE)
-    other_button_2.draw(screen)
-    make_trade_button.draw(screen)
-
-    
-    return build_road_button, build_settlement_button, build_city_button, make_trade_button, other_button_1, other_button_2
-
-build_road_button, build_settlement_button, build_city_button, make_trade_button, other_button_1, other_button_2 = popup()
+def check_player_won():
+    for player in players:
+        if player.victory_points==10:
+            return True
+        
+    return False
     
 def calc_mouse_node(mouse_pos):
     '''
@@ -351,7 +366,7 @@ def convert_to_nodeid( x, y):
         return None          
             
 
-def draw():
+def draw(player_turn):
     """
     Draws the pygame display
     """
@@ -361,7 +376,31 @@ def draw():
             screen.blit(img, rect)
         # screen.blit(bg_img, bg_rect)
 
-    #draws the catan board
+    draw_lines() # draws game board lines
+    
+        
+    for tile_number, coordinates in board_mapping['tiles'].items():
+        # Create text surface
+        text_surface = NUM_FONT.render(str(board[tile_number-1].real_number), True, WHITE)
+    
+        # Get size of text surface
+        text_width, text_height = text_surface.get_size()
+    
+        # Calculate position to center text on tile
+        x = coordinates[0] - text_width // 2
+        y = coordinates[1] - text_height // 2
+    
+        # Draw text on screen
+        screen.blit(text_surface, (x, y))
+
+    
+    draw_scoreboard(player_turn)
+    draw_buttons()
+    
+    popup()
+
+
+def draw_lines():
     for index in range(len(board)):
         
         pygame.draw.line(screen, 'white', board_mapping['nodes']
@@ -381,27 +420,6 @@ def draw():
         
         pygame.draw.line(screen, 'white', board_mapping['nodes']
                             [board[index].node_coord_SE], board_mapping['nodes'][board[index].node_coord_NE], 5)
-        
-    for tile_number, coordinates in board_mapping['tiles'].items():
-        # Create text surface
-        text_surface = NUM_FONT.render(str(board[tile_number-1].real_number), True, WHITE)
-    
-        # Get size of text surface
-        text_width, text_height = text_surface.get_size()
-    
-        # Calculate position to center text on tile
-        x = coordinates[0] - text_width // 2
-        y = coordinates[1] - text_height // 2
-    
-        # Draw text on screen
-        screen.blit(text_surface, (x, y))
-
-    
-    draw_scoreboard()
-    draw_buttons()
-    popup()
-
-
 
     
 
@@ -420,7 +438,7 @@ def draw_buttons():
         # invisible buttons at center of tiles
 
         
-def draw_scoreboard():
+def draw_scoreboard(player_turn):
     """
     Draws the scoreboard as a seperate pygame surface
     """
@@ -443,18 +461,144 @@ def draw_scoreboard():
 
     pygame.draw.rect(rect_surf, WHITE, scoreboard_outline, rect_outline_width)
     pygame.draw.line(rect_surf, WHITE, (10,80), (rect_width-10, 80), 6)
+    pygame.draw.line(rect_surf, WHITE, (10, 160), (rect_width-10, 160), 6)
+    pygame.draw.line(rect_surf, WHITE, (10, 430), (rect_width-10, 430), 6) # space for gamelog
+
+
+        
 
     player_width = scoreboard_width//num_players
     font_size = 20 if len(players)==6 else 30 if len(players)==5 else 40
     player_font = pygame.font.SysFont('Palatino',font_size)
 
-    for i in range(num_players):
+    for i in range(num_players): # draw player names at top of scoreboard
         x = 10 + i * player_width
-        pygame.draw.line(rect_surf, WHITE, (x, 10), (x, 610), rect_outline_width)
+        pygame.draw.line(rect_surf, WHITE, (x, 10), (x, 430), rect_outline_width)
         name =  player_font.render(players[i].name, True, WHITE)
         name_rect = name.get_rect(center=(x + player_width // 2, 40))
         rect_surf.blit(name, name_rect)
+    
+    for i in range(num_players): # draw victory points in each cell below player names
+        x = 10 + i * player_width
+        pygame.draw.line(rect_surf, WHITE, (10,510), (rect_width-10, 510), 6)
+        name =  player_font.render(f'VP: {players[i].victory_points}', True, WHITE)
+        name_rect = name.get_rect(center=(x + player_width // 2, 120))
+        rect_surf.blit(name, name_rect)
+
+    
+    for i in range(len(game_log)): # draws game log text 
+        game_log_text = game_log[-1] # most recent event
+        game_log_text = GAME_LOG_FONT.render(game_log_text, True, WHITE)
+        rect_surf.blit(game_log_text, (50, 460))
+        screen.blit(rect_surf, (rect_x, rect_y))
+
+    # player turn text being drawn
+    player_turn_text = WORD_FONT.render(f'Current turn: {player_turn.name}', True, WHITE)
+    rect_surf.blit(player_turn_text, (250, 540))
     screen.blit(rect_surf,(rect_x, rect_y))
+
+def draw_dice(screen, roll_1, roll_2 ):
+    # loading dice images
+    DICE_SIZE = 80
+    side_1 = pygame.image.load('src\\assets\dice\\1_sided.jpg')
+    side_2 = pygame.image.load('src\\assets\dice\\2_sided.jpg')
+    side_3 = pygame.image.load('src\\assets\dice\\3_sided.jpg')
+    side_4 = pygame.image.load('src\\assets\dice\\4_sided.jpg')
+    side_5 = pygame.image.load('src\\assets\dice\\5_sided.jpg')
+    side_6 = pygame.image.load('src\\assets\dice\\6_sided.jpg')
+
+    # scaling all to the same size
+
+    side_1 = pygame.transform.scale(side_1, (DICE_SIZE, DICE_SIZE))
+    side_2 = pygame.transform.scale(side_2, (DICE_SIZE, DICE_SIZE))
+    side_3 = pygame.transform.scale(side_3, (DICE_SIZE, DICE_SIZE))
+    side_4 = pygame.transform.scale(side_4, (DICE_SIZE, DICE_SIZE))
+    side_5 = pygame.transform.scale(side_5, (DICE_SIZE, DICE_SIZE))
+    side_6 = pygame.transform.scale(side_6, (DICE_SIZE, DICE_SIZE))
+
+
+
+    if roll_1 ==1:
+        screen.blit(side_1, (10, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+    elif roll_1 == 2:
+        screen.blit(side_2, (10, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+    elif roll_1 == 3:
+        screen.blit(side_3, (10, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+    elif roll_1 == 4:
+        screen.blit(side_4, (10, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+    elif roll_1 == 5:
+        screen.blit(side_5, (10, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+    elif roll_1 == 6:
+        screen.blit(side_6, (10, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+    
+    if roll_2 ==1:
+        screen.blit(side_1, (130, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+    elif roll_2 == 2:
+        screen.blit(side_2, (130, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+    elif roll_2 == 3:
+        screen.blit(side_3, (130, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+    elif roll_2 == 4:
+        screen.blit(side_4, (130, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+    elif roll_2 == 5:
+        screen.blit(side_5, (130, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+    elif roll_2 == 6:
+        screen.blit(side_6, (130, DISPLAY_HEIGHT-90))
+        pygame.display.update()
+
+    pygame.display.update()
+
+
+
+
+def popup():
+    '''
+    popup window that gives options for player when node is clicked
+    '''
+    
+    popup_width = 630
+    popup_height = 160
+
+    popup_rect = pygame.Rect(810, 620, popup_width, popup_height)
+    pygame.draw.rect(screen, (255, 255, 255), popup_rect)
+
+    build_road_button = ButtonRect(830, 640, 190, 40,
+                              'Build Road', WORD_FONT, WHITE, (17, 104, 245), WHITE)
+    build_road_button.draw(screen)
+    build_settlement_button = ButtonRect(830, 700, 190, 40,
+                              'Build Settlement', WORD_FONT, WHITE,  (38, 140, 31), WHITE)
+    build_settlement_button.draw(screen)
+    build_city_button = ButtonRect(1030, 640, 190, 40,
+                              'Build City', WORD_FONT, WHITE, (181, 186, 43) , WHITE)
+    build_city_button.draw(screen)
+
+    make_trade_button = ButtonRect(1030, 700, 190, 40,
+                                   'Make Trade', WORD_FONT, WHITE, (255, 51, 153), WHITE)
+    make_trade_button.draw(screen)
+    
+    other_button_1 = ButtonRect(1230, 640, 190, 40,
+                                   'Other Button', WORD_FONT, WHITE, (51, 153, 255), WHITE)
+    other_button_1.draw(screen)
+    
+    other_button_2 = ButtonRect(1230, 700, 190, 40,
+                                   'Other Button', WORD_FONT, WHITE, (255, 153, 51), WHITE)
+    other_button_2.draw(screen)
+    make_trade_button.draw(screen)
+
+    
+    return build_road_button, build_settlement_button, build_city_button, make_trade_button, other_button_1, other_button_2
+
+build_road_button, build_settlement_button, build_city_button, make_trade_button, other_button_1, other_button_2 = popup()
 
 if __name__ == "__main__":
     tile_sprites, board, board_mapping, players = setup()
