@@ -1,5 +1,6 @@
 import random
 from trade import Trade
+from bank import Bank
 from building import Settlement, City
 from Tiles import GameTile
 import hexgrid
@@ -68,7 +69,7 @@ class Player:
         self.settlements = []
         self.cities = []
         self.roads = []
-        self.isTurn = False
+        self.is_turn = False
         self.hasLongestRoad = False
         self.hasLargestArmy = False
         self.tradeOffers = []
@@ -155,19 +156,22 @@ class Player:
         else:
             print("Not enough resources")
 
-    def buy_dev_card(self):
+    def buy_dev_card(self, bank):
         '''
         Buys a development card from the bank
 
             Paramaters: self
         '''
+
+        
+        
     
     def make_trade(self, resource, player):
         new_trade = Trade(self, resource, player)
         new_trade.execute_trade()
 
     def end_turn(self):
-        pass
+        self.is_turn = False
 
     def get_resources(self):
         return self.resources
