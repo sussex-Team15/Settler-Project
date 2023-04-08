@@ -2,3 +2,19 @@
 - clicking outside board closes window.
 - user can create roads between non-adjacent tiles
 - disappearing images after every iteration of event loop
+
+TODO LIST:
+- dont allow turn change if not all things have been done for a turn
+- dont allow settlements to be built over eachother
+
+- fix the image disappearing bug (DONE)
+- add victory points for having longest road (2 pts), largets army (2 pts), settlement (1 pt), city(2 pts), vp card (1 pt)
+- add a timer to the screen that restarts at start of each turn
+- add ways of seeing inventory in GUI
+- add the first 2 loops in the game that allows players to build a road and settlement to start the game with
+- fix the tile type ordering so its more spread out
+- add a robber tile 
+- add method to calculate who has longest road
+- add functionality of resources being added after dice roll
+- add functionality of resources being spent when building road
+

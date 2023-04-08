@@ -70,7 +70,8 @@ class Player:
         self.cities = []
         self.roads = []
         self.is_turn = False
-        self.hasLongestRoad = False
+        self.has_longest_road = False
+        self.total_road_num = 0
         self.hasLargestArmy = False
         self.tradeOffers = []
 
@@ -162,7 +163,7 @@ class Player:
 
             Paramaters: self
         '''
-
+        
         
         
     

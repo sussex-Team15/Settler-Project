@@ -80,3 +80,4 @@ def test_year_of_plenty():
                                              " They can be 2 of the same resource or 2 different resources")
     assert year_of_plenty.vp_awarded() == 0
 
+

@@ -28,12 +28,19 @@ GAME_LOG_FONT = pygame.font.SysFont('calibri', 25)
 screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 bg_img = pygame.image.load(os.path.join(ASSET_DIR, "tile_order.png"))
 bg_img.convert()
+
+
+
 bg_rect = bg_img.get_rect()
 num_players = 6
 player_names = ['Eddie', 'Morgan', 'Ryan', 'Noah', 'Yash', 'Nelson']
 node_buttons = [] #list of ButtonHex objects for nodes
 tile_buttons = [] #list of ButtonHex object for tiles
+built_roads = [] # list of roads built (s_node, e_node, player_owner)
+built_settlements = [] # list of settlements built (node, player_owner)
+built_cities = [] # list of cities built(node, player_owner)
 game_log = [] # list for storing game events as strings
+dice_rolled = []
 
 settlement_img = pygame.image.load('src\\assets\\buildings\\s_img.png')
 settlement_img = pygame.transform.scale(settlement_img, (50, 50))
@@ -168,7 +175,8 @@ def main_game_loop(**kwargs):
     GAME_RUNNING = True
     player_turn_index= 0
     current_player = players[player_turn_index]
-      
+    dice_rolled.append((current_player.roll_dice(2), current_player.roll_dice(2)))
+    
     pprint(board)
     # GAME LOOP
     #1 LOOP THROUGH PLAYERS AND INITIALISE STARTING POSITIONS.
@@ -188,7 +196,10 @@ def main_game_loop(**kwargs):
                     current_player = players[player_turn_index]
 
                 dice_roll1, dice_roll2 = current_player.roll_dice(2)
-                draw_dice(screen, dice_roll1, dice_roll2)
+                dice_rolled.append((dice_roll1, dice_roll2))
+
+                
+                
                 
 
                 for game_tile in board:
@@ -213,7 +224,25 @@ def main_game_loop(**kwargs):
             # draw_end_screen() # TODO
             GAME_RUNNING = False 
         
-        draw(player_turn=current_player)
+        draw(current_player)
+        for line in built_roads:
+            pygame.draw.line(screen, line[2].color, (line[0].x, line[0].y),(line[1].x, line[1].y), 5)
+
+        for settlement in built_settlements:
+
+            highlight_color = settlement[1].color  # Replace with the desired highlight color
+            highlight_alpha = 128  # Replace with the desired highlight opacity (0 to 255)
+            highlight_overlay = pygame.Surface(settlement_img.get_size(), pygame.SRCALPHA)  # Create a transparent surface
+            highlight_overlay.fill((highlight_color[0], highlight_color[1], highlight_color[2], highlight_alpha))  # Fill the surface with the highlight color and opacity
+
+            screen.blit(settlement_img, settlement[0])
+            screen.blit(highlight_overlay, settlement[0])
+
+            # count how many settlements each player has and award vp accordingly
+
+        #player_longest_road = calc_longest_road()
+        #player_longest_road.victory_points +=1
+        draw_dice(screen, dice_rolled[-1][0], dice_rolled[-1][1])
         pygame.display.update()
     pygame.quit()
     # this is a comment)
@@ -249,24 +278,15 @@ def click_event(event, player):
        
         start_node = build_road()
         end_node = build_road()
-        pygame.draw.line(screen, player.color,
-                         board_mapping['nodes'][convert_to_nodeid(start_node.x, start_node.y)],
-                         board_mapping['nodes'][convert_to_nodeid(end_node.x, end_node.y)],
-                         5)
-        pygame.display.update()
+        built_roads.append((start_node, end_node, player))
         
+        pygame.display.update()
         game_log.append((f'{player.name} built road!'))
 
 
     elif build_settlement_button.is_clicked(mouse_pos):
-    
-        settlement_img = pygame.image.load('src\\assets\\buildings\\s_img.png')
-        settlement_img = pygame.transform.scale(settlement_img, (50, 50))
-        print(settlement_img)
-        print("settlement build!")
-        x, y = build_settlement()
-    
-        screen.blit(settlement_img, (x-30, y-20))
+        x,y = build_settlement(player)
+        built_settlements.append(((x-20, y-30), player))
         game_log.append(f'{player.name} built settlement!')
         
 
@@ -284,7 +304,7 @@ def click_event(event, player):
 
     
 
-def build_settlement():
+def build_settlement(player):
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -294,6 +314,8 @@ def build_settlement():
                 mouse_pos = pygame.mouse.get_pos()
                 for button in node_buttons:
                     if button.is_clicked(mouse_pos):
+                        # give player vp
+                        player.victory_points +=1
                         return mouse_pos
 
 def build_road():
@@ -363,7 +385,23 @@ def convert_to_nodeid( x, y):
             if node_points[0] == x and node_points[1] == y:
                 return node_id
         
-        return None          
+        return None        
+
+def calc_longest_road():
+    for road in built_roads:
+        road[2].total_road_num +=1
+    # calculate who has highest total_road_num value
+    highest = 0
+    for player in players:
+        if player.total_road_num > highest:
+            highest = player.total_road_num
+    for player in players:
+        if player.total_road_num == highest:
+            player.has_longest_road = True
+    
+    return player
+        
+
             
 
 def draw(player_turn):
