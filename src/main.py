@@ -28,10 +28,9 @@ GAME_LOG_FONT = pygame.font.SysFont('calibri', 25)
 screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 bg_img = pygame.image.load(os.path.join(ASSET_DIR, "tile_order.png"))
 bg_img.convert()
-
-
-
 bg_rect = bg_img.get_rect()
+
+
 num_players = 6
 player_names = ['Eddie', 'Morgan', 'Ryan', 'Noah', 'Yash', 'Nelson']
 node_buttons = [] #list of ButtonHex objects for nodes
@@ -204,7 +203,7 @@ def main_game_loop(**kwargs):
 
                 for game_tile in board:
                     if dice_roll1+dice_roll2 == game_tile.real_number:
-                        current_player.add_resources(game_tile)
+                        current_player.add_resources(game_tile.tile.generate_resource())
                         game_log.append(f'{current_player.name} just rolled a {dice_roll1+dice_roll2}. Added {game_tile.tile.generate_resource().name()} to inventory')
 
 
@@ -267,12 +266,6 @@ def mouse_motion_event():
     
 def click_event(event, player):
     mouse_pos = pygame.mouse.get_pos()
-    
-            
-    for button in tile_buttons:
-        if button.is_clicked(mouse_pos):
-            print(print(f'{button.x}, {button.y} clicked!'))
-            break
     
     if build_road_button.is_clicked(mouse_pos):
        
@@ -499,8 +492,9 @@ def draw_scoreboard(player_turn):
 
     pygame.draw.rect(rect_surf, WHITE, scoreboard_outline, rect_outline_width)
     pygame.draw.line(rect_surf, WHITE, (10,80), (rect_width-10, 80), 6)
-    pygame.draw.line(rect_surf, WHITE, (10, 160), (rect_width-10, 160), 6)
+    
     pygame.draw.line(rect_surf, WHITE, (10, 430), (rect_width-10, 430), 6) # space for gamelog
+    pygame.draw.line(rect_surf, WHITE, (rect_width/2, 510), (rect_width/2, 610), 6)
 
 
         
@@ -532,8 +526,14 @@ def draw_scoreboard(player_turn):
 
     # player turn text being drawn
     player_turn_text = WORD_FONT.render(f'Current turn: {player_turn.name}', True, WHITE)
-    rect_surf.blit(player_turn_text, (250, 540))
+    rect_surf.blit(player_turn_text, (50, 555))
     screen.blit(rect_surf,(rect_x, rect_y))
+
+    # player inventory being drawn
+    for resource in player_turn.resources:
+        player_inventory_text = WORD_FONT.render(f'Inventory {resource.name()}', True, WHITE)
+        rect_surf.blit(player_inventory_text, ((rect_width/2) + 50, 555))
+        screen.blit(rect_surf, (rect_x, rect_y))
 
 def draw_dice(screen, roll_1, roll_2 ):
     # loading dice images
