@@ -187,7 +187,7 @@ def main_game_loop(**kwargs):
             if event.type == QUIT:
                 GAME_RUNNING = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                if player_turn_index == len(players)-1:
+                if player_turn_index == len(players) - 1:
                     player_turn_index = 0
                     current_player = players[player_turn_index]
                 else:
@@ -198,7 +198,7 @@ def main_game_loop(**kwargs):
                 dice_rolled.append((dice_roll1, dice_roll2))
 
                 for game_tile in board:
-                    if dice_roll1+dice_roll2 == game_tile.real_number:
+                    if dice_roll1 + dice_roll2 == game_tile.real_number:
                         current_player.add_resources(game_tile)
 
                         resource = game_tile.tile.generate_resource().name()
@@ -294,7 +294,7 @@ def click_event(event, player):
 
     elif build_settlement_button.is_clicked(mouse_pos):
         x, y = build_settlement(player)
-        built_settlements.append(((x-20, y-30), player))
+        built_settlements.append(((x - 20, y - 30), player))
         game_log.append(f'{player.name} built settlement!')
 
     elif build_city_button.is_clicked(mouse_pos):
@@ -373,7 +373,7 @@ def calc_mouse_pos_tile(mouse_pos):
         mouse_pos: x, y coordinates of the mouse click
 
     Returns:
-        tile object from the Tiles class
+        tile object from the tiles class
     """
     x, y = mouse_pos
     hex_length = math.dist((621, 318), (699, 187))
@@ -387,7 +387,7 @@ def calc_mouse_pos_tile(mouse_pos):
         # if the distance is less than or equal to the radius
         # the mouse click falls within the tile
         if dist <= radius:
-            return board[tile_id-1]
+            return board[tile_id - 1]
 
 
 def convert_to_nodeid(x, y):
@@ -430,7 +430,7 @@ def draw(player_turn):
     for tile_number, coordinates in board_mapping['tiles'].items():
         # Create text surface
         text_surface = NUM_FONT.render(
-            str(board[tile_number-1].real_number), True, WHITE)
+            str(board[tile_number - 1].real_number), True, WHITE)
 
         # Get size of text surface
         text_width, text_height = text_surface.get_size()
@@ -507,7 +507,7 @@ def draw_scoreboard(player_turn):
     """
     Draws the scoreboard as a seperate pygame surface
     """
-    rect_width = DISPLAY_WIDTH-800
+    rect_width = DISPLAY_WIDTH - 800
     rect_height = DISPLAY_HEIGHT
 
     rect_x = DISPLAY_WIDTH - rect_width
@@ -519,16 +519,16 @@ def draw_scoreboard(player_turn):
     screen.blit(rect_surf, (rect_x, rect_y))
 
     rect_outline_width = 6
-    scoreboard_width = rect_width-20
+    scoreboard_width = rect_width - 20
     scoreboard_outline = pygame.Rect(10, 10, scoreboard_width, 600)
 
     pygame.draw.rect(rect_surf, WHITE, scoreboard_outline, rect_outline_width)
-    pygame.draw.line(rect_surf, WHITE, (10, 80), (rect_width-10, 80), 6)
-    pygame.draw.line(rect_surf, WHITE, (10, 160), (rect_width-10, 160), 6)
+    pygame.draw.line(rect_surf, WHITE, (10, 80), (rect_width - 10, 80), 6)
+    pygame.draw.line(rect_surf, WHITE, (10, 160), (rect_width - 10, 160), 6)
     pygame.draw.line(rect_surf, WHITE, (10, 430),
-                     (rect_width-10, 430), 6)  # space for gamelog
+                     (rect_width - 10, 430), 6)  # space for gamelog
 
-    player_width = scoreboard_width//num_players
+    player_width = scoreboard_width // num_players
     font_size = 20 if len(players) == 6 else 30 if len(players) == 5 else 40
     player_font = pygame.font.SysFont('Palatino', font_size)
 
@@ -542,7 +542,8 @@ def draw_scoreboard(player_turn):
 
     for i in range(num_players):  # draw victory points
         x = 10 + i * player_width  # in each cell below player names
-        pygame.draw.line(rect_surf, WHITE, (10, 510), (rect_width-10, 510), 6)
+        pygame.draw.line(rect_surf, WHITE, (10, 510),
+                         (rect_width - 10, 510), 6)
         name = player_font.render(
             f'VP: {players[i].victory_points}',
             True, WHITE)
@@ -583,41 +584,41 @@ def draw_dice(screen, roll_1, roll_2):
     side_6 = pygame.transform.scale(side_6, (DICE_SIZE, DICE_SIZE))
 
     if roll_1 == 1:
-        screen.blit(side_1, (10, DISPLAY_HEIGHT-90))
+        screen.blit(side_1, (10, DISPLAY_HEIGHT - 90))
         pygame.display.update()
     elif roll_1 == 2:
-        screen.blit(side_2, (10, DISPLAY_HEIGHT-90))
+        screen.blit(side_2, (10, DISPLAY_HEIGHT - 90))
         pygame.display.update()
     elif roll_1 == 3:
-        screen.blit(side_3, (10, DISPLAY_HEIGHT-90))
+        screen.blit(side_3, (10, DISPLAY_HEIGHT - 90))
         pygame.display.update()
     elif roll_1 == 4:
-        screen.blit(side_4, (10, DISPLAY_HEIGHT-90))
+        screen.blit(side_4, (10, DISPLAY_HEIGHT - 90))
         pygame.display.update()
     elif roll_1 == 5:
-        screen.blit(side_5, (10, DISPLAY_HEIGHT-90))
+        screen.blit(side_5, (10, DISPLAY_HEIGHT - 90))
         pygame.display.update()
     elif roll_1 == 6:
-        screen.blit(side_6, (10, DISPLAY_HEIGHT-90))
+        screen.blit(side_6, (10, DISPLAY_HEIGHT - 90))
         pygame.display.update()
 
     if roll_2 == 1:
-        screen.blit(side_1, (130, DISPLAY_HEIGHT-90))
+        screen.blit(side_1, (130, DISPLAY_HEIGHT - 90))
         pygame.display.update()
     elif roll_2 == 2:
-        screen.blit(side_2, (130, DISPLAY_HEIGHT-90))
+        screen.blit(side_2, (130, DISPLAY_HEIGHT - 90))
         pygame.display.update()
     elif roll_2 == 3:
-        screen.blit(side_3, (130, DISPLAY_HEIGHT-90))
+        screen.blit(side_3, (130, DISPLAY_HEIGHT - 90))
         pygame.display.update()
     elif roll_2 == 4:
-        screen.blit(side_4, (130, DISPLAY_HEIGHT-90))
+        screen.blit(side_4, (130, DISPLAY_HEIGHT - 90))
         pygame.display.update()
     elif roll_2 == 5:
-        screen.blit(side_5, (130, DISPLAY_HEIGHT-90))
+        screen.blit(side_5, (130, DISPLAY_HEIGHT - 90))
         pygame.display.update()
     elif roll_2 == 6:
-        screen.blit(side_6, (130, DISPLAY_HEIGHT-90))
+        screen.blit(side_6, (130, DISPLAY_HEIGHT - 90))
         pygame.display.update()
 
     pygame.display.update()
