@@ -30,3 +30,5 @@ class Trade:
                     self.offering_player.resources.remove(resource)
 
             # add all offered resources to recipient players resources
+            for resource in self.offered_resources:
+                self.recieving_player.resources.append(resource)

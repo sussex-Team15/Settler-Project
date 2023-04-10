@@ -19,7 +19,7 @@ def test_knight():
 
 
 def test_largest_army():
-    largest_army = Largest_Army()
+    largest_army = LargestArmy()
     assert largest_army.description() == ("The first player to play 3 Knight "
                                           "cards gets this card. Another "
                                           "player who plays more Knight "
@@ -34,7 +34,7 @@ def test_library():
 
 
 def test_longest_road():
-    longest_road = Longest_Road()
+    longest_road = LongestRoad()
     assert longest_road.description() == ("This Card Goes to the player with "
                                           "the longes unbroken road of at "
                                           "least 5 segments. Another player "
@@ -65,7 +65,7 @@ def test_palace():
 
 
 def test_road_building():
-    road_building = Road_Building()
+    road_building = RoadBuilding()
     assert road_building.description() == ("Place 2 new roads as if you"
                                            " had just built them")
     assert road_building.vp_awarded() == 0
@@ -78,7 +78,7 @@ def test_university():
 
 
 def test_year_of_plenty():
-    year_of_plenty = Year_of_Plenty()
+    year_of_plenty = YearofPlenty()
     assert year_of_plenty.description() == ("take any 2 resources from the "
                                             "bank add them to your hand. They "
                                             "can be 2 of the same resource "
