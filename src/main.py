@@ -38,9 +38,11 @@ built_cities = []  # list of cities built(node, player_owner)
 game_log = []  # list for storing game events as strings
 dice_rolled = []
 
-settlement_img = pygame.image.load('src\\assets\\buildings\\s_img.png')
+settlement_img_path = os.path.join('src','assets','buildings','s_img.png')
+settlement_img = pygame.image.load(settlement_img_path)
 settlement_img = pygame.transform.scale(settlement_img, (50, 50))
-city_img = pygame.image.load('src\\assets\\buildings\\c_img.png')
+city_img_path = os.path.join('src','assets','buildings','c_img.png')
+city_img = pygame.image.load(city_img_path)
 city_img = pygame.transform.scale(city_img, (50, 50))
 
 GRAY = (158, 153, 134)
@@ -568,12 +570,18 @@ def draw_dice(screen, roll_1, roll_2):
     dice_size = 80
 
     # TODO make this a class instead of a method
-    side_1 = pygame.image.load('src\\assets\\dice\\1_sided.jpg')
-    side_2 = pygame.image.load('src\\assets\\dice\\2_sided.jpg')
-    side_3 = pygame.image.load('src\\assets\\dice\\3_sided.jpg')
-    side_4 = pygame.image.load('src\\assets\\dice\\4_sided.jpg')
-    side_5 = pygame.image.load('src\\assets\\dice\\5_sided.jpg')
-    side_6 = pygame.image.load('src\\assets\\dice\\6_sided.jpg')
+    side_1_p = os.path.join('src','assets','dice','1_sided.jpg')
+    side_2_p = os.path.join('src','assets','dice','2_sided.jpg')
+    side_3_p = os.path.join('src','assets','dice','3_sided.jpg')
+    side_4_p = os.path.join('src','assets','dice','4_sided.jpg')
+    side_5_p = os.path.join('src','assets','dice','5_sided.jpg')
+    side_6_p = os.path.join('src','assets','dice','6_sided.jpg')
+    side_1 = pygame.image.load(side_1_p)
+    side_2 = pygame.image.load(side_2_p)
+    side_3 = pygame.image.load(side_3_p)
+    side_4 = pygame.image.load(side_4_p)
+    side_5 = pygame.image.load(side_5_p)
+    side_6 = pygame.image.load(side_6_p)
 
     # scaling all to the same size
 
