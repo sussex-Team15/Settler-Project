@@ -1,16 +1,16 @@
+import math
 import os
 import pygame
 import random
-import math
-import time
+from pygame.locals import *  # QUIT, MOUSEBUTTONDOWN
+from button import ButtonHex, ButtonRect
 from colour import Color
 from hexgrid import legal_tile_ids
-from pprint import pprint
-from pygame.locals import *
-from tiles import GameTile, ResourceTile
-from utils import ASSET_DIR, TILE_CARDS_DIR
 from player import Player
-from button import *
+from pprint import pprint
+from tiles import GameTile, ResourceTile
+from utils import ASSET_DIR
+from colour import Color
 
 
 # Initialize pygame
@@ -43,6 +43,7 @@ settlement_img = pygame.transform.scale(settlement_img, (50, 50))
 city_img = pygame.image.load('src\\assets\\buildings\\c_img.png')
 city_img = pygame.transform.scale(city_img, (50, 50))
 
+GRAY = (158, 153, 134)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 colors = [(255, 0, 0), (25, 255, 25), (255, 255, 77), (255, 153, 51),
@@ -225,8 +226,8 @@ def main_game_loop(**kwargs):
             pygame.draw.line(
                 screen,
                 line[2].color,
-                (line[0].x, line[0].y),
-                (line[1].x, line[1].y),
+                (line[0].x_pos, line[0].y_pos),
+                (line[1].x_pos, line[1].y_pos),
                 5)
 
         for settlement in built_settlements:
@@ -280,7 +281,7 @@ def click_event(event, player):
 
     for button in tile_buttons:
         if button.is_clicked(mouse_pos):
-            print(print(f'{button.x}, {button.y} clicked!'))
+            print(print(f'{button.x_pos}, {button.y_pos} clicked!'))
             break
 
     if build_road_button.is_clicked(mouse_pos):
@@ -356,8 +357,8 @@ def calc_mouse_node(mouse_pos):
         Node_id
     '''
     for node_id, node_point in board_mapping['nodes'].items():
-        pos_1 = (node_point[0] - mouse_pos[0])
-        pos_2 = (node_point[1] - mouse_pos[1])
+        pos_1 = node_point[0] - mouse_pos[0]
+        pos_2 = node_point[1] - mouse_pos[1]
         if (pos_1**2 + pos_2**2)**0.5 < 10:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             return node_id
@@ -419,7 +420,7 @@ def draw(player_turn):
     """
     Draws the pygame display
     """
-    screen.fill(Color("grey"))
+    screen.fill(GRAY)
 
     for img, rect in tile_sprites:
         screen.blit(img, rect)
@@ -484,21 +485,19 @@ def draw_lines():
 
 def draw_buttons():
     button_radius = [10, 22]
-    GRAY = (158, 153, 134)
-    RED = (255, 0, 0)
     # draw node buttons
-    for node_id, node_point in board_mapping['nodes'].items():
+    for _node_id, node_point in board_mapping['nodes'].items():
         button = ButtonHex(
             node_point[0], node_point[1], button_radius[0], GRAY)
         button.draw(screen)
         node_buttons.append(button)
 
-    for node_id, node_point in board_mapping['tiles'].items():
+    for _node_id, node_point in board_mapping['tiles'].items():
         button = ButtonHex(
             node_point[0],
             node_point[1],
             button_radius[1],
-            WHITE, isFilled=False)
+            WHITE, False)
         tile_buttons.append(button)
         # invisible buttons at center of tiles
 
@@ -533,21 +532,21 @@ def draw_scoreboard(player_turn):
     player_font = pygame.font.SysFont('Palatino', font_size)
 
     for i in range(num_players):  # draw player names at top of scoreboard
-        x = 10 + i * player_width
-        pygame.draw.line(rect_surf, WHITE, (x, 10),
-                         (x, 430), rect_outline_width)
+        x_pos = 10 + i * player_width
+        pygame.draw.line(rect_surf, WHITE, (x_pos, 10),
+                         (x_pos, 430), rect_outline_width)
         name = player_font.render(players[i].name, True, WHITE)
-        name_rect = name.get_rect(center=(x + player_width // 2, 40))
+        name_rect = name.get_rect(center=(x_pos + player_width // 2, 40))
         rect_surf.blit(name, name_rect)
 
     for i in range(num_players):  # draw victory points
-        x = 10 + i * player_width  # in each cell below player names
+        x_pos = 10 + i * player_width  # in each cell below player names
         pygame.draw.line(rect_surf, WHITE, (10, 510),
                          (rect_width - 10, 510), 6)
         name = player_font.render(
             f'VP: {players[i].victory_points}',
             True, WHITE)
-        name_rect = name.get_rect(center=(x + player_width // 2, 120))
+        name_rect = name.get_rect(center=(x_pos + player_width // 2, 120))
         rect_surf.blit(name, name_rect)
 
     for i in range(len(game_log)):  # draws game log text
@@ -566,7 +565,9 @@ def draw_scoreboard(player_turn):
 
 def draw_dice(screen, roll_1, roll_2):
     # loading dice images
-    DICE_SIZE = 80
+    dice_size = 80
+
+    # TODO make this a class instead of a method
     side_1 = pygame.image.load('src\\assets\\dice\\1_sided.jpg')
     side_2 = pygame.image.load('src\\assets\\dice\\2_sided.jpg')
     side_3 = pygame.image.load('src\\assets\\dice\\3_sided.jpg')
@@ -576,12 +577,12 @@ def draw_dice(screen, roll_1, roll_2):
 
     # scaling all to the same size
 
-    side_1 = pygame.transform.scale(side_1, (DICE_SIZE, DICE_SIZE))
-    side_2 = pygame.transform.scale(side_2, (DICE_SIZE, DICE_SIZE))
-    side_3 = pygame.transform.scale(side_3, (DICE_SIZE, DICE_SIZE))
-    side_4 = pygame.transform.scale(side_4, (DICE_SIZE, DICE_SIZE))
-    side_5 = pygame.transform.scale(side_5, (DICE_SIZE, DICE_SIZE))
-    side_6 = pygame.transform.scale(side_6, (DICE_SIZE, DICE_SIZE))
+    side_1 = pygame.transform.scale(side_1, (dice_size, dice_size))
+    side_2 = pygame.transform.scale(side_2, (dice_size, dice_size))
+    side_3 = pygame.transform.scale(side_3, (dice_size, dice_size))
+    side_4 = pygame.transform.scale(side_4, (dice_size, dice_size))
+    side_5 = pygame.transform.scale(side_5, (dice_size, dice_size))
+    side_6 = pygame.transform.scale(side_6, (dice_size, dice_size))
 
     if roll_1 == 1:
         screen.blit(side_1, (10, DISPLAY_HEIGHT - 90))

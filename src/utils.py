@@ -15,18 +15,18 @@ def prepare_assets(directory):
     print()
 
     for file in files:
-        if any([file.endswith(extension) for extension in FILE_EXTENSIONS]):
+        if any(file.endswith(extension) for extension in FILE_EXTENSIONS):
             input_path = os.path.join(directory, file)
 
             print(input_path)
 
             output_path = os.path.join(directory, f'new_{file}')
 
-            with open(input_path, 'rb') as i:
-                with open(output_path, 'wb') as o:
-                    input = i.read()
-                    output = remove(input)
-                    o.write(output)
+            with open(input_path, 'rb') as input_file:
+                with open(output_path, 'wb') as output_file:
+                    fileinput = input_file.read()
+                    output = remove(fileinput)
+                    output_file.write(output)
 
             os.remove(input_path)
             os.rename(output_path, input_path)

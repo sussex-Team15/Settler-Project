@@ -15,8 +15,7 @@ class Settlement(Building):
                      Resource.GRAIN, Resource.WOOD]
 
     def build_settlement(self, resources):
-        enough_resource = all(
-            [resource in resources for resource in self.cost])
+        enough_resource = all(resource in resources for resource in self.cost)
         if enough_resource:
             # TODO: node needs to be object instance of a Node class
             self.node.has_settlement = True
