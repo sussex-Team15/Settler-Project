@@ -1,22 +1,26 @@
 import pygame
 
-RED = (255,0,0)
+RED = (255, 0, 0)
 GRAY = (158, 153, 134)
 
+
 class ButtonRect:
-    def __init__(self, x, y, width, height, text, font, text_color, button_color, highlight_color):
+
+    def __init__(self,
+                 x, y,
+                 width, height,
+                 text, font, text_color,
+                 button_color, highlight_color):
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
         self.font = font
         self.text_color = text_color
         self.button_color = button_color
         self.highlight_color = highlight_color
-        self.cursor_set = False #boolean flag
+        self.cursor_set = False  # boolean flag
 
-    
     def draw(self, surface):
         pygame.draw.rect(surface, self.button_color, self.rect)
-        
 
         text_surface = self.font.render(self.text, True, self.text_color)
         text_rect = text_surface.get_rect(center=self.rect.center)
@@ -24,21 +28,18 @@ class ButtonRect:
 
     def is_clicked(self, mouse_pos):
         return self.rect.collidepoint(mouse_pos)
-    
-    def is_hovered_over(self, mouse_pos): # returns true if mouse hovers over button
-        if self.rect.collidepoint(mouse_pos):
+
+    def is_hovered_over(self, mouse_pos):      # returns true
+        if self.rect.collidepoint(mouse_pos):  # if mouse hovers over button
             if not self.cursor_set:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 self.cursor_set = True
                 return True
-        else: 
+        else:
             if self.cursor_set:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                 self.cursor_set = False
             return False
-    
-
-
 
 
 class ButtonHex:
@@ -49,7 +50,7 @@ class ButtonHex:
         self.color = color
         self.cursor_set = False
         self.isFilled = isFilled
-    
+
     def draw(self, surface):
         if self.isFilled:
             pygame.draw.polygon(surface, self.color, [
@@ -61,10 +62,12 @@ class ButtonHex:
                 (self.x + self.radius / 2, self.y - self.radius)
             ])
 
-    
-    def is_hovered_over(self, mouse_pos): # returns true if mouse hovers over button
+    def is_hovered_over(self, mouse_pos):
+        # returns true if mouse hovers over button
 
-        if ((self.x - mouse_pos[0])**2 + (self.y - mouse_pos[1])**2)**0.5 < self.radius:
+        x_pos = (self.x - mouse_pos[0])**2
+        y_pos = (self.y - mouse_pos[1])**2
+        if (x_pos + y_pos)**0.5 < self.radius:
             if not self.cursor_set:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 self.cursor_set = True
@@ -77,9 +80,11 @@ class ButtonHex:
                 self.cursor_set = False
 
             return False
-    
+
     def is_clicked(self, mouse_pos):
-        if ((self.x - mouse_pos[0])**2 + (self.y - mouse_pos[1])**2)**0.5 < self.radius:
+        x_pos = (self.x - mouse_pos[0])**2
+        y_pos = (self.y - mouse_pos[1])**2
+        if (x_pos + y_pos)**0.5 < self.radius:
             return True
-        else: 
+        else:
             return False
