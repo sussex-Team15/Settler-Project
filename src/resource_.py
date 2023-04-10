@@ -12,16 +12,19 @@ class ResourceCard(abc.ABC):
 
     def asset(self):
 
-        found_files = [file for file in os.listdir(RESOURCE_CARDS_DIR) if self.__class__.__name__.lower() in file]
+        found_files = [file for file in os.listdir(
+            RESOURCE_CARDS_DIR) if self.__class__.__name__.lower() in file]
         if found_files:
             for file in found_files:
                 extension = f".{file.split('.')[1]}"
                 if extension in FILE_EXTENSIONS:
                     return os.path.join(RESOURCE_CARDS_DIR, file)
 
+        act_class = self.__class__.__name__.lower()
+        base_class = self.__class__.__bases__[0].__name__.lower()
         raise NotImplementedError(f"no asset files found for "
-                                  f"{self.__class__.__name__.lower()}' "
-                                  f"{self.__class__.__bases__[0].__name__.lower()}")
+                                  f"{act_class}' "
+                                  f"{base_class}")
 
 
 class Lumber(ResourceCard):

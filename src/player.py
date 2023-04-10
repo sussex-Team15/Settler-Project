@@ -7,17 +7,21 @@ import hexgrid
 import pygame
 from resource_ import *
 
+
 class Player:
     """
-    Player class that controls the behaviour of an indivdual player of the game.
+    Player class that controls the
+    behaviour of an indivdual player of the game.
+
     Contains attributes such as the player name and number of VP'S.
 
     Attributes:
-    
+
     - name : str
         String representing the name of the player
     - victory_points: int
-        Integer representing the number of victory points the player has received.
+        Integer representing the number
+        of victory points the player has received.
     - color: tuple
         A tuple with an r,g,b value representing the color that the player has.
     - resources: list
@@ -49,7 +53,8 @@ class Player:
     - play_card(self, card)
         uses the selected card
     - make_trade(self, resource, player)
-        activates a trade with the specified player offering the specified Resource
+        activates a trade with
+        the specified player offering the specified Resource
     - end_turn(self)
         ends player's turn
     - get_resources(self)
@@ -58,7 +63,7 @@ class Player:
         returns number of victory points player has
     - get_longest_road(self):
         returns the longest road that the player currently has
-    
+
     """
 
     def __init__(self, name, color):
@@ -75,18 +80,18 @@ class Player:
         self.hasLargestArmy = False
         self.tradeOffers = []
 
-    def roll_dice(self, numberOfDice=2):  # can be used for any number of dice (default =2)
+    # can be used for any number of dice (default =2)
+    def roll_dice(self, numberOfDice=2):
         """
         simulates a dice roll
 
         Args:
             numberOfDice: number of dice to be rolled
-        
+
         Returns: 1st dice roll, 2nd dice roll
         """
-        return random.randint(1,6), random.randint(1,6)
-    
-    
+        return random.randint(1, 6), random.randint(1, 6)
+
     def build_settlement(self, node):
         """
         Builds a settlement at the node specified
@@ -97,18 +102,24 @@ class Player:
         # cost = 1 lumber 1 brick 1 wool 1 grain
 
         for i in range(len(self.resources)):
-            if self.resources[i]==Resource.WOOD or self.resources[i]==Resource.BRICK or self.resources[i]==Resource.GRAIN or self.resources[i]==Resource.WOOL :
-                num_lumber +=1
-                num_brick+=1
-                num_grain+=1
-                num_wool+=1
+            is_wood = self.resources[i] == Resource.WOOD
+            is_brick = self.resources[i] == Resource.BRICK
+            is_grain = self.resources[i] == Resource.GRAIN
+            is_wool = self.resources[i] == Resource.WOOL
+            if is_wood or is_brick or is_grain or is_wool:
+                num_lumber += 1
+                num_brick += 1
+                num_grain += 1
+                num_wool += 1
 
-        if num_lumber>=1 or num_grain>=1 or num_brick>=1 or num_wool>=1:
+        if any([num_lumber >= 1,
+                num_grain >= 1,
+                num_brick >= 1,
+                num_wool >= 1]):
             self.settlements.append(settlement)
         else:
             print('not enough resources')
-       
-        
+
         pass
 
     def build_city(self, node):
@@ -123,11 +134,11 @@ class Player:
         # check to see if player has enough resources for city
         for i in range(len(self.resources)):
             if self.resources[i] == Resource.GRAIN:
-                num_grain+=1
+                num_grain += 1
             elif self.resources[i] == Resource.ORE:
-                num_ore+=1
-        
-        if num_ore>=3 and num_grain>=2:
+                num_ore += 1
+
+        if num_ore >= 3 and num_grain >= 2:
             # player has enough
             self.cities.append(city)
         else:
@@ -135,24 +146,23 @@ class Player:
 
     def build_road(self, node1, node2):
         """
-        builds a road from node1 to node2. 
+        builds a road from node1 to node2.
         Road will be set to the color of the player building
         """
         # cost 1 lumber 1 brick
         num_lumber = 0
         num_brick = 0
-       
 
         # check to see if player has enough resources
         for i in range(len(self.resources)):
-            if self.resources[i]==Resource.WOOD:
-                num_lumber+=1
+            if self.resources[i] == Resource.WOOD:
+                num_lumber += 1
             elif self.resources[i] == Resource.BRICK:
-                num_brick+=1
-        
-        if num_brick>=1 and num_lumber>=1:
+                num_brick += 1
+
+        if num_brick >= 1 and num_lumber >= 1:
             # player has enough
-            self.roads.append((node1,node2))
+            self.roads.append((node1, node2))
             print(f'road built from {node1} to {node2}')
         else:
             print("Not enough resources")
@@ -163,10 +173,7 @@ class Player:
 
             Paramaters: self
         '''
-        
-        
-        
-    
+
     def make_trade(self, resource, player):
         new_trade = Trade(self, resource, player)
         new_trade.execute_trade()
@@ -176,19 +183,18 @@ class Player:
 
     def get_resources(self):
         return self.resources
+
     def add_resources(self, resources):
         self.resources.append(resources)
-    
+
     def get_victory_points(self):
         return self.victory_points
-    
+
     def get_longest_road(self):
-        longest_road = self.roads[0].get_length() 
+        longest_road = self.roads[0].get_length()
         # TODO implement get_length() in Road class
         for road in self.roads[1:]:
-            if road.get_length()>longest_road.get_length():
+            if road.get_length() > longest_road.get_length():
                 road = longest_road
-        
+
         return longest_road
-
-

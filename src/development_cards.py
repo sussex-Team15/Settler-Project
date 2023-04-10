@@ -2,7 +2,7 @@ import abc
 import os
 
 from enum import Enum
-from utils import ASSET_DIR, FILE_EXTENSIONS, DEVELOPMENT_CARDS_DIR
+from utils import FILE_EXTENSIONS, DEVELOPMENT_CARDS_DIR
 
 
 class DevelopmentCard(abc.ABC):
@@ -19,16 +19,19 @@ class DevelopmentCard(abc.ABC):
 
     def asset(self):
 
-        found_files = [file for file in os.listdir(DEVELOPMENT_CARDS_DIR) if self.__class__.__name__.lower() in file]
+        found_files = [file for file in os.listdir(
+            DEVELOPMENT_CARDS_DIR) if self.__class__.__name__.lower() in file]
         if found_files:
             for file in found_files:
                 extension = f".{file.split('.')[1]}"
                 if extension in FILE_EXTENSIONS:
                     return os.path.join(DEVELOPMENT_CARDS_DIR, file)
 
+        act_class = self.__class__.__name__.lower()
+        base_class = self.__class__.__bases__[0].__name__.lower()
         raise NotImplementedError(f"no asset files found for "
-                                  f"{self.__class__.__name__.lower()}' "
-                                  f"{self.__class__.__bases__[0].__name__.lower()}")
+                                  f"{act_class}' "
+                                  f"{base_class}")
 
 
 class Chapel(DevelopmentCard):
@@ -50,11 +53,11 @@ class Knight(DevelopmentCard):
         return 0
 
 
-class Largest_Army(DevelopmentCard):
+class LargestArmy(DevelopmentCard):
 
     def description(self):
         return ("The first player to play 3 Knight cards "
-                "gets this card. Another player who plays more"
+                "gets this card. Another player who plays more "
                 "Knight cards will take this card")
 
     def vp_awarded(self):
@@ -70,7 +73,7 @@ class Library(DevelopmentCard):
         return 1
 
 
-class Longest_Road(DevelopmentCard):
+class LongestRoad(DevelopmentCard):
 
     def description(self):
         return ("This Card Goes to the player with the longes unbroken"
@@ -110,10 +113,10 @@ class Palace(DevelopmentCard):
         return 1
 
 
-class Road_Building(DevelopmentCard):
+class RoadBuilding(DevelopmentCard):
 
     def description(self):
-        return ("Place 2 new roads as if you had just built them")
+        return "Place 2 new roads as if you had just built them"
 
     def vp_awarded(self):
         return 0
@@ -128,7 +131,7 @@ class University(DevelopmentCard):
         return 1
 
 
-class Year_of_Plenty(DevelopmentCard):
+class YearofPlenty(DevelopmentCard):
 
     def description(self):
         return ("take any 2 resources from the bank add them to your hand."
@@ -142,15 +145,15 @@ class DevelopmentCards(Enum):
 
     CHAPEL = Chapel()
     KNIGHT = Knight()
-    LARGEST_ARMY = Largest_Army()
+    LARGEST_ARMY = LargestArmy()
     LIBRARY = Library()
-    LONGEST_ROAD = Longest_Road()
+    LONGEST_ROAD = LongestRoad()
     MARKET = Market()
     MONOPLY = Monopoly()
     PALACE = Palace()
-    ROAD_BUILDING = Road_Building()
+    ROAD_BUILDING = RoadBuilding()
     UNIVERSITY = University()
-    YEAR_OF_PLENTY = Year_of_Plenty()
+    YEAR_OF_PLENTY = YearofPlenty()
 
     def __init__(self, card):
         self.card = card

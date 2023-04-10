@@ -1,63 +1,61 @@
-import pytest
 import sys
+import pytest
 sys.path.insert(1, 'src')
 
 from player import *
 from trade import *
 
 
-
-
 def test_trade_init():
-    player1 = Player("Noah")
-    player2 = Player("John")
-    resources = ["Wool","Grain","Brick","Wood","Ore"]
+    player1 = Player("Noah",(255,0,0))
+    player2 = Player("John",(0,255,0))
+    resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
 
     trade = Trade(player1, resources, player2)
 
     assert trade.offering_player == player1
     assert trade.offered_resources == resources
     assert trade.recieving_player == player2
-    assert trade.is_accepted == False
+    assert trade.is_accepted is False
 
 
 def test_accept_trade():
-    player1 = Player("Noah")
-    player2 = Player("John")
-    resources = ["Wool","Grain","Brick","Wood","Ore"]
+    player1 = Player("Noah",(255,0,0))
+    player2 = Player("John",(0,255,0))
+    resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
 
     trade = Trade(player1, resources, player2)
     trade.accept_trade()
 
-    assert trade.is_accepted == True
+    assert trade.is_accepted is True
 
 
 def test_cancel_trade():
-    player1 = Player("Noah")
-    player2 = Player("John")
-    resources = ["Wool","Grain","Brick","Wood","Ore"]
+    player1 = Player("Noah",(255,0,0))
+    player2 = Player("John",(0,255,0))
+    resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
 
     trade = Trade(player1, resources, player2)
     trade.accept_trade()
     trade.cancel_trade()
 
-    assert trade.is_accepted == False
+    assert trade.is_accepted is False
 
 
 def test_get_offering_player():
-    player1 = Player("Noah")
-    player2 = Player("John")
-    resources = ["Wool","Grain","Brick","Wood","Ore"]
+    player1 = Player("Noah",(255,0,0))
+    player2 = Player("John",(0,255,0))
+    resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
 
     trade = Trade(player1, resources, player2)
-    
+
     assert trade.get_offering_player() == player1
 
 
 def test_get_offered_resource():
-    player1 = Player("Noah")
-    player2 = Player("John")
-    resources = ["Wool","Grain","Brick","Wood","Ore"]
+    player1 = Player("Noah",(255,0,0))
+    player2 = Player("John",(0,255,0))
+    resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
 
     trade = Trade(player1, resources, player2)
 
@@ -65,11 +63,11 @@ def test_get_offered_resource():
 
 
 def test_execute_trade():
-    player1 = Player("Noah")
+    player1 = Player("Noah",(255,0,0))
     player1.resources = ["Wood", "Brick"]
-    player2 = Player("John")
+    player2 = Player("John",(0,255,0))
     player2.resources = ["Sheep", "Ore"]
-    resources = ["Brick"]  
+    resources = ["Brick"]
 
     trade = Trade(player1, resources, player2)
     trade.accept_trade()
