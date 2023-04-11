@@ -2,7 +2,8 @@ import pytest
 import sys
 sys.path.insert(1, 'src')
 
-from player import *
+from player import Player
+
 
 @pytest.fixture
 def player():

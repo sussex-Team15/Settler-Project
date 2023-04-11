@@ -8,7 +8,7 @@ from colour import Color
 from hexgrid import legal_tile_ids
 from player import Player
 from pprint import pprint
-from Tiles import GameTile, ResourceTile
+from tiles import GameTile, ResourceTile
 from utils import ASSET_DIR
 from colour import Color
 
