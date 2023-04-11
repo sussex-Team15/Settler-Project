@@ -1,5 +1,5 @@
 import os
-
+import abc
 from rembg import remove
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -35,3 +35,19 @@ def prepare_assets(directory):
         else:
             print(f"Error: {file} has an unsupported file extension")
             continue
+
+
+class Abstract(abc.ABC):
+    def get_asset(self, DIR):
+        found_files = [file for file in os.listdir(
+            DIR) if self.__class__.__name__.lower() in file]
+        if found_files:
+            for file in found_files:
+                extension = f".{file.split('.')[1]}"
+                if extension in FILE_EXTENSIONS:
+                    return os.path.join(DIR, file)
+
+        act_class = self.__class__.__name__.lower()
+        base_class = self.__class__.__bases__[0].__name__.lower()
+        raise NotImplementedError(f"no asset files found for "
+                                  f"'{act_class}' {base_class}")

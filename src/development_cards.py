@@ -1,11 +1,10 @@
 import abc
-import os
 
 from enum import Enum
-from utils import FILE_EXTENSIONS, DEVELOPMENT_CARDS_DIR
+from utils import DEVELOPMENT_CARDS_DIR, Abstract
 
 
-class DevelopmentCard(abc.ABC):
+class DevelopmentCard(Abstract):
     def name(self):
         return self.__class__.__name__.title().replace('_', ' ')
 
@@ -18,20 +17,7 @@ class DevelopmentCard(abc.ABC):
         return 0  # 0 for false and anyother num for the amount of VP awarded
 
     def asset(self):
-
-        found_files = [file for file in os.listdir(
-            DEVELOPMENT_CARDS_DIR) if self.__class__.__name__.lower() in file]
-        if found_files:
-            for file in found_files:
-                extension = f".{file.split('.')[1]}"
-                if extension in FILE_EXTENSIONS:
-                    return os.path.join(DEVELOPMENT_CARDS_DIR, file)
-
-        act_class = self.__class__.__name__.lower()
-        base_class = self.__class__.__bases__[0].__name__.lower()
-        raise NotImplementedError(f"no asset files found for "
-                                  f"{act_class}' "
-                                  f"{base_class}")
+        return self.get_asset(DEVELOPMENT_CARDS_DIR)
 
 
 class Chapel(DevelopmentCard):
@@ -158,8 +144,11 @@ class DevelopmentCards(Enum):
     def __init__(self, card):
         self.card = card
 
-    def name(self):
+    def name(self):  # pylint: disable=function-redefined
         return self.card.name()
 
     def asset(self):
         return self.card.asset()
+
+
+print(DevelopmentCards.CHAPEL.name())

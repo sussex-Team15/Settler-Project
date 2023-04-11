@@ -1,30 +1,16 @@
 import abc
-import os
 
 from enum import Enum
-from utils import ASSET_DIR, RESOURCE_CARDS_DIR
+from utils import RESOURCE_CARDS_DIR, Abstract
 
 
-class ResourceCard(abc.ABC):
+class ResourceCard(Abstract):
     @abc.abstractmethod
     def name(self):
         pass
 
     def asset(self):
-
-        found_files = [file for file in os.listdir(
-            RESOURCE_CARDS_DIR) if self.__class__.__name__.lower() in file]
-        if found_files:
-            for file in found_files:
-                extension = f".{file.split('.')[1]}"
-                if extension in FILE_EXTENSIONS:
-                    return os.path.join(RESOURCE_CARDS_DIR, file)
-
-        act_class = self.__class__.__name__.lower()
-        base_class = self.__class__.__bases__[0].__name__.lower()
-        raise NotImplementedError(f"no asset files found for "
-                                  f"{act_class}' "
-                                  f"{base_class}")
+        return self.get_asset(RESOURCE_CARDS_DIR)
 
 
 class Lumber(ResourceCard):
