@@ -7,10 +7,15 @@ GRAY = (158, 153, 134)
 class ButtonRect:
 
     def __init__(self,
-                 x_pos, y_pos,
-                 width, height,
-                 text, font, text_color,
-                 button_color, highlight_color):
+                 x_y_pos,
+                 width_height,
+                 text,
+                 colors):
+        x_pos, y_pos = x_y_pos
+        width, height = width_height
+        text, font, text_color = text
+        button_color, highlight_color = colors
+
         self.rect = pygame.Rect(x_pos, y_pos, width, height)
         self.text = text
         self.font = font
@@ -42,9 +47,12 @@ class ButtonRect:
 
 
 class ButtonHex:
-    def __init__(self, x_pos, y_pos, radius, color, is_filled=True):
-        self.x_pos = x_pos
-        self.y_pos = y_pos
+    def __init__(self,
+                 x_y_pos,
+                 radius,
+                 color,
+                 is_filled=True):
+        self.x_pos, self.y_pos = x_y_pos
         self.radius = radius
         self.color = color
         self.cursor_set = False

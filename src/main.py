@@ -511,14 +511,15 @@ def draw_buttons():
     # draw node buttons
     for _node_id, node_point in board_mapping['nodes'].items():
         button = ButtonHex(
-            node_point[0], node_point[1], button_radius[0], GRAY)
+            (node_point[0], node_point[1]),
+            button_radius[0],
+            GRAY)
         button.draw(screen)
         node_buttons.append(button)
 
     for _node_id, node_point in board_mapping['tiles'].items():
         button = ButtonHex(
-            node_point[0],
-            node_point[1],
+            (node_point[0], node_point[1]),
             button_radius[1],
             WHITE, False)
         tile_buttons.append(button)
@@ -579,7 +580,8 @@ def draw_scoreboard(player_turn):
         screen.blit(rect_surf, (rect_x, rect_y))
 
     # player turn text being drawn
-    player_turn_text = WORD_FONT.render(f'Current turn: {player_turn.name}', True, WHITE)
+    player_turn_text = WORD_FONT.render(f'Current turn: {player_turn.name}',
+                                        True, WHITE)
     rect_surf.blit(player_turn_text, (250, 540))
     screen.blit(rect_surf, (rect_x, rect_y))
 
@@ -705,38 +707,44 @@ def popup():
     popup_rect = pygame.Rect(810, 620, popup_width, popup_height)
     pygame.draw.rect(screen, (255, 255, 255), popup_rect)
 
-    build_road_button = ButtonRect(830, 640,
-                                   190, 40,
-                                   'Build Road', WORD_FONT, WHITE,
-                                   (17, 104, 245), WHITE)
+    build_road_button = ButtonRect(
+        (830, 640),
+        (190, 40),
+        ('Build Road', WORD_FONT, WHITE),
+        ((17, 104, 245), WHITE))
     build_road_button.draw(screen)
-    build_settlement_button = ButtonRect(830, 700,
-                                         190, 40,
-                                         'Build Settlement', WORD_FONT, WHITE,
-                                         (38, 140, 31), WHITE)
+    build_settlement_button = ButtonRect(
+        (830, 700),
+        (190, 40),
+        ('Build Settlement', WORD_FONT, WHITE),
+        ((38, 140, 31), WHITE))
     build_settlement_button.draw(screen)
-    build_city_button = ButtonRect(1030, 640,
-                                   190, 40,
-                                   'Build City', WORD_FONT, WHITE,
-                                   (181, 186, 43), WHITE)
+    build_city_button = ButtonRect(
+        (1030, 640),
+        (190, 40),
+        ('Build City', WORD_FONT, WHITE),
+        ((181, 186, 43), WHITE))
     build_city_button.draw(screen)
 
-    make_trade_button = ButtonRect(1030, 700,
-                                   190, 40,
-                                   'Make Trade', WORD_FONT, WHITE,
-                                   (255, 51, 153), WHITE)
+    make_trade_button = ButtonRect(
+        (1030, 700),
+        (190, 40),
+        ('Make Trade', WORD_FONT, WHITE),
+        ((255, 51, 153), WHITE))
     make_trade_button.draw(screen)
 
-    other_button_1 = ButtonRect(1230, 640,
-                                190, 40,
-                                'Other Button', WORD_FONT, WHITE,
-                                (51, 153, 255), WHITE)
+    other_button_1 = ButtonRect(
+        (1230, 640),
+        (190, 40),
+        ('Other Button', WORD_FONT, WHITE),
+        ((51, 153, 255), WHITE))
     other_button_1.draw(screen)
 
-    other_button_2 = ButtonRect(1230, 700,
-                                190, 40,
-                                'Other Button', WORD_FONT, WHITE,
-                                (255, 153, 51), WHITE)
+    other_button_2 = ButtonRect(
+        (1230, 700),
+        (190, 40),
+        ('Other Button', WORD_FONT, WHITE),
+        ((255, 153, 51), WHITE))
     other_button_2.draw(screen)
     make_trade_button.draw(screen)
 
