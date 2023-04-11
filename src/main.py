@@ -40,10 +40,11 @@ built_cities = []  # list of cities built(node, player_owner)
 game_log = []  # list for storing game events as strings
 dice_rolled = []
 
-settlement_img_path = os.path.join('src','assets','buildings','s_img.png')
+settlement_img_path = os.path.join(
+    'src', 'assets', 'buildings', 'settlement.png')
 settlement_img = pygame.image.load(settlement_img_path)
 settlement_img = pygame.transform.scale(settlement_img, (50, 50))
-city_img_path = os.path.join('src','assets','buildings','c_img.png')
+city_img_path = os.path.join('src', 'assets', 'buildings', 'city.png')
 city_img = pygame.image.load(city_img_path)
 city_img = pygame.transform.scale(city_img, (50, 50))
 
@@ -205,7 +206,7 @@ def main_game_loop(**kwargs):
                 dice_rolled.append((dice_roll1, dice_roll2))
 
                 for game_tile in board:
-                    if dice_roll1+dice_roll2 == game_tile.real_number:
+                    if dice_roll1 + dice_roll2 == game_tile.real_number:
                         current_player.add_resources(game_tile)
                         resource = game_tile.tile.generate_resource().name()
                         game_log_txt = ''.join(
@@ -267,13 +268,12 @@ def mouse_motion_event():
 
 def click_event(event, player):
     mouse_pos = pygame.mouse.get_pos()
-    
-            
+
     for button in tile_buttons:
         if button.is_clicked(mouse_pos):
             print(print(f'{button.x_pos}, {button.y_pos} clicked!'))
             break
-    
+
     if build_road_button.is_clicked(mouse_pos):
 
         start_node = build_road()
@@ -545,9 +545,10 @@ def draw_scoreboard(player_turn):
     scoreboard_outline = pygame.Rect(10, 10, scoreboard_width, 600)
 
     pygame.draw.rect(rect_surf, WHITE, scoreboard_outline, rect_outline_width)
-    pygame.draw.line(rect_surf, WHITE, (10,80), (rect_width-10, 80), 6)
-    pygame.draw.line(rect_surf, WHITE, (10, 160), (rect_width-10, 160), 6)
-    pygame.draw.line(rect_surf, WHITE, (10, 430), (rect_width-10, 430), 6) # space for gamelog
+    pygame.draw.line(rect_surf, WHITE, (10, 80), (rect_width - 10, 80), 6)
+    pygame.draw.line(rect_surf, WHITE, (10, 160), (rect_width - 10, 160), 6)
+    pygame.draw.line(rect_surf, WHITE, (10, 430),
+                     (rect_width - 10, 430), 6)  # space for gamelog
 
     player_width = scoreboard_width // num_players
     font_size = 20 if len(players) == 6 else 30 if len(players) == 5 else 40
@@ -580,19 +581,20 @@ def draw_scoreboard(player_turn):
     # player turn text being drawn
     player_turn_text = WORD_FONT.render(f'Current turn: {player_turn.name}', True, WHITE)
     rect_surf.blit(player_turn_text, (250, 540))
-    screen.blit(rect_surf,(rect_x, rect_y))
+    screen.blit(rect_surf, (rect_x, rect_y))
 
-def draw_dice(screen, roll_1, roll_2 ):
+
+def draw_dice(screen, roll_1, roll_2):
     # loading dice images
     dice_size = 80
 
     # TODO make this a class instead of a method
-    side_1_p = os.path.join('src','assets','dice','1_sided.jpg')
-    side_2_p = os.path.join('src','assets','dice','2_sided.jpg')
-    side_3_p = os.path.join('src','assets','dice','3_sided.jpg')
-    side_4_p = os.path.join('src','assets','dice','4_sided.jpg')
-    side_5_p = os.path.join('src','assets','dice','5_sided.jpg')
-    side_6_p = os.path.join('src','assets','dice','6_sided.jpg')
+    side_1_p = os.path.join('src', 'assets', 'dice', '1_sided.jpg')
+    side_2_p = os.path.join('src', 'assets', 'dice', '2_sided.jpg')
+    side_3_p = os.path.join('src', 'assets', 'dice', '3_sided.jpg')
+    side_4_p = os.path.join('src', 'assets', 'dice', '4_sided.jpg')
+    side_5_p = os.path.join('src', 'assets', 'dice', '5_sided.jpg')
+    side_6_p = os.path.join('src', 'assets', 'dice', '6_sided.jpg')
     side_1 = pygame.image.load(side_1_p)
     side_2 = pygame.image.load(side_2_p)
     side_3 = pygame.image.load(side_3_p)
