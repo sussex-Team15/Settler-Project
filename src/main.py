@@ -2,19 +2,19 @@ import math
 import os
 import pygame
 import random
-from pygame.locals import *  # QUIT, MOUSEBUTTONDOWN
+import sys
+
 from button import ButtonHex, ButtonRect
-from colour import Color
 from hexgrid import legal_tile_ids
 from player import Player
 from pprint import pprint
+from pygame.locals import *  # pylint: disable=unused-wildcard-import wildcard-import # nopep8 E501
 from tiles import GameTile, ResourceTile
 from utils import ASSET_DIR
-from colour import Color
 
 
 # Initialize pygame
-pygame.init()
+pygame.init()  # pylint: disable=no-member
 
 DISPLAY_WIDTH, DISPLAY_HEIGHT = 1450, 800
 NUM_FONT = pygame.font.SysFont('Palatino', 40)
@@ -176,8 +176,8 @@ def setup():
     return tile_sprites, board, board_mapping, players
 
 
-def main_game_loop(**kwargs):
-    GAME_RUNNING = True
+def main_game_loop(**kwargs):  # pylint: disable=unused-argument
+    game_running = True
     player_turn_index = 0
     current_player = players[player_turn_index]
     dice_rolled.append((current_player.roll_dice(2),
@@ -189,44 +189,45 @@ def main_game_loop(**kwargs):
     # 2 BEGIN MAIN TURN BASED LOOP.
     # 2.1 PLAYER HAS CHOICE OF BUILDING AND
 
-    while GAME_RUNNING:
+    while game_running:
         for event in pygame.event.get():
-            if event.type == QUIT:
-                GAME_RUNNING = False
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                
-                if player_turn_index == len(players) - 1:
-                    player_turn_index = 0
-                    current_player = players[player_turn_index]
-                else:
-                    player_turn_index += 1
-                    current_player = players[player_turn_index]
+            if event.type == pygame.event.QUIT:
+                game_running = False
 
-                dice_roll1, dice_roll2 = current_player.roll_dice(2)
-                dice_rolled.append((dice_roll1, dice_roll2))
+            elif event.type == pygame.KEYDOWN:  # pylint: disable=no-member
+                if event.key == pygame.key.K_SPACE:
+                    if player_turn_index == len(players) - 1:
+                        player_turn_index = 0
+                        current_player = players[player_turn_index]
+                    else:
+                        player_turn_index += 1
+                        current_player = players[player_turn_index]
 
-                for game_tile in board:
-                    if dice_roll1 + dice_roll2 == game_tile.real_number:
-                        current_player.add_resources(game_tile)
-                        resource = game_tile.tile.generate_resource().name()
-                        game_log_txt = ''.join(
-                            f'{current_player.name} just rolled a '
-                            f'{dice_roll1+dice_roll2}. Added '
-                            f'{resource} to inventory'
-                        )
+                    dice_roll1, dice_roll2 = current_player.roll_dice(2)
+                    dice_rolled.append((dice_roll1, dice_roll2))
 
-                        game_log.append(game_log_txt)
+                    for game_tile in board:
+                        if dice_roll1 + dice_roll2 == game_tile.real_number:
+                            current_player.add_resources(game_tile)
 
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+                            resource = game_tile.tile.generate_resource().name()
+                            game_log_txt = ''.join(
+                                f'{current_player.name} just rolled a '
+                                f'{dice_roll1+dice_roll2}. Added '
+                                f'{resource} to inventory'
+                            )
+
+                            game_log.append(game_log_txt)
+
+            elif event.type == pygame.event.MOUSEBUTTONDOWN:
                 click_event(event, current_player)  # handles clicking events
 
-            elif event.type == pygame.MOUSEMOTION:
+            elif event.type == pygame.event.MOUSEMOTION:
                 mouse_motion_event()  # function handles mouse motion events
 
         if check_player_won():
             # draw_end_screen() # TODO
-            GAME_RUNNING = False
-    
+            game_running = False
 
         draw(current_player)
         for line in built_roads:
@@ -247,7 +248,6 @@ def main_game_loop(**kwargs):
         # player_longest_road.victory_points +=1
         draw_dice(screen, dice_rolled[-1][0], dice_rolled[-1][1])
         pygame.display.update()
-    pygame.quit()
     # this is a comment)
 
 
@@ -258,15 +258,15 @@ def mouse_motion_event():
     for button in tile_buttons:
         button.is_hovered_over(mouse_pos)
 
-    build_road_button.is_hovered_over(mouse_pos)
-    build_city_button.is_hovered_over(mouse_pos)
-    build_settlement_button.is_hovered_over(mouse_pos)
-    make_trade_button.is_hovered_over(mouse_pos)
-    other_button_1.is_hovered_over(mouse_pos)
-    other_button_2.is_hovered_over(mouse_pos)
+    build_road_btn.is_hovered_over(mouse_pos)
+    build_city_btn.is_hovered_over(mouse_pos)
+    build_settlement_btn.is_hovered_over(mouse_pos)
+    make_trade_btn.is_hovered_over(mouse_pos)
+    other_btn_1.is_hovered_over(mouse_pos)
+    other_btn_2.is_hovered_over(mouse_pos)
 
 
-def click_event(event, player):
+def click_event(_event, player):  # _ as not used yet
     mouse_pos = pygame.mouse.get_pos()
 
     for button in tile_buttons:
@@ -274,7 +274,7 @@ def click_event(event, player):
             print(print(f'{button.x_pos}, {button.y_pos} clicked!'))
             break
 
-    if build_road_button.is_clicked(mouse_pos):
+    if build_road_btn.is_clicked(mouse_pos):
 
         start_node = build_road()
         end_node = build_road()
@@ -284,9 +284,9 @@ def click_event(event, player):
             pygame.display.update()
             game_log.append((f'{player.name} built road!'))
 
-    elif build_settlement_button.is_clicked(mouse_pos):
-        x, y = build_settlement(player)
-        built_settlements.append(((x - 20, y - 30), player))
+    elif build_settlement_btn.is_clicked(mouse_pos):
+        x_pos, y_pos = build_settlement(player)
+        built_settlements.append(((x_pos - 20, y_pos - 30), player))
         game_log.append(f'{player.name} built settlement!')
 
     elif build_city_button.is_clicked(mouse_pos):
@@ -295,9 +295,9 @@ def click_event(event, player):
         game_log.append(f'{player.name} built city!')
     elif make_trade_button.is_clicked(mouse_pos):
         print('Trade Clicked')
-    elif other_button_1.is_clicked(mouse_pos):
+    elif other_btn_1.is_clicked(mouse_pos):
         print('other button 1 clicked')
-    elif other_button_2.is_clicked(mouse_pos):
+    elif other_btn_2.is_clicked(mouse_pos):
         print('other button 2 clicked')
 
     pygame.display.flip()
@@ -306,10 +306,9 @@ def click_event(event, player):
 def build_settlement(player, city=False): 
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.QUIT
-                exit()
-            elif event.type == MOUSEBUTTONDOWN:
+            if event.type == pygame.event.QUIT:
+                sys.exit()
+            elif event.type == pygame.event.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 for button in node_buttons:
                     if button.is_clicked(mouse_pos):
@@ -324,10 +323,9 @@ def build_settlement(player, city=False):
 def build_road():
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.QUIT
-                exit()
-            elif event.type == MOUSEBUTTONDOWN:
+            if event.type == pygame.event.QUIT:
+                sys.exit()
+            elif event.type == pygame.event.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 for button in node_buttons:
                     if button.is_clicked(mouse_pos):
@@ -383,10 +381,12 @@ def calc_mouse_node(mouse_pos):
         pos_1 = node_point[0] - mouse_pos[0]
         pos_2 = node_point[1] - mouse_pos[1]
         if (pos_1**2 + pos_2**2)**0.5 < 10:
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+            pygame.mouse.set_cursor(
+                pygame.SYSTEM_CURSOR_HAND)  # pylint: disable=no-member
             return node_id
-    else:
-        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+    pygame.mouse.set_cursor(
+        pygame.SYSTEM_CURSOR_ARROW)  # pylint: disable=no-member
 
 
 def calc_mouse_pos_tile(mouse_pos):
@@ -399,13 +399,13 @@ def calc_mouse_pos_tile(mouse_pos):
     Returns:
         tile object from the tiles class
     """
-    x, y = mouse_pos
+    x_pos, y_pos = mouse_pos
     hex_length = math.dist((621, 318), (699, 187))
 
     for tile_id in board_mapping['tiles']:
         coords = board_mapping['tiles'][tile_id]
         # dist between mouse click and center of tile
-        dist = math.sqrt((coords[0] - x)**2 + (coords[1] - y)**2)
+        dist = math.sqrt((coords[0] - x_pos)**2 + (coords[1] - y_pos)**2)
         radius = hex_length * math.sqrt(3) / 2
 
         # if the distance is less than or equal to the radius
@@ -414,11 +414,11 @@ def calc_mouse_pos_tile(mouse_pos):
             return board[tile_id - 1]
 
 
-def convert_to_nodeid(x, y):
+def convert_to_nodeid(x_pos, y_pos):
     # converts the x, y coords of the
     # node button to the nodeid stored in board_mapping
     for node_id, node_points in board_mapping['nodes'].items():
-        if node_points[0] == x and node_points[1] == y:
+        if node_points[0] == x_pos and node_points[1] == y_pos:
             return node_id
 
     return None
@@ -460,11 +460,11 @@ def draw(player_turn):
         text_width, text_height = text_surface.get_size()
 
         # Calculate position to center text on tile
-        x = coordinates[0] - text_width // 2
-        y = coordinates[1] - text_height // 2
+        x_pos = coordinates[0] - text_width // 2
+        y_pos = coordinates[1] - text_height // 2
 
         # Draw text on screen
-        screen.blit(text_surface, (x, y))
+        screen.blit(text_surface, (x_pos, y_pos))
 
     draw_scoreboard(player_turn)
     draw_buttons()
@@ -473,37 +473,36 @@ def draw(player_turn):
 
 
 def draw_lines():
-    for index in range(len(board)):
+    for tile in board:
+        pygame.draw.line(screen,
+                         'white',
+                         board_mapping['nodes'][tile.node_coord_N],
+                         board_mapping['nodes'][tile.node_coord_NW], 5)
 
         pygame.draw.line(screen,
                          'white',
-                         board_mapping['nodes'][board[index].node_coord_N],
-                         board_mapping['nodes'][board[index].node_coord_NW], 5)
+                         board_mapping['nodes'][tile.node_coord_N],
+                         board_mapping['nodes'][tile.node_coord_NE], 5)
 
         pygame.draw.line(screen,
                          'white',
-                         board_mapping['nodes'][board[index].node_coord_N],
-                         board_mapping['nodes'][board[index].node_coord_NE], 5)
+                         board_mapping['nodes'][tile.node_coord_NW],
+                         board_mapping['nodes'][tile.node_coord_SW], 5)
 
         pygame.draw.line(screen,
                          'white',
-                         board_mapping['nodes'][board[index].node_coord_NW],
-                         board_mapping['nodes'][board[index].node_coord_SW], 5)
+                         board_mapping['nodes'][tile.node_coord_SW],
+                         board_mapping['nodes'][tile.node_coord_S], 5)
 
         pygame.draw.line(screen,
                          'white',
-                         board_mapping['nodes'][board[index].node_coord_SW],
-                         board_mapping['nodes'][board[index].node_coord_S], 5)
+                         board_mapping['nodes'][tile.node_coord_S],
+                         board_mapping['nodes'][tile.node_coord_SE], 5)
 
         pygame.draw.line(screen,
                          'white',
-                         board_mapping['nodes'][board[index].node_coord_S],
-                         board_mapping['nodes'][board[index].node_coord_SE], 5)
-
-        pygame.draw.line(screen,
-                         'white',
-                         board_mapping['nodes'][board[index].node_coord_SE],
-                         board_mapping['nodes'][board[index].node_coord_NE], 5)
+                         board_mapping['nodes'][tile.node_coord_SE],
+                         board_mapping['nodes'][tile.node_coord_NE], 5)
 
 
 def draw_buttons():
@@ -707,61 +706,61 @@ def popup():
     popup_rect = pygame.Rect(810, 620, popup_width, popup_height)
     pygame.draw.rect(screen, (255, 255, 255), popup_rect)
 
-    build_road_button = ButtonRect(
+    build_road_btn = ButtonRect(  # pylint: disable=redefined-outer-name
         (830, 640),
         (190, 40),
         ('Build Road', WORD_FONT, WHITE),
         ((17, 104, 245), WHITE))
-    build_road_button.draw(screen)
-    build_settlement_button = ButtonRect(
+    build_road_btn.draw(screen)
+    build_settlement_btn = ButtonRect(  # pylint: disable=redefined-outer-name
         (830, 700),
         (190, 40),
         ('Build Settlement', WORD_FONT, WHITE),
         ((38, 140, 31), WHITE))
-    build_settlement_button.draw(screen)
-    build_city_button = ButtonRect(
+    build_settlement_btn.draw(screen)
+    build_city_btn = ButtonRect(  # pylint: disable=redefined-outer-name
         (1030, 640),
         (190, 40),
         ('Build City', WORD_FONT, WHITE),
         ((181, 186, 43), WHITE))
-    build_city_button.draw(screen)
+    build_city_btn.draw(screen)
 
-    make_trade_button = ButtonRect(
+    make_trade_btn = ButtonRect(  # pylint: disable=redefined-outer-name
         (1030, 700),
         (190, 40),
         ('Make Trade', WORD_FONT, WHITE),
         ((255, 51, 153), WHITE))
-    make_trade_button.draw(screen)
+    make_trade_btn.draw(screen)
 
-    other_button_1 = ButtonRect(
+    other_btn_1 = ButtonRect(  # pylint: disable=redefined-outer-name
         (1230, 640),
         (190, 40),
         ('Other Button', WORD_FONT, WHITE),
         ((51, 153, 255), WHITE))
-    other_button_1.draw(screen)
+    other_btn_1.draw(screen)
 
-    other_button_2 = ButtonRect(
+    other_btn_2 = ButtonRect(  # pylint: disable=redefined-outer-name
         (1230, 700),
         (190, 40),
         ('Other Button', WORD_FONT, WHITE),
         ((255, 153, 51), WHITE))
-    other_button_2.draw(screen)
-    make_trade_button.draw(screen)
+    other_btn_2.draw(screen)
+    make_trade_btn.draw(screen)
 
-    return (build_road_button,
-            build_settlement_button,
-            build_city_button,
-            make_trade_button,
-            other_button_1,
-            other_button_2)
+    return (build_road_btn,
+            build_settlement_btn,
+            build_city_btn,
+            make_trade_btn,
+            other_btn_1,
+            other_btn_2)
 
 
-(build_road_button,
- build_settlement_button,
- build_city_button,
- make_trade_button,
- other_button_1,
- other_button_2) = popup()
+(build_road_btn,
+ build_settlement_btn,
+ build_city_btn,
+ make_trade_btn,
+ other_btn_1,
+ other_btn_2) = popup()
 
 if __name__ == "__main__":
     tile_sprites, board, board_mapping, players = setup()
