@@ -1,8 +1,12 @@
+# pylint: disable=redefined-outer-name
+# pylint: disable=wrong-import-position
+
 import pytest
 import sys
 sys.path.insert(1, 'src')
 
 from player import Player
+from resource_ import Resource
 
 
 @pytest.fixture
@@ -11,17 +15,13 @@ def player():
 
 
 def test_roll_dice(player):
-    d1, d2 = player.roll_dice()
-    assert 1 <= d1 <= 6
-    assert 1 <= d2 <= 6
+    dice_1, dice_2 = player.roll_dice()
+    assert 1 <= dice_1 <= 6
+    assert 1 <= dice_2 <= 6
 
+# TODO: test building a settlement
 
-def test_build_settlement(player):
-    pass
-
-
-def test_build_city(player):
-    pass
+# TODO: test building a city
 
 
 def test_build_road(player):
@@ -33,8 +33,10 @@ def test_build_road(player):
 
 
 def test_get_resources(player):
-    player.resources = [Resource.WOOD, Resource.BRICK, Resource.GRAIN, Resource.WOOL]
-    assert player.get_resources() == [Resource.WOOD, Resource.BRICK, Resource.GRAIN, Resource.WOOL]
+    player.resources = [Resource.WOOD,
+                        Resource.BRICK, Resource.GRAIN, Resource.WOOL]
+    assert player.get_resources() == [
+        Resource.WOOD, Resource.BRICK, Resource.GRAIN, Resource.WOOL]
 
 
 def test_add_resources(player):

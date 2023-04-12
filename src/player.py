@@ -1,14 +1,10 @@
 import random
 from trade import Trade
-from bank import Bank
 from building import Settlement, City
-from tiles import GameTile
-import hexgrid
-import pygame
-from resource_ import *
+from resource_ import Resource
 
 
-class Player:
+class Player:  # pylint: disable=too-many-instance-attributes
     """
     Player class that controls the
     behaviour of an indivdual player of the game.
@@ -36,10 +32,10 @@ class Player:
         a boolean indicating if it is the players turn in the gameloop.
     - hasLongestRoad: boolean
         a boolean indicating if the player has the longest road.
-    - hasLargestArmy: boolean
+    - has_largest_army: boolean
         a boolean indicating if the player has the largest army
-    - tradeOffers: list
-        a list of tradeOffers that the player has received (of type Trade)
+    - trade_offers: list
+        a list of trade_offers that the player has received (of type Trade)
 
 
     Methods:
@@ -77,20 +73,20 @@ class Player:
         self.is_turn = False
         self.has_longest_road = False
         self.total_road_num = 0
-        self.hasLargestArmy = False
-        self.tradeOffers = []
+        self.has_largest_army = False
+        self.trade_offers = []
 
     # can be used for any number of dice (default =2)
-    def roll_dice(self, numberOfDice=2):
+    def roll_dice(self, num_dice=2):
         """
         simulates a dice roll
 
         Args:
-            numberOfDice: number of dice to be rolled
+            num_dice: number of dice to be rolled
 
         Returns: 1st dice roll, 2nd dice roll
         """
-        return random.randint(1, 6), random.randint(1, 6)
+        return tuple(random.randint(1, 6) for i in range(num_dice))
 
     def build_settlement(self, node):
         """
@@ -98,14 +94,14 @@ class Player:
 
         """
         settlement = Settlement(self, node)
-        num_lumber, num_brick, num_wool, num_grain = 0
+        num_lumber, num_brick, num_wool, num_grain = 0, 0, 0, 0
         # cost = 1 lumber 1 brick 1 wool 1 grain
 
-        for i in range(len(self.resources)):
-            is_wood = self.resources[i] == Resource.WOOD
-            is_brick = self.resources[i] == Resource.BRICK
-            is_grain = self.resources[i] == Resource.GRAIN
-            is_wool = self.resources[i] == Resource.WOOL
+        for resource in self.resources:
+            is_wood = resource == Resource.WOOD
+            is_brick = resource == Resource.BRICK
+            is_grain = resource == Resource.GRAIN
+            is_wool = resource == Resource.WOOL
             if is_wood or is_brick or is_grain or is_wool:
                 num_lumber += 1
                 num_brick += 1
@@ -120,8 +116,6 @@ class Player:
         else:
             print('not enough resources')
 
-        pass
-
     def build_city(self, node):
         """
         Builds a city at specified node
@@ -132,10 +126,10 @@ class Player:
         num_grain = 0
 
         # check to see if player has enough resources for city
-        for i in range(len(self.resources)):
-            if self.resources[i] == Resource.GRAIN:
+        for resource in self.resources:
+            if resource == Resource.GRAIN:
                 num_grain += 1
-            elif self.resources[i] == Resource.ORE:
+            elif resource == Resource.ORE:
                 num_ore += 1
 
         if num_ore >= 3 and num_grain >= 2:
@@ -154,10 +148,10 @@ class Player:
         num_brick = 0
 
         # check to see if player has enough resources
-        for i in range(len(self.resources)):
-            if self.resources[i] == Resource.WOOD:
+        for resource in self.resources:
+            if resource == Resource.WOOD:
                 num_lumber += 1
-            elif self.resources[i] == Resource.BRICK:
+            elif resource == Resource.BRICK:
                 num_brick += 1
 
         if num_brick >= 1 and num_lumber >= 1:
