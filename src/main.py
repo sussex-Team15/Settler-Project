@@ -48,6 +48,7 @@ city_img = pygame.image.load(city_img_path)
 city_img = pygame.transform.scale(city_img, (50, 50))
 
 GRAY = (158, 153, 134)
+BACKGROUND = (235, 235, 235)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 colors = [(255, 0, 0), (25, 255, 25), (255, 255, 77), (255, 153, 51),
@@ -192,6 +193,7 @@ def main_game_loop(**kwargs):
             if event.type == QUIT:
                 GAME_RUNNING = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                
                 if player_turn_index == len(players) - 1:
                     player_turn_index = 0
                     current_player = players[player_turn_index]
@@ -205,7 +207,12 @@ def main_game_loop(**kwargs):
                 for game_tile in board:
                     if dice_roll1+dice_roll2 == game_tile.real_number:
                         current_player.add_resources(game_tile)
-                        game_log.append(f'{current_player.name} just rolled a {dice_roll1+dice_roll2}. Added {game_tile.tile.generate_resource().name()} to inventory')
+                        resource = game_tile.tile.generate_resource().name()
+                        game_log_txt = ''.join(
+                            f'{current_player.name} just rolled a '
+                            f'{dice_roll1+dice_roll2}. Added '
+                            f'{resource} to inventory'
+                        )
 
                         game_log.append(game_log_txt)
 
@@ -218,6 +225,7 @@ def main_game_loop(**kwargs):
         if check_player_won():
             # draw_end_screen() # TODO
             GAME_RUNNING = False
+    
 
         draw(current_player)
         for line in built_roads:
@@ -227,26 +235,9 @@ def main_game_loop(**kwargs):
                 (line[0].x_pos, line[0].y_pos),
                 (line[1].x_pos, line[1].y_pos),
                 5)
-
-        for settlement in built_settlements:
-
-            # Replace with the desired highlight color
-            highlight_color = settlement[1].color
-            # Replace with the desired highlight opacity (0 to 255)
-            highlight_alpha = 128
-            # Create a transparent surface
-            highlight_overlay = pygame.Surface(settlement_img.get_size(),
-                                               pygame.SRCALPHA)
-            # Fill the surface with the highlight color and opacity
-            highlight_overlay.fill(
-                (highlight_color[0],
-                 highlight_color[1],
-                 highlight_color[2],
-                 highlight_alpha
-                 ))
-
-            screen.blit(settlement_img, settlement[0])
-            screen.blit(highlight_overlay, settlement[0])
+        draw_buildings() # draw_settlements
+        draw_buildings(city=True) # draw cities
+        
 
             # count how many settlements
             # each player has and award vp accordingly
@@ -280,17 +271,18 @@ def click_event(event, player):
             
     for button in tile_buttons:
         if button.is_clicked(mouse_pos):
-            print(print(f'{button.x}, {button.y} clicked!'))
+            print(print(f'{button.x_pos}, {button.y_pos} clicked!'))
             break
     
     if build_road_button.is_clicked(mouse_pos):
 
         start_node = build_road()
         end_node = build_road()
-        built_roads.append((start_node, end_node, player))
+        if is_adjacent(start_node, end_node): # check to see if nodes selected are adjacent
+            built_roads.append((start_node, end_node, player))
 
-        pygame.display.update()
-        game_log.append((f'{player.name} built road!'))
+            pygame.display.update()
+            game_log.append((f'{player.name} built road!'))
 
     elif build_settlement_button.is_clicked(mouse_pos):
         x, y = build_settlement(player)
@@ -298,7 +290,9 @@ def click_event(event, player):
         game_log.append(f'{player.name} built settlement!')
 
     elif build_city_button.is_clicked(mouse_pos):
-        print('city build')
+        x, y = build_settlement(player, city=True)
+        built_cities.append(((x - 20, y - 30), player))
+        game_log.append(f'{player.name} built city!')
     elif make_trade_button.is_clicked(mouse_pos):
         print('Trade Clicked')
     elif other_button_1.is_clicked(mouse_pos):
@@ -309,7 +303,7 @@ def click_event(event, player):
     pygame.display.flip()
 
 
-def build_settlement(player):
+def build_settlement(player, city=False): 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -320,7 +314,10 @@ def build_settlement(player):
                 for button in node_buttons:
                     if button.is_clicked(mouse_pos):
                         # give player vp
-                        player.victory_points += 1
+                        if city==True:
+                            player.victory_points += 2 # add 2 vp if player builds a city
+                        else:
+                            player.victory_points += 1
                         return mouse_pos
 
 
@@ -335,14 +332,41 @@ def build_road():
                 for button in node_buttons:
                     if button.is_clicked(mouse_pos):
                         return button
+                    
+        
 
 
 def check_player_won():
     for player in players:
-        if player.victory_points == 10:
+        if player.victory_points >= 10:
             return True
 
     return False
+
+def is_adjacent(node1, node2):
+    ''' Returns true if node1 and node2 are connected by a road
+
+    Args:
+        node1: first node to be checked
+        node2: second node to be checked
+
+    Returns: 
+        boolean
+    
+    '''
+
+    x1, y1 = node1.x_pos, node1.y_pos
+    x2, y2 = node2.x_pos, node2.y_pos
+
+    x_diff = abs(x1-x2)
+    y_diff = abs(y1-y2)
+    max_road_len = 100 # road lens are diff so this is maximum road len
+
+    print(f'x_diff: {x_diff}')
+    print(f'y_diff: {y_diff}')
+    
+    # return true if x_diff and y_diff is less than radius of tiles
+    return (x_diff <= max_road_len) and (y_diff <= max_road_len)
 
 
 def calc_mouse_node(mouse_pos):
@@ -419,7 +443,7 @@ def draw(player_turn):
     """
     Draws the pygame display
     """
-    screen.fill(GRAY)
+    screen.fill(BACKGROUND)
 
     for img, rect in tile_sprites:
         screen.blit(img, rect)
@@ -624,6 +648,48 @@ def draw_dice(screen, roll_1, roll_2 ):
         pygame.display.update()
 
     pygame.display.update()
+
+def draw_buildings(city=False):
+    if city == False:
+        for settlement in built_settlements:
+
+                # Replace with the desired highlight color
+                highlight_color = settlement[1].color
+                # Replace with the desired highlight opacity (0 to 255)
+                highlight_alpha = 0
+                # Create a transparent surface
+                highlight_overlay = pygame.Surface(settlement_img.get_size(),
+                                                pygame.SRCALPHA)
+                # Fill the surface with the highlight color and opacity
+                highlight_overlay.fill(
+                    (highlight_color[0],
+                    highlight_color[1],
+                    highlight_color[2],
+                    highlight_alpha
+                    ))
+                screen.blit(settlement_img, settlement[0])
+                screen.blit(highlight_overlay, settlement[0])
+    else:
+        for city in built_cities:
+
+                # Replace with the desired highlight color
+                highlight_color = city[1].color
+                # Replace with the desired highlight opacity (0 to 255)
+                highlight_alpha = 0
+                # Create a transparent surface
+                highlight_overlay = pygame.Surface(city_img.get_size(),
+                                                pygame.SRCALPHA)
+                # Fill the surface with the highlight color and opacity
+                highlight_overlay.fill(
+                    (highlight_color[0],
+                    highlight_color[1],
+                    highlight_color[2],
+                    highlight_alpha
+                    ))
+                screen.blit(city_img, city[0])
+                screen.blit(highlight_overlay, city[0])
+    
+
 
 
 def popup():
