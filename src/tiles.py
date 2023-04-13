@@ -1,4 +1,3 @@
-from pprint import pprint
 import abc
 import hexgrid
 
@@ -101,7 +100,7 @@ class ResourceTile(Enum):
     def __init__(self, tile):
         self.tile = tile
 
-    def name(self):
+    def name(self):  # pylint: disable=function-redefined
         return self.tile.name()
 
     def generate_resource(self):
@@ -114,9 +113,8 @@ class ResourceTile(Enum):
         return self.tile.asset()
 
 
-class GameTile:
-    def __init__(self, number_label, real_number, tile, points, tile_id):
-        self.number_label = number_label
+class GameTile:  # pylint: disable=too-many-instance-attributes
+    def __init__(self, real_number, tile, points, tile_id):
         self.real_number = real_number  # number that will show on GUI
         self.tile = tile
         self.points = points
@@ -129,30 +127,30 @@ class GameTile:
         self.tile_coord = convert_to_number(
             hexgrid.tile_id_to_coord(self.tile_id))
 
-        self.node_coord_N = convert_to_number(
+        self.node_coord_n = convert_to_number(
             hexgrid.from_location(hexgrid.NODE, self.tile_id, 'N'))
-        self.node_coord_NE = convert_to_number(
+        self.node_coord_ne = convert_to_number(
             hexgrid.from_location(hexgrid.NODE, self.tile_id, 'NE'))
-        self.node_coord_NW = convert_to_number(
+        self.node_coord_nw = convert_to_number(
             hexgrid.from_location(hexgrid.NODE, self.tile_id, 'NW'))
-        self.node_coord_S = convert_to_number(
+        self.node_coord_s = convert_to_number(
             hexgrid.from_location(hexgrid.NODE, self.tile_id, 'S'))
-        self.node_coord_SE = convert_to_number(
+        self.node_coord_se = convert_to_number(
             hexgrid.from_location(hexgrid.NODE, self.tile_id, 'SE'))
-        self.node_coord_SW = convert_to_number(
+        self.node_coord_sw = convert_to_number(
             hexgrid.from_location(hexgrid.NODE, self.tile_id, 'SW'))
 
-        self.edge_NE = convert_to_number(
+        self.edge_ne = convert_to_number(
             hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'NE'))
-        self.edge_NW = convert_to_number(
+        self.edge_nw = convert_to_number(
             hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'NW'))
-        self.edge_SE = convert_to_number(
+        self.edge_se = convert_to_number(
             hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'SE'))
-        self.edge_SW = convert_to_number(
+        self.edge_sw = convert_to_number(
             hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'SW'))
-        self.edge_E = convert_to_number(
+        self.edge_s = convert_to_number(
             hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'E'))
-        self.edge_W = convert_to_number(
+        self.edge_w = convert_to_number(
             hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'W'))
 
     def __repr__(self):
@@ -160,24 +158,20 @@ class GameTile:
 
     def get_tile_info(self):
 
-        def convert_to_number(coord):
-            return int(f"{hexgrid.hex_digit(coord,digit=1)}"
-                       f"{hexgrid.hex_digit(coord,digit=2)}")
-
         return {
             'Tile id': self.tile_id,
             'Coord': self.tile_coord,
-            'Node': {'Node <N>': self.node_coord_N,
-                     'Node <NE>': self.node_coord_NE,
-                     'Node <NW>': self.node_coord_NW,
-                     'Node <S>': self.node_coord_S,
-                     'Node <SE>': self.node_coord_SE,
-                     'Node <SW>': self.node_coord_SW},
+            'Node': {'Node <N>': self.node_coord_n,
+                     'Node <NE>': self.node_coord_ne,
+                     'Node <NW>': self.node_coord_nw,
+                     'Node <S>': self.node_coord_s,
+                     'Node <SE>': self.node_coord_se,
+                     'Node <SW>': self.node_coord_sw},
 
-            'Edge': {'Edge <E>': self.edge_E,
-                     'Edge <NE>': self.edge_NE,
-                     'Edge <NW>': self.edge_NW,
-                     'Edge <SE>': self.edge_SE,
-                     'Edge <SW>': self.edge_SW,
-                     'Edge <W>': self.edge_W}
+            'Edge': {'Edge <E>': self.edge_s,
+                     'Edge <NE>': self.edge_ne,
+                     'Edge <NW>': self.edge_nw,
+                     'Edge <SE>': self.edge_se,
+                     'Edge <SW>': self.edge_sw,
+                     'Edge <W>': self.edge_w}
         }

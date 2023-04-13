@@ -477,33 +477,33 @@ def draw_lines():
     for tile in board:
         pygame.draw.line(screen,
                          'white',
-                         board_mapping['nodes'][tile.node_coord_N],
-                         board_mapping['nodes'][tile.node_coord_NW], 5)
+                         board_mapping['nodes'][tile.node_coord_n],
+                         board_mapping['nodes'][tile.node_coord_nw], 5)
 
         pygame.draw.line(screen,
                          'white',
-                         board_mapping['nodes'][tile.node_coord_N],
-                         board_mapping['nodes'][tile.node_coord_NE], 5)
+                         board_mapping['nodes'][tile.node_coord_n],
+                         board_mapping['nodes'][tile.node_coord_ne], 5)
 
         pygame.draw.line(screen,
                          'white',
-                         board_mapping['nodes'][tile.node_coord_NW],
-                         board_mapping['nodes'][tile.node_coord_SW], 5)
+                         board_mapping['nodes'][tile.node_coord_nw],
+                         board_mapping['nodes'][tile.node_coord_sw], 5)
 
         pygame.draw.line(screen,
                          'white',
-                         board_mapping['nodes'][tile.node_coord_SW],
-                         board_mapping['nodes'][tile.node_coord_S], 5)
+                         board_mapping['nodes'][tile.node_coord_sw],
+                         board_mapping['nodes'][tile.node_coord_s], 5)
 
         pygame.draw.line(screen,
                          'white',
-                         board_mapping['nodes'][tile.node_coord_S],
-                         board_mapping['nodes'][tile.node_coord_SE], 5)
+                         board_mapping['nodes'][tile.node_coord_s],
+                         board_mapping['nodes'][tile.node_coord_se], 5)
 
         pygame.draw.line(screen,
                          'white',
-                         board_mapping['nodes'][tile.node_coord_SE],
-                         board_mapping['nodes'][tile.node_coord_NE], 5)
+                         board_mapping['nodes'][tile.node_coord_se],
+                         board_mapping['nodes'][tile.node_coord_ne], 5)
 
 
 def draw_buttons():
