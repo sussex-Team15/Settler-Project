@@ -147,6 +147,12 @@ class DevelopmentCards(Enum):
     def name(self):  # pylint: disable=function-redefined
         return self.card.name()
 
+    def description(self):
+        return self.card.description()
+
+    def vp_awarded(self):
+        return self.card.vp_awarded()
+
     def asset(self):
         return self.card.asset()
 
