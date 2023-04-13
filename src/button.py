@@ -37,11 +37,13 @@ class ButtonRect:
     # returns true if mouse hovers over button
     def is_hovered_over(self, mouse_pos):
         if self.rect.collidepoint(mouse_pos) and not self.cursor_set:
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+            pygame.mouse.set_cursor(
+                pygame.SYSTEM_CURSOR_HAND)  # pylint: disable=no-member
             self.cursor_set = True
             return True
 
-        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+        pygame.mouse.set_cursor(
+            pygame.SYSTEM_CURSOR_ARROW)  # pylint: disable=no-member
         self.cursor_set = False
         return False
 
@@ -75,12 +77,14 @@ class ButtonHex:
         x_pos = (self.x_pos - mouse_pos[0])**2
         y_pos = (self.y_pos - mouse_pos[1])**2
         if (x_pos + y_pos)**0.5 < self.radius and not self.cursor_set:
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+            pygame.mouse.set_cursor(
+                pygame.SYSTEM_CURSOR_HAND)  # pylint: disable=no-member
             self.cursor_set = True
 
             return True
 
-        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+        pygame.mouse.set_cursor(
+            pygame.SYSTEM_CURSOR_ARROW)  # pylint: disable=no-member
         self.cursor_set = False
 
         return False

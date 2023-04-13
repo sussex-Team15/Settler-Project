@@ -12,6 +12,7 @@ from pygame.locals import *  # pylint: disable=unused-wildcard-import wildcard-i
 from tiles import GameTile, ResourceTile
 from utils import ASSET_DIR
 
+# pylint: disable=redefined-outer-name
 
 # Initialize pygame
 pygame.init()  # pylint: disable=no-member
@@ -30,7 +31,7 @@ bg_img.convert()
 bg_rect = bg_img.get_rect()
 
 
-num_players = 6
+NUM_PLAYERS = 6
 player_names = ['Eddie', 'Morgan', 'Ryan', 'Noah', 'Yash', 'Nelson']
 node_buttons = []  # list of ButtonHex objects for nodes
 tile_buttons = []  # list of ButtonHex object for tiles
@@ -150,7 +151,6 @@ def setup():
 
     # Create the board as a list of GameTile Objects
     board = [GameTile(random.randint(0, 12),
-                      random.randint(1, 12),
                       random.choice(list(ResourceTile)), 4,
                       tile_id) for tile_id in legal_tile_ids()]
 
@@ -168,7 +168,7 @@ def setup():
 
     players = []
 
-    for i in range(num_players):
+    for i in range(NUM_PLAYERS):
         player = Player(player_names[i], colors[i])
         print(player.name)
         players.append(player)
@@ -190,8 +190,8 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
     # 2.1 PLAYER HAS CHOICE OF BUILDING AND
 
     while game_running:
-        for event in pygame.event.get():
-            if event.type == pygame.event.QUIT:
+        for event in pygame.event.get():  # pylint: disable=no-member
+            if event.type == pygame.QUIT:  # pylint: disable=no-member
                 game_running = False
 
             elif event.type == pygame.KEYDOWN:  # pylint: disable=no-member
@@ -210,19 +210,19 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
                         if dice_roll1 + dice_roll2 == game_tile.real_number:
                             current_player.add_resources(game_tile)
 
-                            resource = game_tile.tile.generate_resource().name()
+                            card = game_tile.tile.generate_resource().name()
                             game_log_txt = ''.join(
                                 f'{current_player.name} just rolled a '
                                 f'{dice_roll1+dice_roll2}. Added '
-                                f'{resource} to inventory'
+                                f'{card} to inventory'
                             )
 
                             game_log.append(game_log_txt)
 
-            elif event.type == pygame.event.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:  # pylint: disable=no-member # nopep8 E501
                 click_event(event, current_player)  # handles clicking events
 
-            elif event.type == pygame.event.MOUSEMOTION:
+            elif event.type == pygame.MOUSEMOTION:  # pylint: disable=no-member
                 mouse_motion_event()  # function handles mouse motion events
 
         if check_player_won():
@@ -237,9 +237,8 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
                 (line[0].x_pos, line[0].y_pos),
                 (line[1].x_pos, line[1].y_pos),
                 5)
-        draw_buildings() # draw_settlements
-        draw_buildings(city=True) # draw cities
-        
+        draw_buildings()  # draw_settlements
+        draw_buildings(city=True)  # draw cities
 
         # count how many settlements
         # each player has and award vp accordingly
@@ -290,11 +289,11 @@ def click_event(_event, player):  # _ as not used yet
         built_settlements.append(((x_pos - 20, y_pos - 30), player))
         game_log.append(f'{player.name} built settlement!')
 
-    elif build_city_button.is_clicked(mouse_pos):
-        x, y = build_settlement(player, city=True)
-        built_cities.append(((x - 20, y - 30), player))
+    elif build_city_btn.is_clicked(mouse_pos):
+        x_pos, y_pos = build_settlement(player, city=True)
+        built_cities.append(((x_pos - 20, y_pos - 30), player))
         game_log.append(f'{player.name} built city!')
-    elif make_trade_button.is_clicked(mouse_pos):
+    elif make_trade_btn.is_clicked(mouse_pos):
         print('Trade Clicked')
     elif other_btn_1.is_clicked(mouse_pos):
         print('other button 1 clicked')
@@ -306,15 +305,15 @@ def click_event(_event, player):  # _ as not used yet
 
 def build_settlement(player, city=False):
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.event.QUIT:
+        for event in pygame.event.get():  # pylint: disable=no-member
+            if event.type == pygame.QUIT:  # pylint: disable=no-member
                 sys.exit()
-            elif event.type == pygame.event.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:  # pylint: disable=no-member # nopep8 E501
                 mouse_pos = pygame.mouse.get_pos()
                 for button in node_buttons:
                     if button.is_clicked(mouse_pos):
                         # give player vp
-                        if city == True:
+                        if city:
                             player.victory_points += 2
                             # add 2 vp if player builds a city
                         else:
@@ -324,10 +323,10 @@ def build_settlement(player, city=False):
 
 def build_road():
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.event.QUIT:
+        for event in pygame.event.get():  # pylint: disable=no-member
+            if event.type == pygame.QUIT:  # pylint: disable=no-member
                 sys.exit()
-            elif event.type == pygame.event.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:  # pylint: disable=no-member # nopep8 E501
                 mouse_pos = pygame.mouse.get_pos()
                 for button in node_buttons:
                     if button.is_clicked(mouse_pos):
@@ -349,16 +348,16 @@ def is_adjacent(node1, node2):
         node1: first node to be checked
         node2: second node to be checked
 
-    Returns: 
+    Returns:
         boolean
 
     '''
 
-    x1, y1 = node1.x_pos, node1.y_pos
-    x2, y2 = node2.x_pos, node2.y_pos
+    x1_pos, y1_pos = node1.x_pos, node1.y_pos
+    x2_pos, y2_pos = node2.x_pos, node2.y_pos
 
-    x_diff = abs(x1 - x2)
-    y_diff = abs(y1 - y2)
+    x_diff = abs(x1_pos - x2_pos)
+    y_diff = abs(y1_pos - y2_pos)
     max_road_len = 100  # road lens are diff so this is maximum road len
 
     print(f'x_diff: {x_diff}')
@@ -551,11 +550,11 @@ def draw_scoreboard(player_turn):
     pygame.draw.line(rect_surf, WHITE, (10, 430),
                      (rect_width - 10, 430), 6)  # space for gamelog
 
-    player_width = scoreboard_width // num_players
+    player_width = scoreboard_width // NUM_PLAYERS
     font_size = 20 if len(players) == 6 else 30 if len(players) == 5 else 40
     player_font = pygame.font.SysFont('Palatino', font_size)
 
-    for i in range(num_players):  # draw player names at top of scoreboard
+    for i in range(NUM_PLAYERS):  # draw player names at top of scoreboard
         x_pos = 10 + i * player_width
         pygame.draw.line(rect_surf, WHITE, (x_pos, 10),
                          (x_pos, 430), rect_outline_width)
@@ -563,7 +562,7 @@ def draw_scoreboard(player_turn):
         name_rect = name.get_rect(center=(x_pos + player_width // 2, 40))
         rect_surf.blit(name, name_rect)
 
-    for i in range(num_players):  # draw victory points
+    for i in range(NUM_PLAYERS):  # draw victory points
         x_pos = 10 + i * player_width  # in each cell below player names
         pygame.draw.line(rect_surf, WHITE, (10, 510),
                          (rect_width - 10, 510), 6)
@@ -655,7 +654,7 @@ def draw_dice(screen, roll_1, roll_2):
 
 
 def draw_buildings(city=False):
-    if city == False:
+    if city:
         for settlement in built_settlements:
 
             # Replace with the desired highlight color
@@ -664,7 +663,7 @@ def draw_buildings(city=False):
             highlight_alpha = 0
             # Create a transparent surface
             highlight_overlay = pygame.Surface(settlement_img.get_size(),
-                                               pygame.SRCALPHA)
+                                               pygame.SRCALPHA)  # pylint: disable=no-member # nopep8 E501
             # Fill the surface with the highlight color and opacity
             highlight_overlay.fill(
                 (highlight_color[0],
@@ -683,7 +682,7 @@ def draw_buildings(city=False):
             highlight_alpha = 0
             # Create a transparent surface
             highlight_overlay = pygame.Surface(city_img.get_size(),
-                                               pygame.SRCALPHA)
+                                               pygame.SRCALPHA)  # pylint: disable=no-member # nopep8 E501
             # Fill the surface with the highlight color and opacity
             highlight_overlay.fill(
                 (highlight_color[0],
