@@ -1,14 +1,13 @@
 import sys
-import pytest
 sys.path.insert(1, 'src')
 
-from player import *
-from trade import *
+from player import Player
+from trade import Trade
 
 
 def test_trade_init():
-    player1 = Player("Noah",(255,0,0))
-    player2 = Player("John",(0,255,0))
+    player1 = Player("Noah", (255, 0, 0))
+    player2 = Player("John", (0, 255, 0))
     resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
 
     trade = Trade(player1, resources, player2)
@@ -20,8 +19,8 @@ def test_trade_init():
 
 
 def test_accept_trade():
-    player1 = Player("Noah",(255,0,0))
-    player2 = Player("John",(0,255,0))
+    player1 = Player("Noah", (255, 0, 0))
+    player2 = Player("John", (0, 255, 0))
     resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
 
     trade = Trade(player1, resources, player2)
@@ -31,8 +30,8 @@ def test_accept_trade():
 
 
 def test_cancel_trade():
-    player1 = Player("Noah",(255,0,0))
-    player2 = Player("John",(0,255,0))
+    player1 = Player("Noah", (255, 0, 0))
+    player2 = Player("John", (0, 255, 0))
     resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
 
     trade = Trade(player1, resources, player2)
@@ -43,8 +42,8 @@ def test_cancel_trade():
 
 
 def test_get_offering_player():
-    player1 = Player("Noah",(255,0,0))
-    player2 = Player("John",(0,255,0))
+    player1 = Player("Noah", (255, 0, 0))
+    player2 = Player("John", (0, 255, 0))
     resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
 
     trade = Trade(player1, resources, player2)
@@ -53,8 +52,8 @@ def test_get_offering_player():
 
 
 def test_get_offered_resource():
-    player1 = Player("Noah",(255,0,0))
-    player2 = Player("John",(0,255,0))
+    player1 = Player("Noah", (255, 0, 0))
+    player2 = Player("John", (0, 255, 0))
     resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
 
     trade = Trade(player1, resources, player2)
@@ -63,9 +62,9 @@ def test_get_offered_resource():
 
 
 def test_execute_trade():
-    player1 = Player("Noah",(255,0,0))
+    player1 = Player("Noah", (255, 0, 0))
     player1.resources = ["Wood", "Brick"]
-    player2 = Player("John",(0,255,0))
+    player2 = Player("John", (0, 255, 0))
     player2.resources = ["Sheep", "Ore"]
     resources = ["Brick"]
 
