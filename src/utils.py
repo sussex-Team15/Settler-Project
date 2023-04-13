@@ -37,15 +37,15 @@ def prepare_assets(directory):
             continue
 
 
-class Abstract(abc.ABC):
-    def get_asset(self, DIR):
+class Abstract(abc.ABC):  # pylint: disable=too-few-public-methods
+    def get_asset(self, directory):
         found_files = [file for file in os.listdir(
-            DIR) if self.__class__.__name__.lower() in file]
+            directory) if self.__class__.__name__.lower() in file]
         if found_files:
             for file in found_files:
                 extension = f".{file.split('.')[1]}"
                 if extension in FILE_EXTENSIONS:
-                    return os.path.join(DIR, file)
+                    return os.path.join(directory, file)
 
         act_class = self.__class__.__name__.lower()
         base_class = self.__class__.__bases__[0].__name__.lower()
