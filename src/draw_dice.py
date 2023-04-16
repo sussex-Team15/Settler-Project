@@ -1,17 +1,19 @@
 import os
+from os import path
 import pygame
+
 
 class DrawDice:
     def __init__(self):
         # loading dice images
-        DISPLAY_HEIGHT = 800
+        self.DISPLAY_HEIGHT = 800
         self.dice_size = 80
-        side_1_p = os.path.join('src','assets','dice','1_sided.jpg')
-        side_2_p = os.path.join('src','assets','dice','2_sided.jpg')
-        side_3_p = os.path.join('src','assets','dice','3_sided.jpg')
-        side_4_p = os.path.join('src','assets','dice','4_sided.jpg')
-        side_5_p = os.path.join('src','assets','dice','5_sided.jpg')
-        side_6_p = os.path.join('src','assets','dice','6_sided.jpg')
+        side_1_p = path.join('src','assets','dice','1_sided.jpg')
+        side_2_p = path.join('src','assets','dice','2_sided.jpg')
+        side_3_p = path.join('src','assets','dice','3_sided.jpg')
+        side_4_p = path.join('src','assets','dice','4_sided.jpg')
+        side_5_p = path.join('src','assets','dice','5_sided.jpg')
+        side_6_p = path.join('src','assets','dice','6_sided.jpg')
         self.side_1 = pygame.image.load(side_1_p)
         self.side_2 = pygame.image.load(side_2_p)
         self.side_3 = pygame.image.load(side_3_p)

@@ -1,7 +1,7 @@
 import abc
 import os
-from utils import BUILDINGS_DIR, FILE_EXTENSIONS
-from resource_ import Resource
+from src.utils import BUILDINGS_DIR, FILE_EXTENSIONS
+from src.resource_ import Resource
 
 
 class Building(abc.ABC):

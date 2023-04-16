@@ -3,15 +3,18 @@ import os
 import pygame
 import random
 import sys
-
-from draw_dice import DrawDice
-from button import ButtonHex, ButtonRect
-from hexgrid import legal_tile_ids
-from player import Player
-from pprint import pprint
 from pygame.locals import *  # pylint: disable=unused-wildcard-import wildcard-import # nopep8 E501
-from tiles import GameTile, ResourceTile
-from utils import ASSET_DIR
+from hexgrid import legal_tile_ids
+from pprint import pprint
+
+from src.draw_dice import DrawDice
+from src.button import ButtonHex, ButtonRect
+
+from src.player import Player
+
+
+from src.tiles import GameTile, ResourceTile
+from src.utils import ASSET_DIR
 
 # pylint: disable=redefined-outer-name
 
@@ -181,8 +184,8 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
     game_running = True
     player_turn_index = 0
     current_player = players[player_turn_index]
-    dice_rolled.append((current_player.roll_dice(2),
-                        current_player.roll_dice(2)))
+
+    dice_rolled.append((current_player.roll_dice(2)))
 
     pprint(board)
     # GAME LOOP
@@ -206,6 +209,7 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
 
                     dice_roll1, dice_roll2 = current_player.roll_dice(2)
                     dice_rolled.append((dice_roll1, dice_roll2))
+                    
 
                     for game_tile in board:
                         if dice_roll1 + dice_roll2 == game_tile.real_number:
@@ -246,9 +250,11 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
 
         # player_longest_road = calc_longest_road()
         # player_longest_road.victory_points +=1
-        DrawDice.draw(screen, dice_rolled[-1][0], dice_rolled[-1][1])
+        roll1, roll2 = dice_rolled[0]
+        draw_dice = DrawDice()
+        draw_dice.draw(screen, roll1, roll2)
         pygame.display.update()
-    # this is a comment)
+        # this is a comment)
 
 
 def mouse_motion_event():

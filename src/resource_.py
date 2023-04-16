@@ -1,7 +1,7 @@
 import abc
-
 from enum import Enum
-from utils import RESOURCE_CARDS_DIR, Abstract
+
+from src.utils import RESOURCE_CARDS_DIR, Abstract
 
 
 class ResourceCard(Abstract):

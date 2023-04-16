@@ -1,8 +1,8 @@
 import pytest
 import sys
-sys.path.insert(1, 'src')
-from bank import Bank
-from resource_ import Resource
+
+from src.bank import Bank
+from src.resource_ import Resource
 
 
 @pytest.fixture

@@ -1,7 +1,7 @@
 import abc
 
 from enum import Enum
-from utils import DEVELOPMENT_CARDS_DIR, Abstract
+from src.utils import DEVELOPMENT_CARDS_DIR, Abstract
 
 
 class DevelopmentCard(Abstract):

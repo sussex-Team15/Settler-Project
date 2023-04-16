@@ -1,8 +1,7 @@
 import sys
-sys.path.insert(1, 'src')
 
-from player import Player
-from trade import Trade
+from src.player import Player
+from src.trade import Trade
 
 
 def test_trade_init():

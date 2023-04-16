@@ -1,7 +1,8 @@
 import random
-from trade import Trade
-from building import Settlement, City
-from resource_ import Resource
+
+from src.trade import Trade
+from src.building import Settlement, City
+from src.resource_ import Resource
 
 
 class Player:  # pylint: disable=too-many-instance-attributes
@@ -79,12 +80,15 @@ class Player:  # pylint: disable=too-many-instance-attributes
     # can be used for any number of dice (default =2)
     def roll_dice(self, num_dice=2):
         """
-        simulates a dice roll
+        This returns 1st dice roll, 2nd dice roll.
+        Like this::
 
-        Args:
-            num_dice: number of dice to be rolled
+            p = Player()
+            p.roll_dice("...")
 
-        Returns: 1st dice roll, 2nd dice roll
+        :param num_dice: number of dice to be rolled
+        :type num_dice: int, optional
+        :return: Tuple
         """
         return tuple(random.randint(1, 6) for i in range(num_dice))
 

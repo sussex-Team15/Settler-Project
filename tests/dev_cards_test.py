@@ -1,7 +1,6 @@
 import sys
-sys.path.insert(1, 'src')
 
-from development_cards import DevelopmentCards
+from src.development_cards import DevelopmentCards
 
 
 def test_chapel():

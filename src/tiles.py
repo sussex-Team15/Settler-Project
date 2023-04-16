@@ -1,9 +1,9 @@
 import abc
 import hexgrid
-
 from enum import Enum
-from resource_ import Resource
-from utils import TILE_CARDS_DIR, Abstract
+
+from src.resource_ import Resource
+from src.utils import TILE_CARDS_DIR, Abstract
 
 
 class Tile(Abstract):

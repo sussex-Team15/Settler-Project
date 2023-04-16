@@ -3,10 +3,9 @@
 
 import pytest
 import sys
-sys.path.insert(1, 'src')
 
-from player import Player
-from resource_ import Resource
+from src.player import Player
+from src.resource_ import Resource
 
 
 @pytest.fixture
