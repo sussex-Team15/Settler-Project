@@ -14,7 +14,7 @@ class Bank:
             return 3
         return self.trade_ratios
 
-    def null_methode(self):
+    def null_method(self):
         return (
             self.resources,
             self.trade_ratios,
