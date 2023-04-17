@@ -5,5 +5,5 @@ venv/
 .vscode/
 .DS_Store
 docs/_build/
-docs/_static/
-docs/_templates/
+# docs/_static/
+# docs/_templates/
