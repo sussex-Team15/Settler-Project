@@ -311,6 +311,15 @@ def click_event(_event, player):  # _ as not used yet
 
 
 def build_settlement(player, city=False):
+    """_summary_
+
+    :param player: _description_
+    :type player: _type_
+    :param city: _description_, defaults to False
+    :type city: bool, optional
+    :return: _description_
+    :rtype: _type_
+    """
     while True:
         for event in pygame.event.get():  # pylint: disable=no-member
             if event.type == pygame.QUIT:  # pylint: disable=no-member
@@ -329,6 +338,11 @@ def build_settlement(player, city=False):
 
 
 def build_road():
+    """_summary_
+
+    :return: _description_
+    :rtype: _type_
+    """
     while True:
         for event in pygame.event.get():  # pylint: disable=no-member
             if event.type == pygame.QUIT:  # pylint: disable=no-member
@@ -341,6 +355,11 @@ def build_road():
 
 
 def check_player_won():
+    """_summary_
+
+    :return: _description_
+    :rtype: _type_
+    """
     for player in players:
         if player.victory_points >= 10:
             return True

@@ -8,7 +8,7 @@
 import os
 import sys
 
-project = 'Setler Project'
+project = 'Settler Project'
 copyright = '2023, Noah Davy'
 author = 'Noah Davy'
 
@@ -25,7 +25,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.autodoc',
 ]
-autodoc_mock_imports = ["pygame", "rembg"]
+autodoc_mock_imports = ["pygame", "rembg", "hexgrid"]
 
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('..'))
@@ -34,5 +34,5 @@ sys.path.insert(0, os.path.abspath('../../src'))
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = 'sphinxdoc'
 html_static_path = ['_static']

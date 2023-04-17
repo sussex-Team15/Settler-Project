@@ -20,6 +20,11 @@ class Trade:
         return self.offering_player
 
     def get_offered_resource(self):
+        """_summary_
+
+        :return: _description_
+        :rtype: _type_
+        """
         return self.offered_resources
 
     def execute_trade(self):
