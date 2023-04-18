@@ -2,7 +2,7 @@
 
 This project is a version of the Settlers "Catan" game written in Python for the team15 Software Engineering Project. The game itself is turn based similar in parts to monopoly but mainly more focused on resources and building roads across the world map. For a detailed explanation of the game rules and concepts please refer to [this](https://www.catan.com/understand-catan/game-rules) document.
 # Getting Started
-In order to run this on your personal machine be sure to download the repository as a zip file and save on your own machine. Then unzip the folder and open using an IDE of your choice, for example VSCode. Finally run main.py to start the game and display the pygame window from which you can play the game.
+In order to run this on your personal machine be sure to download the repository as a zip file and save on your own machine. Then unzip the folder and open using an IDE of your choice, for example VSCode. Finally run main.py to start the game and display the pygame window from which you can play the game. Read the Documentation [here](https://settler-project.readthedocs.io/en/latest/).
 # Installing
 In order to install the correct modules run this code in the terminal.
 ```
