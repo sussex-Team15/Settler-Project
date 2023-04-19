@@ -10,6 +10,13 @@ class Bank:
         self.dev_cards = dev_cards
 
     def get_trade_ratio(self, num_settlements):
+        """_summary_
+
+        :param num_settlements: _description_
+        :type num_settlements: _type_
+        :return: _description_
+        :rtype: _type_
+        """
         if num_settlements > 0:
             return 3
         return self.trade_ratios

@@ -1,12 +1,11 @@
 import math
 import os
-import pygame
 import random
 import sys
+from pprint import pprint
+import pygame
 from pygame.locals import *  # pylint: disable=unused-wildcard-import wildcard-import # nopep8 E501
 from hexgrid import legal_tile_ids
-from pprint import pprint
-
 from src.draw_dice import DrawDice
 from src.button import ButtonHex, ButtonRect
 
@@ -179,7 +178,8 @@ def setup():
 
     return tile_sprites, board, board_mapping, players
 
-
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-nested-blocks
 def main_game_loop(**kwargs):  # pylint: disable=unused-argument
     game_running = True
     player_turn_index = 0
@@ -209,8 +209,6 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
 
                     dice_roll1, dice_roll2 = current_player.roll_dice(2)
                     dice_rolled.append((dice_roll1, dice_roll2))
-                    
-
                     for game_tile in board:
                         if dice_roll1 + dice_roll2 == game_tile.real_number:
                             current_player.add_resources(game_tile)
@@ -309,7 +307,7 @@ def click_event(_event, player):  # _ as not used yet
 
     pygame.display.flip()
 
-
+# pylint: disable=too-many-nested-blocks
 def build_settlement(player, city=False):
     """_summary_
 
@@ -392,7 +390,7 @@ def is_adjacent(node1, node2):
     # return true if x_diff and y_diff is less than radius of tiles
     return (x_diff <= max_road_len) and (y_diff <= max_road_len)
 
-
+# pylint: disable=inconsistent-return-statements
 def calc_mouse_node(mouse_pos):
     '''
     calculates and returns the node mouse is hovering over
@@ -414,7 +412,7 @@ def calc_mouse_node(mouse_pos):
     pygame.mouse.set_cursor(
         pygame.SYSTEM_CURSOR_ARROW)  # pylint: disable=no-member
 
-
+# pylint: disable=inconsistent-return-statements
 def calc_mouse_pos_tile(mouse_pos):
     """
     returns the tile that the mouse has clicked in
@@ -550,7 +548,7 @@ def draw_buttons():
         tile_buttons.append(button)
         # invisible buttons at center of tiles
 
-
+# pylint: disable=too-many-locals
 def draw_scoreboard(player_turn):
     """
     Draws the scoreboard as a seperate pygame surface
@@ -610,7 +608,7 @@ def draw_scoreboard(player_turn):
     rect_surf.blit(player_turn_text, (250, 540))
     screen.blit(rect_surf, (rect_x, rect_y))
 
-
+# pylint: disable=redefined-argument-from-local
 def draw_buildings(city=False):
     if city:
         for settlement in built_settlements:

@@ -1,5 +1,4 @@
-import sys
-
+# pylint: disable=missing-module-docstring,missing-function-docstring
 from src.development_cards import DevelopmentCards
 
 

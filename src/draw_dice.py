@@ -1,8 +1,8 @@
-import os
 from os import path
 import pygame
 
-
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-few-public-methods
 class DrawDice:
     def __init__(self):
         # loading dice images

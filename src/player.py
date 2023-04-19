@@ -94,7 +94,8 @@ class Player:  # pylint: disable=too-many-instance-attributes
 
     def build_settlement(self, node):
         """
-        Builds a settlement at the node specified
+        Builds a settlement at specified node 
+        Can only build if player has enough resources
 
         """
         settlement = Settlement(self, node)
@@ -180,15 +181,30 @@ class Player:  # pylint: disable=too-many-instance-attributes
         self.is_turn = False
 
     def get_resources(self):
+        """_summary_
+
+        :return: _description_
+        :rtype: _type_
+        """
         return self.resources
 
     def add_resources(self, resources):
         self.resources.append(resources)
 
     def get_victory_points(self):
+        """_summary_
+
+        :return: _description_
+        :rtype: _type_
+        """
         return self.victory_points
 
     def get_longest_road(self):
+        """_summary_
+
+        :return: _description_
+        :rtype: _type_
+        """
         longest_road = self.roads[0].get_length()
         # TODO implement get_length() in Road class
         for road in self.roads[1:]:

@@ -42,7 +42,7 @@ class Null(ResourceCard):
     def name(self):
         return None
 
-
+# pylint: disable=function-redefined
 class Resource(Enum):
     WOOD = Lumber()
     WOOL = Wool()

@@ -1,2 +1,5 @@
 [MASTER]
 disable= wrong-import-position
+
+[BASIC]
+good-names=DISPLAY_HEIGHT ,i

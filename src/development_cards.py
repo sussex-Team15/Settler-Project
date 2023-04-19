@@ -5,6 +5,11 @@ from src.utils import DEVELOPMENT_CARDS_DIR, Abstract
 
 
 class DevelopmentCard(Abstract):
+    """_summary_
+
+    :param Abstract: _description_
+    :type Abstract: _type_
+    """
     def name(self):
         return self.__class__.__name__.title().replace('_', ' ')
 
@@ -21,7 +26,11 @@ class DevelopmentCard(Abstract):
 
 
 class Chapel(DevelopmentCard):
+    """_summary_
 
+    :param DevelopmentCard: _description_
+    :type DevelopmentCard: _type_
+    """
     def description(self):
         return "+1 Victory Point"
 
@@ -30,7 +39,11 @@ class Chapel(DevelopmentCard):
 
 
 class Knight(DevelopmentCard):
+    """_summary_
 
+    :param DevelopmentCard: _description_
+    :type DevelopmentCard: _type_
+    """
     def description(self):
         return ("Move the Robber. Steal 1 resource card "
                 "from the owner of an adjacent settlement")
@@ -40,7 +53,11 @@ class Knight(DevelopmentCard):
 
 
 class LargestArmy(DevelopmentCard):
+    """_summary_
 
+    :param DevelopmentCard: _description_
+    :type DevelopmentCard: _type_
+    """
     def description(self):
         return ("The first player to play 3 Knight cards "
                 "gets this card. Another player who plays more "
@@ -51,7 +68,11 @@ class LargestArmy(DevelopmentCard):
 
 
 class Library(DevelopmentCard):
+    """_summary_
 
+    :param DevelopmentCard: _description_
+    :type DevelopmentCard: _type_
+    """
     def description(self):
         return "+1 Victory Point"
 
@@ -60,7 +81,11 @@ class Library(DevelopmentCard):
 
 
 class LongestRoad(DevelopmentCard):
+    """_summary_
 
+    :param DevelopmentCard: _description_
+    :type DevelopmentCard: _type_
+    """
     def description(self):
         return ("This Card Goes to the player with the longes unbroken"
                 " road of at least 5 segments. Another player who builds"
@@ -71,7 +96,11 @@ class LongestRoad(DevelopmentCard):
 
 
 class Market(DevelopmentCard):
+    """_summary_
 
+    :param DevelopmentCard: _description_
+    :type DevelopmentCard: _type_
+    """
     def description(self):
         return "+1 Victor Point"
 
@@ -80,7 +109,11 @@ class Market(DevelopmentCard):
 
 
 class Monopoly(DevelopmentCard):
+    """_summary_
 
+    :param DevelopmentCard: _description_
+    :type DevelopmentCard: _type_
+    """
     def description(self):
         return ("When you play this card, announce 1 type of resource."
                 " All other players must give you all their resource cards "
@@ -91,7 +124,11 @@ class Monopoly(DevelopmentCard):
 
 
 class Palace(DevelopmentCard):
+    """_summary_
 
+    :param DevelopmentCard: _description_
+    :type DevelopmentCard: _type_
+    """
     def description(self):
         return "+1 Victory Point"
 
@@ -100,7 +137,11 @@ class Palace(DevelopmentCard):
 
 
 class RoadBuilding(DevelopmentCard):
+    """_summary_
 
+    :param DevelopmentCard: _description_
+    :type DevelopmentCard: _type_
+    """
     def description(self):
         return "Place 2 new roads as if you had just built them"
 
@@ -109,7 +150,11 @@ class RoadBuilding(DevelopmentCard):
 
 
 class University(DevelopmentCard):
+    """_summary_
 
+    :param DevelopmentCard: _description_
+    :type DevelopmentCard: _type_
+    """
     def description(self):
         return "+1 Victory Point"
 
@@ -118,7 +163,11 @@ class University(DevelopmentCard):
 
 
 class YearofPlenty(DevelopmentCard):
+    """_summary_
 
+    :param DevelopmentCard: _description_
+    :type DevelopmentCard: _type_
+    """
     def description(self):
         return ("take any 2 resources from the bank add them to your hand."
                 " They can be 2 of the same resource or 2 different resources")
@@ -128,7 +177,13 @@ class YearofPlenty(DevelopmentCard):
 
 
 class DevelopmentCards(Enum):
+    """_summary_
 
+    :param Enum: _description_
+    :type Enum: _type_
+    :return: _description_
+    :rtype: _type_
+    """
     CHAPEL = Chapel()
     KNIGHT = Knight()
     LARGEST_ARMY = LargestArmy()

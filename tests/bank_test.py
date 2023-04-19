@@ -1,13 +1,13 @@
+# pylint: disable=missing-module-docstring,missing-function-docstring
+# pylint: disable=redefined-outer-name
 import pytest
-import sys
-
 from src.bank import Bank
 from src.resource_ import Resource
 
-
 @pytest.fixture
 def bank():
-    return Bank([Resource.BRICK] * 4 + [Resource.WOOD] * 4 + [Resource.WOOL] * 4 + [Resource.GRAIN] * 4 + [Resource.ORE] * 4, [])
+    return Bank([Resource.BRICK] * 4 + [Resource.WOOD]
+                * 4 + [Resource.WOOL] * 4 + [Resource.GRAIN] * 4 + [Resource.ORE] * 4, [])
 
 def test_bank_init(bank):
     assert len(bank.resources) == 20

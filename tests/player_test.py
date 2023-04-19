@@ -1,8 +1,11 @@
 # pylint: disable=redefined-outer-name
 # pylint: disable=wrong-import-position
+# pylint: disable=missing-module-docstring,missing-function-docstring
+# pylint: disable=fixme
+
+
 
 import pytest
-import sys
 
 from src.player import Player
 from src.resource_ import Resource
@@ -10,6 +13,7 @@ from src.resource_ import Resource
 
 @pytest.fixture
 def player():
+
     return Player("John", (255, 0, 0))
 
 
