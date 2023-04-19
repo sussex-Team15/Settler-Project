@@ -2,9 +2,6 @@
 # pylint: disable=wrong-import-position
 # pylint: disable=missing-module-docstring,missing-function-docstring
 # pylint: disable=fixme
-
-
-
 import pytest
 
 from src.player import Player

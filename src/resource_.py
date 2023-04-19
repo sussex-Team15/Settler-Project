@@ -43,6 +43,8 @@ class Null(ResourceCard):
         return None
 
 # pylint: disable=function-redefined
+
+
 class Resource(Enum):
     WOOD = Lumber()
     WOOL = Wool()

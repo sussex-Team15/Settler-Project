@@ -94,7 +94,7 @@ class Player:  # pylint: disable=too-many-instance-attributes
 
     def build_settlement(self, node):
         """
-        Builds a settlement at specified node 
+        Builds a settlement at specified node
         Can only build if player has enough resources
 
         """

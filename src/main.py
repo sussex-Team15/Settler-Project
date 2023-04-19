@@ -178,6 +178,7 @@ def setup():
 
     return tile_sprites, board, board_mapping, players
 
+
 # pylint: disable=too-many-branches
 # pylint: disable=too-many-nested-blocks
 def main_game_loop(**kwargs):  # pylint: disable=unused-argument
@@ -307,6 +308,7 @@ def click_event(_event, player):  # _ as not used yet
 
     pygame.display.flip()
 
+
 # pylint: disable=too-many-nested-blocks
 def build_settlement(player, city=False):
     """_summary_
@@ -390,6 +392,7 @@ def is_adjacent(node1, node2):
     # return true if x_diff and y_diff is less than radius of tiles
     return (x_diff <= max_road_len) and (y_diff <= max_road_len)
 
+
 # pylint: disable=inconsistent-return-statements
 def calc_mouse_node(mouse_pos):
     '''
@@ -411,6 +414,7 @@ def calc_mouse_node(mouse_pos):
 
     pygame.mouse.set_cursor(
         pygame.SYSTEM_CURSOR_ARROW)  # pylint: disable=no-member
+
 
 # pylint: disable=inconsistent-return-statements
 def calc_mouse_pos_tile(mouse_pos):
@@ -548,6 +552,7 @@ def draw_buttons():
         tile_buttons.append(button)
         # invisible buttons at center of tiles
 
+
 # pylint: disable=too-many-locals
 def draw_scoreboard(player_turn):
     """
@@ -607,6 +612,7 @@ def draw_scoreboard(player_turn):
                                         True, WHITE)
     rect_surf.blit(player_turn_text, (250, 540))
     screen.blit(rect_surf, (rect_x, rect_y))
+
 
 # pylint: disable=redefined-argument-from-local
 def draw_buildings(city=False):
