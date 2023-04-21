@@ -6,7 +6,6 @@ from pprint import pprint
 import pygame
 from pygame.locals import *  # pylint: disable=unused-wildcard-import wildcard-import # nopep8 E501
 from hexgrid import legal_tile_ids
-from src.draw_dice import DrawDice
 from src.button import ButtonHex, ButtonRect
 
 from src.player import Player
