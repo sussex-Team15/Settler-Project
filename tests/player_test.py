@@ -29,23 +29,25 @@ def test_roll_dice(player):
 
 def test_build_road(player):
     road_count = len(player.roads)
-    player.resources = [Resource.WOOD, Resource.BRICK]
+    player.resources = {Resource.WOOD:1, Resource.BRICK:1}
     player.build_road(1, 2)
     assert len(player.roads) == road_count + 1
     assert player.roads[-1] == (1, 2)
 
 
 def test_get_resources(player):
-    player.resources = [Resource.WOOD,
-                        Resource.BRICK, Resource.GRAIN, Resource.WOOL]
-    assert player.get_resources() == [
-        Resource.WOOD, Resource.BRICK, Resource.GRAIN, Resource.WOOL]
+    player.resources = {Resource.WOOD:1,
+                        Resource.BRICK:1, Resource.GRAIN:1, Resource.WOOL:1}
+    assert player.get_resources() == {
+        Resource.WOOD:1, Resource.BRICK:1, Resource.GRAIN:1, Resource.WOOL:1}
 
 
 def test_add_resources(player):
-    player.add_resources(Resource.WOOD)
-    player.add_resources(Resource.BRICK)
-    assert player.resources == [Resource.WOOD, Resource.BRICK]
+    player.add_resource(Resource.WOOD)
+    player.add_resource(Resource.BRICK)
+    assert player.resources == {Resource.WOOD:1, Resource.BRICK:1, 
+                                Resource.GRAIN:0, Resource.NONE:0,
+                                Resource.ORE:0, Resource.WOOL:0}
 
 
 def test_get_victory_points(player):

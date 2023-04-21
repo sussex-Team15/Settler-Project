@@ -21,8 +21,8 @@ class Player:  # pylint: disable=too-many-instance-attributes
         of victory points the player has received.
     - color: tuple
         A tuple with an r,g,b value representing the color that the player has.
-    - resources: list
-        A list of resources that the player has (all of type Resource)
+    - resources: dict
+        a dictionary of resource type mapped to the amount the player has
     - settlements: list
         A list of settlements the player has
     - cities: list
@@ -67,7 +67,10 @@ class Player:  # pylint: disable=too-many-instance-attributes
         self.name = name
         self.victory_points = 0
         self.color = color
-        self.resources = []
+        self.resources = {}
+        for r in Resource:
+            self.resources[r] = 0
+
         self.settlements = []
         self.cities = []
         self.roads = []
@@ -98,73 +101,33 @@ class Player:  # pylint: disable=too-many-instance-attributes
         Can only build if player has enough resources
 
         """
-        settlement = Settlement(self, node)
-        num_lumber, num_brick, num_wool, num_grain = 0, 0, 0, 0
-        # cost = 1 lumber 1 brick 1 wool 1 grain
-
-        for resource in self.resources:
-            is_wood = resource == Resource.WOOD
-            is_brick = resource == Resource.BRICK
-            is_grain = resource == Resource.GRAIN
-            is_wool = resource == Resource.WOOL
-            if is_wood or is_brick or is_grain or is_wool:
-                num_lumber += 1
-                num_brick += 1
-                num_grain += 1
-                num_wool += 1
-
-        if any([num_lumber >= 1,
-                num_grain >= 1,
-                num_brick >= 1,
-                num_wool >= 1]):
-            self.settlements.append(settlement)
-        else:
-            print('not enough resources')
+        self.resources[Resource.BRICK.name()]-=1
+        self.resources[Resource.WOOD.name()]-=1
+        self.resources[Resource.WOOL.name()]-=1
+        self.resources[Resource.GRAIN.name()]-=1
+        self.settlements.append(node)
+       
 
     def build_city(self, node):
         """
         Builds a city at specified node
         only can build if a settlement is on the node
         """
-        city = City(self, node)
-        num_ore = 0
-        num_grain = 0
-
-        # check to see if player has enough resources for city
-        for resource in self.resources:
-            if resource == Resource.GRAIN:
-                num_grain += 1
-            elif resource == Resource.ORE:
-                num_ore += 1
-
-        if num_ore >= 3 and num_grain >= 2:
-            # player has enough
-            self.cities.append(city)
-        else:
-            print("Not enough resources")
+        self.resources[Resource.ORE.name()]-=3
+        self.resources[Resource.GRAIN.name()]-=2
+        self.cities.append(node)
+        
 
     def build_road(self, node1, node2):
         """
         builds a road from node1 to node2.
         Road will be set to the color of the player building
         """
-        # cost 1 lumber 1 brick
-        num_lumber = 0
-        num_brick = 0
-
-        # check to see if player has enough resources
-        for resource in self.resources:
-            if resource == Resource.WOOD:
-                num_lumber += 1
-            elif resource == Resource.BRICK:
-                num_brick += 1
-
-        if num_brick >= 1 and num_lumber >= 1:
-            # player has enough
-            self.roads.append((node1, node2))
-            print(f'road built from {node1} to {node2}')
-        else:
-            print("Not enough resources")
+        self.resources[Resource.WOOD]-=1
+        self.resources[Resource.BRICK]-=1
+        self.roads.append((node1, node2))
+        print(f'road built from {node1} to {node2}')
+        
 
     def buy_dev_card(self, bank):
         '''
@@ -188,8 +151,11 @@ class Player:  # pylint: disable=too-many-instance-attributes
         """
         return self.resources
 
-    def add_resources(self, resources):
-        self.resources.append(resources)
+    def add_resource(self, resource):
+        if resource in self.resources:
+            self.resources[resource] +=1
+        else:
+            self.resources[resource] = 1
 
     def get_victory_points(self):
         """_summary_
