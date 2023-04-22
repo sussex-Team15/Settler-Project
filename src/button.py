@@ -5,7 +5,8 @@ GRAY = (158, 153, 134)
 
 
 class ButtonRect:
-
+    """_summary_
+    """
     def __init__(self,
                  x_y_pos,
                  width_height,

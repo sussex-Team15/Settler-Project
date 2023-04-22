@@ -45,7 +45,7 @@ class Player:  # pylint: disable=too-many-instance-attributes
         builds a settlement at the specified location
     - build_road(self, location1, location2)
         builds a road from location1 to location2
-    - buy_card(self)
+    - buy_dev_card(self,bank)
         buys card from the bank
     - play_card(self, card)
         uses the selected card
@@ -60,7 +60,12 @@ class Player:  # pylint: disable=too-many-instance-attributes
         returns number of victory points player has
     - get_longest_road(self):
         returns the longest road that the player currently has
-
+    - roll_dice(self,num_dice = 2)
+        returns the values of both the rolled dice in a player's turn
+    - get_resources(self)
+        return player's current resources
+    - add_resources(self, resources)
+        add resources to player's inventory
     """
 
     def __init__(self, name, color):
@@ -174,6 +179,13 @@ class Player:  # pylint: disable=too-many-instance-attributes
         '''
 
     def make_trade(self, resource, player):
+        """_summary_
+
+        :param resource: _description_
+        :type resource: _type_
+        :param player: _description_
+        :type player: _type_
+        """
         new_trade = Trade(self, resource, player)
         new_trade.execute_trade()
 
