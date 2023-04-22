@@ -6,37 +6,31 @@ from src.resource_ import Resource
 
 
 class Player:  # pylint: disable=too-many-instance-attributes
-    """
-    Player class that controls the
-    behaviour of an indivdual player of the game.
+    """Player class that controls the behaviour of an indivdual player of the game. Contains attributes such as the player name and number of VP'S.
 
-    Contains attributes such as the player name and number of VP'S.
-
-    Attributes:
-
-    - name : str
-        String representing the name of the player
-    - victory_points: int
-        Integer representing the number
-        of victory points the player has received.
-    - color: tuple
-        A tuple with an r,g,b value representing the color that the player has.
-    - resources: list
-        A list of resources that the player has (all of type Resource)
-    - settlements: list
-        A list of settlements the player has
-    - cities: list
-        A list of cities the player has
-    - roads: list
-        a list of roads the player has (all of type Road)
-    - isTurn: boolean
-        a boolean indicating if it is the players turn in the gameloop.
-    - hasLongestRoad: boolean
-        a boolean indicating if the player has the longest road.
-    - has_largest_army: boolean
-        a boolean indicating if the player has the largest army
-    - trade_offers: list
-        a list of trade_offers that the player has received (of type Trade)
+    :param name: String representing the name of the player
+    :type name: str
+    :param victory_points: Integer representing the number of victory points the player has received.
+    :type victory_points: int  
+    :param color: A tuple with an r,g,b value representing the color that the player has.
+    :type color: tuple
+    :param resources: A list of resources that the player has (all of type Resource)
+    :type resources: list
+    :param settlements: A list of settlements the player has
+    :type settlements: list
+    :param cities: A list of cities the player has
+    :type cities: list
+    :param roads: a list of roads the player has (all of type Road)
+    :type roads: list
+    :param isTurn: a boolean indicating if it is the players turn in the gameloop.
+    :type is Turn: bool  
+    :param hasLongestRoad: a boolean indicating if the player has the longest road.
+    :type hasLongestRoad: bool
+    :param has_largest_army: a boolean indicating if the player has the largest army
+    :type has_largest_army: bool
+    :param trade_offers: a list of trade_offers that the player has received (of type Trade)
+    :type trade_offers: list
+        
 
 
     Methods:
@@ -69,6 +63,8 @@ class Player:  # pylint: disable=too-many-instance-attributes
     """
 
     def __init__(self, name, color):
+        """Constructor Class
+        """
         self.name = name
         self.victory_points = 0
         self.color = color
@@ -84,24 +80,22 @@ class Player:  # pylint: disable=too-many-instance-attributes
 
     # can be used for any number of dice (default =2)
     def roll_dice(self, num_dice=2):
-        """
-        This returns 1st dice roll, 2nd dice roll.
+        """This returns 1st dice roll, 2nd dice roll.
         Like this::
 
             p = Player()
-            p.roll_dice("...")
+            print(p.roll_dice("2")) = [5,2]
 
         :param num_dice: number of dice to be rolled
         :type num_dice: int, optional
-        :return: Tuple
+        :return: A Tuple
+        :rtype: tuple
         """
         return tuple(random.randint(1, 6) for i in range(num_dice))
 
     def build_settlement(self, node):
         """
-        Builds a settlement at specified node
-        Can only build if player has enough resources
-
+        Builds a settlement at specified node, Can only build if player has enough resources
         """
         settlement = Settlement(self, node)
         num_lumber, num_brick, num_wool, num_grain = 0, 0, 0, 0
@@ -150,8 +144,7 @@ class Player:  # pylint: disable=too-many-instance-attributes
 
     def build_road(self, node1, node2):
         """
-        builds a road from node1 to node2.
-        Road will be set to the color of the player building
+        Builds a road from node1 to node2. Road will be set to the color of the player building
         """
         # cost 1 lumber 1 brick
         num_lumber = 0
@@ -172,50 +165,55 @@ class Player:  # pylint: disable=too-many-instance-attributes
             print("Not enough resources")
 
     def buy_dev_card(self, bank):
-        '''
+        """
         Buys a development card from the bank
-
-            Paramaters: self
-        '''
+        """
 
     def make_trade(self, resource, player):
-        """_summary_
+        """Executes a trade of resources between two players
 
-        :param resource: _description_
-        :type resource: _type_
-        :param player: _description_
-        :type player: _type_
+        :param resource: the resources being traded
+        :type resource: list
+        :param player: player names
+        :type player: str
         """
         new_trade = Trade(self, resource, player)
         new_trade.execute_trade()
 
     def end_turn(self):
+        """Ends a players turn
+        """
         self.is_turn = False
 
     def get_resources(self):
-        """_summary_
+        """Returns current players resources
 
-        :return: _description_
-        :rtype: _type_
+        :return: list of resources
+        :rtype: list
         """
         return self.resources
 
     def add_resources(self, resources):
+        """Adds resources to players inventory
+
+        :param resources: resources to be added
+        :type resources: list
+        """
         self.resources.append(resources)
 
     def get_victory_points(self):
-        """_summary_
+        """Returns current players victory points
 
-        :return: _description_
-        :rtype: _type_
+        :return: Integer value of current victory point count for desired player
+        :rtype: int
         """
         return self.victory_points
 
     def get_longest_road(self):
-        """_summary_
+        """Displays current longest connected road built on the board
 
-        :return: _description_
-        :rtype: _type_
+        :return: Integer value of longest constructed road
+        :rtype: int
         """
         longest_road = self.roads[0].get_length()
         # TODO implement get_length() in Road class

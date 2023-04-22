@@ -370,13 +370,13 @@ def check_player_won():
 def is_adjacent(node1, node2):
     ''' Returns true if node1 and node2 are connected by a road
 
-    Args:
-        node1: first node to be checked
-        node2: second node to be checked
-
-    Returns:
-        boolean
-
+    :param node1: first node to be checked
+    :type node1: int
+    :param node2: second node to be checked
+    :type node2: int
+    
+    :return: true if x_diff and y_diff is less than radius of tiles
+    :rtype: bool
     '''
 
     x1_pos, y1_pos = node1.x_pos, node1.y_pos
@@ -395,14 +395,12 @@ def is_adjacent(node1, node2):
 
 # pylint: disable=inconsistent-return-statements
 def calc_mouse_node(mouse_pos):
-    '''
-    calculates and returns the node mouse is hovering over
+    '''Calculates and returns the node mouse is hovering over
 
-    Args:
-        mouse_pos: x, y coordinates of the mouse click
+    :param [x_pos: int, y_pos: int]: x, y coordinates of the mouse click
 
-    Returns:
-        Node_id
+    :return: node_id
+    :rtype: int
     '''
     for node_id, node_point in board_mapping['nodes'].items():
         pos_1 = node_point[0] - mouse_pos[0]
@@ -418,14 +416,11 @@ def calc_mouse_node(mouse_pos):
 
 # pylint: disable=inconsistent-return-statements
 def calc_mouse_pos_tile(mouse_pos):
-    """
-    returns the tile that the mouse has clicked in
+    """Returns the tile that the mouse has clicked in
 
-    Args:
-        mouse_pos: x, y coordinates of the mouse click
-
-    Returns:
-        tile object from the tiles class
+    :param [x_pos: int, y_pos: int]: x, y coordinates of the mouse click
+    :return: tile object from the tiles class
+    :rtype: tile object
     """
     x_pos, y_pos = mouse_pos
     hex_length = math.dist((621, 318), (699, 187))
@@ -657,9 +652,9 @@ def draw_buildings(city=False):
 
 
 def popup():
-    '''
+    """
     popup window that gives options for player when node is clicked
-    '''
+    """
 
     popup_width = 630
     popup_height = 160

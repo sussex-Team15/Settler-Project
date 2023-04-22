@@ -4,6 +4,8 @@ import pygame
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-few-public-methods
 class DrawDice:
+    """A Class that displays and updates all of the dice image assets onto the pygame window.
+    """
     def __init__(self):
         # loading dice images
         self.DISPLAY_HEIGHT = 800
