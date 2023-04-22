@@ -42,7 +42,7 @@ def test_longest_road():
 
 def test_market():
     market = DevelopmentCards.MARKET
-    assert market.description() == "+1 Victor Point"
+    assert market.description() == "+1 Victory Point"
     assert market.vp_awarded() == 1
 
 
