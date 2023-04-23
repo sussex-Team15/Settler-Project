@@ -1,3 +1,4 @@
+# pylint: disable=missing-module-docstring
 class Bank:
     """Bank class that controls behaviour of the bank in the game
 
@@ -5,7 +6,9 @@ class Bank:
 
     :param resources: bank's resources
     :type resources: list
-    :param trade_ratios: standard ratio for all players trading with the bank, 4 of the same card for one from the bank
+    :param trade_ratios: standard ratio for all players 
+    trading with the bank, 4 of the same card for one 
+    from the bank
     :type trade_ratios: int
     :param dev_cards: list of development cards in the bank's inventory
     :type dev_cards: list
@@ -21,7 +24,9 @@ class Bank:
         self.dev_cards = dev_cards
 
     def get_trade_ratio(self, num_settlements):
-        """Returns the trade ratio as an integer value based on how many settlements are constructed.
+        """Returns the trade ratio as an integer 
+        value based on how many settlements are 
+        constructed.
 
         :param num_settlements: Current number of settlements constructed on the board
         :type num_settlements: int
@@ -35,7 +40,8 @@ class Bank:
     def null_method(self):
         """Returns all current information about the bank
 
-        :return: The current values of the bank's 'resources','trade_ratios' and 'dev_cards' inventory
+        :return: The current values of the bank's 'resources',
+        'trade_ratios' and 'dev_cards' inventory
         :rtype: Union[List[str],int]
         """
         return (

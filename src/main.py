@@ -1,10 +1,11 @@
+# pylint: disable=missing-module-docstring
 import math
 import os
 import random
 import sys
 from pprint import pprint
 import pygame
-from pygame.locals import *  # pylint: disable=unused-wildcard-import wildcard-import # nopep8 E501
+from pygame.locals import*  # pylint: disable=unused-wildcard-import wildcard-import # nopep8 E501
 from hexgrid import legal_tile_ids
 from src.draw_dice import DrawDice
 from src.button import ButtonHex, ButtonRect
@@ -186,8 +187,8 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
     """
     The main loop that runs the game logic.
 
-    :param **kwargs: Any keyword arguments required.
-    :type **kwargs: dict
+    :param \\**kwargs: Any keyword arguments required.
+    :type \\**kwargs: dict
     :return: None
     :rtype: None
     """
@@ -267,10 +268,18 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
 
 def mouse_motion_event():
     """
-    Handles mouse motion events, checking if the mouse hovers over any button and updating its cursor accordingly.
+    Handles mouse motion events, checking if the mouse 
+    hovers over any button and updating its cursor accordingly.
 
-    This function iterates over the node and tile buttons, as well as the build road, build city, build settlement, make trade, and other buttons, checking if the mouse hovers over any of them. If a button is hovered over and
-    the cursor is not already set to a hand icon, it sets the cursor to a hand icon, indicating that the button can be clicked. If the cursor is already set to a hand icon and the mouse is not hovering over a button anymore, it sets the cursor back to the default arrow icon.
+    This function iterates over the node and tile buttons, 
+    as well as the build road, build city, build settlement, 
+    make trade, and other buttons, checking if the mouse 
+    hovers over any of them. If a button is hovered over and
+    the cursor is not already set to a hand icon, it sets the 
+    cursor to a hand icon, indicating that the button can be 
+    clicked. If the cursor is already set to a hand icon and 
+    the mouse is not hovering over a button anymore, it sets 
+    the cursor back to the default arrow icon.
 
     :return: None
     """
@@ -292,9 +301,13 @@ def click_event(_event, player):  # _ as not used yet
     """
     Handles click events for the game.
 
-    This function is called when a mouse click event is detected in the game window. It checks whether any of the buttons have been clicked, and takes the appropriate action based on which button was clicked.
+    This function is called when a mouse click event is 
+    detected in the game window. It checks whether any 
+    of the buttons have been clicked, and takes the 
+    appropriate action based on which button was clicked.
 
-    :param _event: The pygame event object associated with the mouse click.
+    :param _event: The pygame event object associated with 
+    the mouse click.
     :type _event: pygame.event.Event
     :param player: The current player object.
     :type player: Player
@@ -338,15 +351,19 @@ def click_event(_event, player):  # _ as not used yet
 
 # pylint: disable=too-many-nested-blocks
 def build_settlement(player, city=False):
-    """Build a settlement or a city on a node selected by the player.
+    """Build a settlement or a city on a node selected by 
+    the player.
 
-    This function allows the player to build a settlement or a city on a node that they select on the game board. If the
-    player builds a city, they will be awarded two victory points, and if they build a settlement, they will be awarded
-    one victory point.
+    This function allows the player to build a settlement 
+    or a city on a node that they select on the game board. 
+    If the player builds a city, they will be awarded two 
+    victory points, and if they build a settlement, 
+    they will be awarded one victory point.
 
     :param player: The player who is building the settlement or city.
     :type player: Player
-    :param city: A boolean value indicating whether the player is building a city (True) or a settlement (False).
+    :param city: A boolean value indicating whether the player is
+    building a city (True) or a settlement (False).
     :type city: bool, optional
     :return: The (x, y) coordinates of the node where the player built the settlement or city.
     :rtype: Tuple[int, int]
@@ -369,14 +386,14 @@ def build_settlement(player, city=False):
 
 
 def build_road():
-    """
-    Wait for a click on a node button, then return that button.
+    """Wait for a click on a node button, then return that button.
 
     This function waits for a mouse click event and checks if it occurred
     on one of the node buttons. If so, it returns the corresponding button.
 
     :return: The button object representing the node where the road will start.
-    :rtype: ButtonRect
+    :rtype: :class: `ButtonRect`
+    :raises SystemExit: If the user quits the game.
     """
     while True:
         for event in pygame.event.get():  # pylint: disable=no-member
@@ -687,7 +704,9 @@ def draw_buildings(city=False):
     """
     Draw settlements or cities on the board.
 
-    :param city: A boolean value indicating whether to draw cities or settlements. Defaults to False which means settlements will be drawn.
+    :param city: A boolean value indicating whether to 
+    draw cities or settlements. Defaults to False which 
+    means settlements will be drawn.
     :type city: bool, optional
     """
     if city:
@@ -732,9 +751,11 @@ def draw_buildings(city=False):
 
 def popup():
     """
-    Displays a popup window with options for the player when a node is clicked. 
+    Displays a popup window with options for the player when a node 
+    is clicked. 
     
-    :return: A tuple of six ButtonRect objects representing the different options available to the player.
+    :return: A tuple of six ButtonRect objects representing the
+    different options available to the player.
     :rtype: tuple
     """
 

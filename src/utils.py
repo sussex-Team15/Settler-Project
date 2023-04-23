@@ -1,3 +1,4 @@
+# pylint: disable=missing-module-docstring
 import os
 import abc
 from rembg import remove
@@ -20,7 +21,8 @@ def prepare_assets(directory):
     :raises: ValueError if the directory does not exist.
 
     This method prepares all asset files in the given directory by applying the `remove` function
-    to their contents and writing the results to new files with the prefix "new_". The original files
+    to their contents and writing the results to new 
+    files with the prefix "new_". The original files
     are deleted, and the new files are renamed to match the names of the original files.
     """
     files = os.listdir(directory)

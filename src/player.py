@@ -1,3 +1,4 @@
+# pylint: disable=missing-module-docstring
 import random
 
 from src.trade import Trade
@@ -6,11 +7,15 @@ from src.resource_ import Resource
 
 
 class Player:  # pylint: disable=too-many-instance-attributes
-    """Player class that controls the behaviour of an indivdual player of the game. Contains attributes such as the player name and number of VP'S.
+    """Player class that controls the behaviour of 
+    an indivdual player of the game. Contains attributes
+    such as the player name and number of VP'S.
 
-    :param name: String representing the name of the player
+    :param name: String representing the name of the 
+    player
     :type name: str
-    :param victory_points: Integer representing the number of victory points the player has received.
+    :param victory_points: Integer representing the number 
+    of victory points the player has received.
     :type victory_points: int  
     :param color: A tuple with an r,g,b value representing the color that the player has.
     :type color: tuple

@@ -1,3 +1,4 @@
+# pylint: disable=missing-module-docstring
 import pygame
 
 RED = (255, 0, 0)
@@ -8,7 +9,8 @@ class ButtonRect:
     """
     A class representing a rectangular button.
 
-    :param x_y_pos: A tuple representing the x and y coordinates of the top-left corner of the button.
+    :param x_y_pos: A tuple representing the x and y 
+    coordinates of the top-left corner of the button.
     :type x_y_pos: Tuple[int, int]
     :param width_height: A tuple representing the width and height of the button.
     :type width_height: Tuple[int, int]

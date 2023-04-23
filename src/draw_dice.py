@@ -1,3 +1,4 @@
+# pylint: disable=missing-module-docstring
 from os import path
 import pygame
 

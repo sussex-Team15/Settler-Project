@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+# pylint: disable=unnecessary-pass
 import abc
 import os
 from src.utils import BUILDINGS_DIR, FILE_EXTENSIONS
@@ -36,7 +38,8 @@ class Building(abc.ABC):
     def asset(self):
         """Retrieves corresponding image files for either a city or settlement
 
-        :raises NotImplementedError: If a type of building besides a city or settlement is attempted to be built
+        :raises NotImplementedError: If a type of building 
+        besides a city or settlement is attempted to be built
         """
         found_files = [file for file in os.listdir(
             BUILDINGS_DIR) if self.__class__.__name__.lower() in file]

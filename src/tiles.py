@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+# pylint: disable=unnecessary-pass
 import abc
 from enum import Enum
 import hexgrid
@@ -7,7 +9,11 @@ from src.utils import TILE_CARDS_DIR, Abstract
 
 
 class Tile(Abstract):
-    """Abstract class template for Tiles and controls behaviour for all tile card types, also inherits behaviour from abstract class so that the correct image files are retrieved for each tile
+    """Abstract class template for Tiles and 
+    controls behaviour for all tile card types, 
+    also inherits behaviour from abstract class 
+    so that the correct image files are retrieved 
+    for each tile
 
     :param Abstract: abstract base class in utils.py
     :type Abstract: type
@@ -224,9 +230,15 @@ class Desert(Tile):
 
 class ResourceTile(Enum):
     """
-    Represents a resource tile in the game, with associated properties and methods.
+    Represents a resource tile in the game, with 
+    associated properties and methods.
 
-    This class is an enumeration of the different types of resource tiles in the game, including Forest, Pasture, Fields, Hills, Mountain, and Desert. Each type of tile has a corresponding `Tile` object, which is used to generate resources and provide other information.
+    This class is an enumeration of the different types 
+    of resource tiles in the game, including Forest, 
+    Pasture, Fields, Hills, Mountain, and Desert. 
+    Each type of tile has a corresponding `Tile` object, 
+    which is used to generate resources and provide other 
+    information.
     """
     FOREST = Forest()
     PASTURE = Pasture()

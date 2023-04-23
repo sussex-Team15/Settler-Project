@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+# pylint: disable=unnecessary-pass
 import abc
 
 from enum import Enum
@@ -5,7 +7,11 @@ from src.utils import DEVELOPMENT_CARDS_DIR, Abstract
 
 
 class DevelopmentCard(Abstract):
-    """Abstract class template for development cards and controls behaviour for all development card types, also inherits behaviour from abstract class so that the correct image files are retrieved for each development card
+    """Abstract class template for development cards 
+    and controls behaviour for all development card 
+    types, also inherits behaviour from abstract class
+    so that the correct image files are retrieved for 
+    each development card.
 
     :param Abstract: abstract base class in utils.py
     :type Abstract: type
@@ -278,12 +284,13 @@ class YearofPlenty(DevelopmentCard):
 
 
 class DevelopmentCards(Enum):
-    """Enum Base class
+    """
+    Enumerations of development cards available in the game.
 
-    :param Enum: Enum base class
+    :param Enum: Enum base class.
     :type Enum: Enum
-    :return: _description_
-    :rtype: _type_
+    :return: The DevelopmentCards object with corresponding card object.
+    :rtype: DevelopmentCards
     """
     CHAPEL = Chapel()
     KNIGHT = Knight()
@@ -298,18 +305,46 @@ class DevelopmentCards(Enum):
     YEAR_OF_PLENTY = YearofPlenty()
 
     def __init__(self, card):
+        """Constructor class
+        :param card: The corresponding DevelopmentCard object for this resource.
+        :type card: DevelopmentCard
+        """
         self.card = card
 
     def name(self):  # pylint: disable=function-redefined
+        """
+        Get the name of the development card.
+
+        :return: The name of the development card.
+        :rtype: str
+        """
         return self.card.name()
 
     def description(self):
+        """
+        Get the description of the development card.
+
+        :return: The description of the development card.
+        :rtype: str
+        """
         return self.card.description()
 
     def vp_awarded(self):
+        """
+        Get the victory point awarded by the development card.
+
+        :return: The victory point awarded by the development card.
+        :rtype: int
+        """
         return self.card.vp_awarded()
 
     def asset(self):
+        """
+        Get the asset (i.e. image) of the development card.
+
+        :return: The asset of the development card.
+        :rtype: str
+        """
         return self.card.asset()
 
 

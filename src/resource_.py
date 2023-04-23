@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+# pylint: disable=unnecessary-pass
 import abc
 from enum import Enum
 
@@ -5,7 +7,11 @@ from src.utils import RESOURCE_CARDS_DIR, Abstract
 
 
 class ResourceCard(Abstract):
-    """Abstract class template for Resource cards and controls behaviour for all resource card types, also inherits behaviour from abstract class so that the correct image files are retrieved for each resource card
+    """Abstract class template for Resource cards and 
+    controls behaviour for all resource card types, 
+    also inherits behaviour from abstract class so 
+    that the correct image files are retrieved for 
+    each resource card
 
     :param Abstract: abstract base class in utils.py
     :type Abstract: type
@@ -91,19 +97,25 @@ class Ore(ResourceCard):
 
 
 class Null(ResourceCard):
+    """
+    A class representing a null resource card.
+    """
     def name(self):
+        """
+        Returns None, since a null resource card has no name.
+        
+        :return: None
+        """
         return None
 
 # pylint: disable=function-redefined
 
 
 class Resource(Enum):
-    """Enum base class
+    """Class representing a Settlers of Catan resource.
 
-    :param Enum: _description_
-    :type Enum: _type_
-    :return: _description_
-    :rtype: _type_
+    :param card: The corresponding ResourceCard object for this resource.
+    :type card: ResourceCard
     """
     WOOD = Lumber()
     WOOL = Wool()
@@ -114,10 +126,22 @@ class Resource(Enum):
     NONE = Null()
 
     def __init__(self, card):
+        """Constructor class
+        """
         self.card = card
 
     def name(self):
+        """Get the name of the resource.
+
+        :return: The name of the resource.
+        :rtype: str
+        """
         return self.card.name()
 
     def asset(self):
+        """Get the asset representing the resource.
+
+        :return: The asset representing the resource.
+        :rtype: str
+        """
         return self.card.asset()

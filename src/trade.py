@@ -1,3 +1,4 @@
+# pylint: disable=missing-module-docstring
 class Trade:
     """Trade Class that controls behaviour of all trading actions that occur within the game
 
@@ -56,7 +57,11 @@ class Trade:
         return self.offered_resources
 
     def execute_trade(self):
-        """Executes the trade process so that the resources move from the offering_player to the receiving_player and ensures the offering_player no longer has the resources available.
+        """Executes the trade process so that the 
+        resources move from the offering_player to 
+        the receiving_player and ensures the 
+        offering_player no longer has the resources 
+        available.
         """
         if self.is_accepted:
             # remove all offered resources from offering players resources
