@@ -30,36 +30,6 @@ class Player:  # pylint: disable=too-many-instance-attributes
     :type has_largest_army: bool
     :param trade_offers: a list of trade_offers that the player has received (of type Trade)
     :type trade_offers: list
-        
-
-
-    Methods:
-
-    - build_settlement(self, location)
-        builds a settlement at the specified location
-    - build_road(self, location1, location2)
-        builds a road from location1 to location2
-    - buy_dev_card(self,bank)
-        buys card from the bank
-    - play_card(self, card)
-        uses the selected card
-    - make_trade(self, resource, player)
-        activates a trade with
-        the specified player offering the specified Resource
-    - end_turn(self)
-        ends player's turn
-    - get_resources(self)
-        returns list of resources player has
-    - get_victory_points(self)
-        returns number of victory points player has
-    - get_longest_road(self):
-        returns the longest road that the player currently has
-    - roll_dice(self,num_dice = 2)
-        returns the values of both the rolled dice in a player's turn
-    - get_resources(self)
-        return player's current resources
-    - add_resources(self, resources)
-        add resources to player's inventory
     """
 
     def __init__(self, name, color):

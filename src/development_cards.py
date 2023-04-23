@@ -41,6 +41,11 @@ class DevelopmentCard(Abstract):
         return 0  # 0 for false and anyother num for the amount of VP awarded
 
     def asset(self):
+        """Returns development card asset
+
+        :return: Development Card asset
+        :rtype: str
+        """
         return self.get_asset(DEVELOPMENT_CARDS_DIR)
 
 
@@ -273,7 +278,7 @@ class YearofPlenty(DevelopmentCard):
 
 
 class DevelopmentCards(Enum):
-    """
+    """Enum Base class
 
     :param Enum: Enum base class
     :type Enum: Enum
