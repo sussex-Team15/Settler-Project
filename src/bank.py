@@ -2,8 +2,6 @@
 class Bank:
     """Bank class that controls behaviour of the bank in the game
 
-    Attributes:
-
     :param resources: bank's resources
     :type resources: list
     :param trade_ratios: standard ratio for all players 
@@ -12,6 +10,7 @@ class Bank:
     :type trade_ratios: int
     :param dev_cards: list of development cards in the bank's inventory
     :type dev_cards: list
+    
     """
     def __init__(self, resources, dev_cards):
         """Constructor Method
