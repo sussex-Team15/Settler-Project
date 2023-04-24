@@ -4,9 +4,9 @@ Getting Started
 Pre-Requisites
 --------------
 
-Firstly you must ensure that on the system that you are using, and whether you are using a virtual environment or intend to do everything globally, you must not use a python version higher than 3.10 as these are the versiosns that the game has been been tested to work optimally with and if not some packages will not install such as 'rembg', versions between 3.8 and 3.10 should run with no issues, preferably install version 3.10 in a virtual environment. 
+Firstly you must ensure that on the system you are using, whether you use a virtual environment or intend to do everything globally, you must not use a python version that is 3.10 or lower as these are the versions that the game has been been tested to work optimally with and if not some packages will not install such as 'rembg'; versions between 3.8 and 3.10 should run with no issues, preferably install version 3.10 in a virtual environment. 
 
-Secondly, from the github repository https://github.com/sussex-Team15/Settler-Project/tree/main, you must download the repository as a zip file to your machine and save in an appropriate location.
+Secondly, from the github repository https://github.com/sussex-Team15/Settler-Project/tree/main, you must download the repository as a zip file to your machine and save in an appropriate location. Alternatively you can just clone the repository and input the link in the appropriate section within your IDE to clone it directly.
 
 Then, in order to install the correct modules run this code in the terminal, however if you use a different package manager than pip, change accordingly.
 
