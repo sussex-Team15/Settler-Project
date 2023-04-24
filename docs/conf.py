@@ -25,12 +25,12 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.autodoc',
 ]
-autodoc_mock_imports = ["pygame", "rembg", "hexgrid"]
+autodoc_mock_imports = ["pygame", "rembg", "hexgrid","pytest"]
 
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../../src'))
-
+sys.path.insert(0, os.path.abspath('../../tests'))
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 

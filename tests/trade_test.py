@@ -1,9 +1,14 @@
-# pylint: disable=missing-module-docstring,missing-function-docstring
+# pylint: disable=missing-module-docstring
 from src.player import Player
 from src.trade import Trade
 
 
 def test_trade_init():
+    """
+    Test the Trade object is initialized with the expected values.
+
+    :return: Nothing.
+    """
     player1 = Player("Noah", (255, 0, 0))
     player2 = Player("John", (0, 255, 0))
     resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
@@ -17,6 +22,11 @@ def test_trade_init():
 
 
 def test_accept_trade():
+    """
+    Test that the Trade object is marked as accepted after calling accept_trade.
+
+    :return: Nothing.
+    """
     player1 = Player("Noah", (255, 0, 0))
     player2 = Player("John", (0, 255, 0))
     resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
@@ -28,6 +38,11 @@ def test_accept_trade():
 
 
 def test_cancel_trade():
+    """
+    Test that the Trade object is marked as not accepted after calling cancel_trade.
+
+    :return: Nothing.
+    """
     player1 = Player("Noah", (255, 0, 0))
     player2 = Player("John", (0, 255, 0))
     resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
@@ -40,6 +55,11 @@ def test_cancel_trade():
 
 
 def test_get_offering_player():
+    """
+    Test that get_offering_player() returns the correct offering player.
+
+    :return: Nothing.
+    """
     player1 = Player("Noah", (255, 0, 0))
     player2 = Player("John", (0, 255, 0))
     resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
@@ -50,6 +70,11 @@ def test_get_offering_player():
 
 
 def test_get_offered_resource():
+    """
+    Test that get_offered_resource() returns the correct offered resources.
+
+    :return: Nothing.
+    """
     player1 = Player("Noah", (255, 0, 0))
     player2 = Player("John", (0, 255, 0))
     resources = ["Wool", "Grain", "Brick", "Wood", "Ore"]
@@ -60,6 +85,11 @@ def test_get_offered_resource():
 
 
 def test_execute_trade():
+    """
+    Test that execute_trade() properly transfers resources between players.
+
+    :return: Nothing.
+    """
     player1 = Player("Noah", (255, 0, 0))
     player1.resources = ["Wood", "Brick"]
     player2 = Player("John", (0, 255, 0))

@@ -1,10 +1,11 @@
+# pylint: disable=missing-module-docstring
 import math
 import os
 import random
 import sys
 from pprint import pprint
 import pygame
-from pygame.locals import *  # pylint: disable=unused-wildcard-import wildcard-import # nopep8 E501
+from pygame.locals import*  # pylint: disable=unused-wildcard-import wildcard-import # nopep8 E501
 from hexgrid import legal_tile_ids
 from src.draw_dice import DrawDice
 from src.button import ButtonHex, ButtonRect
@@ -142,13 +143,14 @@ board_mapping = {'tiles': {
 
 def setup():
     """
-    Sets up the initial catan board positions and the ids for each tile
+    Sets up the initial Catan board positions and tile IDs.
 
-    Returns:
-        board: List of tile objects
-        tile_sprites: list of images for each tile
-        board_mapping: dictionary that maps the tile
-        object to an id and nodes to respective coordinates.
+    :return: A tuple of the following:
+             - A list of tuples with the Pygame image objects and their corresponding rectangles.
+             - A list of GameTile objects representing the Catan board.
+             - A dictionary mapping the tile object to its ID and the coordinates of its nodes.
+             - A list of Player objects representing the players.
+    :rtype: tuple
     """
     # maps the tile_id to the x, y, coordinates for the screen
 
@@ -182,6 +184,14 @@ def setup():
 # pylint: disable=too-many-branches
 # pylint: disable=too-many-nested-blocks
 def main_game_loop(**kwargs):  # pylint: disable=unused-argument
+    """
+    The main loop that runs the game logic.
+
+    :param \\**kwargs: Any keyword arguments required.
+    :type \\**kwargs: dict
+    :return: None
+    :rtype: None
+    """
     game_running = True
     player_turn_index = 0
     current_player = players[player_turn_index]
@@ -257,6 +267,22 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
 
 
 def mouse_motion_event():
+    """
+    Handles mouse motion events, checking if the mouse 
+    hovers over any button and updating its cursor accordingly.
+
+    This function iterates over the node and tile buttons, 
+    as well as the build road, build city, build settlement, 
+    make trade, and other buttons, checking if the mouse 
+    hovers over any of them. If a button is hovered over and
+    the cursor is not already set to a hand icon, it sets the 
+    cursor to a hand icon, indicating that the button can be 
+    clicked. If the cursor is already set to a hand icon and 
+    the mouse is not hovering over a button anymore, it sets 
+    the cursor back to the default arrow icon.
+
+    :return: None
+    """
     mouse_pos = pygame.mouse.get_pos()
     for button in node_buttons:
         button.is_hovered_over(mouse_pos)
@@ -272,6 +298,20 @@ def mouse_motion_event():
 
 
 def click_event(_event, player):  # _ as not used yet
+    """
+    Handles click events for the game.
+
+    This function is called when a mouse click event is 
+    detected in the game window. It checks whether any 
+    of the buttons have been clicked, and takes the 
+    appropriate action based on which button was clicked.
+
+    :param _event: The pygame event object associated with 
+    the mouse click.
+    :type _event: pygame.event.Event
+    :param player: The current player object.
+    :type player: Player
+    """
     mouse_pos = pygame.mouse.get_pos()
 
     for button in tile_buttons:
@@ -311,14 +351,22 @@ def click_event(_event, player):  # _ as not used yet
 
 # pylint: disable=too-many-nested-blocks
 def build_settlement(player, city=False):
-    """_summary_
+    """Build a settlement or a city on a node selected by 
+    the player.
 
-    :param player: _description_
-    :type player: _type_
-    :param city: _description_, defaults to False
+    This function allows the player to build a settlement 
+    or a city on a node that they select on the game board. 
+    If the player builds a city, they will be awarded two 
+    victory points, and if they build a settlement, 
+    they will be awarded one victory point.
+
+    :param player: The player who is building the settlement or city.
+    :type player: Player
+    :param city: A boolean value indicating whether the player is
+    building a city (True) or a settlement (False).
     :type city: bool, optional
-    :return: _description_
-    :rtype: _type_
+    :return: The (x, y) coordinates of the node where the player built the settlement or city.
+    :rtype: Tuple[int, int]
     """
     while True:
         for event in pygame.event.get():  # pylint: disable=no-member
@@ -338,10 +386,14 @@ def build_settlement(player, city=False):
 
 
 def build_road():
-    """_summary_
+    """Wait for a click on a node button, then return that button.
 
-    :return: _description_
-    :rtype: _type_
+    This function waits for a mouse click event and checks if it occurred
+    on one of the node buttons. If so, it returns the corresponding button.
+
+    :return: The button object representing the node where the road will start.
+    :rtype: :class: `ButtonRect`
+    :raises SystemExit: If the user quits the game.
     """
     while True:
         for event in pygame.event.get():  # pylint: disable=no-member
@@ -355,10 +407,14 @@ def build_road():
 
 
 def check_player_won():
-    """_summary_
+    """Check if a player has won the game.
 
-    :return: _description_
-    :rtype: _type_
+    This function iterates through the list of players, and checks if any player
+    has accumulated 10 or more victory points. If there is such a player, the function
+    returns True. Otherwise, it returns False.
+
+    :return: A boolean value indicating if a player has won the game.
+    :rtype: bool
     """
     for player in players:
         if player.victory_points >= 10:
@@ -370,13 +426,13 @@ def check_player_won():
 def is_adjacent(node1, node2):
     ''' Returns true if node1 and node2 are connected by a road
 
-    Args:
-        node1: first node to be checked
-        node2: second node to be checked
-
-    Returns:
-        boolean
-
+    :param node1: first node to be checked
+    :type node1: int
+    :param node2: second node to be checked
+    :type node2: int
+    
+    :return: True if the nodes are adjacent, False otherwise.
+    :rtype: bool
     '''
 
     x1_pos, y1_pos = node1.x_pos, node1.y_pos
@@ -396,13 +452,15 @@ def is_adjacent(node1, node2):
 # pylint: disable=inconsistent-return-statements
 def calc_mouse_node(mouse_pos):
     '''
-    calculates and returns the node mouse is hovering over
+    Returns True if the two nodes are adjacent, meaning that they are connected by a road.
 
-    Args:
-        mouse_pos: x, y coordinates of the mouse click
+    :param node1: The first node to be checked.
+    :type node1: Node
+    :param node2: The second node to be checked.
+    :type node2: Node
 
-    Returns:
-        Node_id
+    :return: True if the nodes are adjacent, False otherwise.
+    :rtype: bool
     '''
     for node_id, node_point in board_mapping['nodes'].items():
         pos_1 = node_point[0] - mouse_pos[0]
@@ -419,13 +477,12 @@ def calc_mouse_node(mouse_pos):
 # pylint: disable=inconsistent-return-statements
 def calc_mouse_pos_tile(mouse_pos):
     """
-    returns the tile that the mouse has clicked in
+    Returns the tile that the mouse has clicked in.
 
-    Args:
-        mouse_pos: x, y coordinates of the mouse click
-
-    Returns:
-        tile object from the tiles class
+    :param mouse_pos: The x, y coordinates of the mouse click as a list of integers.
+    :type mouse_pos: list[int, int]
+    :return: The tile object from the tiles class that corresponds to the clicked tile.
+    :rtype: Tile object
     """
     x_pos, y_pos = mouse_pos
     hex_length = math.dist((621, 318), (699, 187))
@@ -443,6 +500,15 @@ def calc_mouse_pos_tile(mouse_pos):
 
 
 def convert_to_nodeid(x_pos, y_pos):
+    """Converts the x, y coordinates of a node button to the node ID stored in board_mapping.
+
+    :param x_pos: The x-coordinate of the node button
+    :type x_pos: int
+    :param y_pos: The y-coordinate of the node button
+    :type y_pos: int
+    :return: The node ID corresponding to the node button coordinates
+    :rtype: int or None
+    """
     # converts the x, y coords of the
     # node button to the nodeid stored in board_mapping
     for node_id, node_points in board_mapping['nodes'].items():
@@ -453,6 +519,12 @@ def convert_to_nodeid(x_pos, y_pos):
 
 
 def calc_longest_road():
+    """
+    Calculates the player who has the longest road
+
+    :return: The player who has the longest road
+    :rtype: Player object
+    """
     for road in built_roads:
         road[2].total_road_num += 1
     # calculate who has highest total_road_num value
@@ -469,7 +541,10 @@ def calc_longest_road():
 
 def draw(player_turn):
     """
-    Draws the pygame display
+    Draws the pygame display.
+
+    :param player_turn: the current player's turn
+    :type player_turn: Player object
     """
     screen.fill(BACKGROUND)
 
@@ -501,6 +576,7 @@ def draw(player_turn):
 
 
 def draw_lines():
+    """Draws the lines that form the hexagonal game board in white color."""
     for tile in board:
         pygame.draw.line(screen,
                          'white',
@@ -534,6 +610,12 @@ def draw_lines():
 
 
 def draw_buttons():
+    """
+    Draws the node buttons and tile buttons on the screen.
+
+    :return: None
+    :rtype: None
+    """
     button_radius = [10, 22]
     # draw node buttons
     for _node_id, node_point in board_mapping['nodes'].items():
@@ -556,7 +638,10 @@ def draw_buttons():
 # pylint: disable=too-many-locals
 def draw_scoreboard(player_turn):
     """
-    Draws the scoreboard as a seperate pygame surface
+    Draws the scoreboard as a separate Pygame surface.
+    
+    :param player_turn: The current player whose turn it is.
+    :type player_turn: Player object
     """
     rect_width = DISPLAY_WIDTH - 800
     rect_height = DISPLAY_HEIGHT
@@ -616,6 +701,14 @@ def draw_scoreboard(player_turn):
 
 # pylint: disable=redefined-argument-from-local
 def draw_buildings(city=False):
+    """
+    Draw settlements or cities on the board.
+
+    :param city: A boolean value indicating whether to 
+    draw cities or settlements. Defaults to False which 
+    means settlements will be drawn.
+    :type city: bool, optional
+    """
     if city:
         for settlement in built_settlements:
 
@@ -657,9 +750,14 @@ def draw_buildings(city=False):
 
 
 def popup():
-    '''
-    popup window that gives options for player when node is clicked
-    '''
+    """
+    Displays a popup window with options for the player when a node 
+    is clicked. 
+    
+    :return: A tuple of six ButtonRect objects representing the
+    different options available to the player.
+    :rtype: tuple
+    """
 
     popup_width = 630
     popup_height = 160

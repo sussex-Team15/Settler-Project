@@ -1,3 +1,4 @@
+# pylint: disable=missing-module-docstring
 import os
 import abc
 from rembg import remove
@@ -12,6 +13,18 @@ FILE_EXTENSIONS = [".jpg", ".png", ".gif", ".jpeg"]
 
 
 def prepare_assets(directory):
+    """
+    Prepare all asset files in the given directory.
+
+    :param directory: A string representing the directory where assets can be found.
+    :type directory: str
+    :raises: ValueError if the directory does not exist.
+
+    This method prepares all asset files in the given directory by applying the `remove` function
+    to their contents and writing the results to new 
+    files with the prefix "new_". The original files
+    are deleted, and the new files are renamed to match the names of the original files.
+    """
     files = os.listdir(directory)
     print()
 
@@ -38,7 +51,27 @@ def prepare_assets(directory):
 
 
 class Abstract(abc.ABC):  # pylint: disable=too-few-public-methods
+    """
+    A base class for implementing abstract methods and retrieving assets.
+
+    :param directory: A string representing the directory where assets can be found.
+    :type directory: str
+
+    This class provides a base for implementing abstract methods and retrieving assets.
+    The `get_asset` method searches the given directory for asset files that match the name
+    of the current class. If a match is found, the full path to the asset file is returned.
+    If no matches are found, a NotImplementedError is raised.
+    """
     def get_asset(self, directory):
+        """
+        Retrieve the asset file for the current class.
+
+        :param directory: A string representing the directory where assets can be found.
+        :type directory: str
+        :return: The full path to the asset file for the current class.
+        :rtype: str
+        :raises: NotImplementedError if no asset files are found for the current class.
+        """
         found_files = [file for file in os.listdir(
             directory) if self.__class__.__name__.lower() in file]
         if found_files:

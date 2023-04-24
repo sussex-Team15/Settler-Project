@@ -17,6 +17,7 @@ Documentation
 
    installation
    classes
+   tests
 
 
 * :ref:`genindex`
