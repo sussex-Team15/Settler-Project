@@ -22,7 +22,7 @@ class Player:  # pylint: disable=too-many-instance-attributes
     - color: tuple
         A tuple with an r,g,b value representing the color that the player has.
     - resources: dict
-        a dictionary of resource type mapped to the amount the player has
+        a dictionary of resource type string mapped to the amount the player has
     - settlements: list
         A list of settlements the player has
     - cities: list
@@ -67,9 +67,7 @@ class Player:  # pylint: disable=too-many-instance-attributes
         self.name = name
         self.victory_points = 0
         self.color = color
-        self.resources = {}
-        for r in Resource:
-            self.resources[r] = 0
+        self.resources = {resource.name(): 0 for resource in Resource if not resource.name() == None}
 
         self.settlements = []
         self.cities = []
@@ -101,10 +99,10 @@ class Player:  # pylint: disable=too-many-instance-attributes
         Can only build if player has enough resources
 
         """
-        self.resources[Resource.BRICK.name()]-=1
-        self.resources[Resource.WOOD.name()]-=1
-        self.resources[Resource.WOOL.name()]-=1
-        self.resources[Resource.GRAIN.name()]-=1
+        self.resources[Resource.BRICK]-=1
+        self.resources[Resource.WOOD]-=1
+        self.resources[Resource.WOOL]-=1
+        self.resources[Resource.GRAIN]-=1
         self.settlements.append(node)
        
 
@@ -113,8 +111,8 @@ class Player:  # pylint: disable=too-many-instance-attributes
         Builds a city at specified node
         only can build if a settlement is on the node
         """
-        self.resources[Resource.ORE.name()]-=3
-        self.resources[Resource.GRAIN.name()]-=2
+        self.resources[Resource.ORE]-=3
+        self.resources[Resource.GRAIN]-=2
         self.cities.append(node)
         
 
@@ -123,13 +121,16 @@ class Player:  # pylint: disable=too-many-instance-attributes
         builds a road from node1 to node2.
         Road will be set to the color of the player building
         """
+       
         self.resources[Resource.WOOD]-=1
         self.resources[Resource.BRICK]-=1
+        
+        
         self.roads.append((node1, node2))
         print(f'road built from {node1} to {node2}')
         
 
-    def buy_dev_card(self, bank):
+    def buy_dev_card(self, card_name):
         '''
         Buys a development card from the bank
 
@@ -152,6 +153,8 @@ class Player:  # pylint: disable=too-many-instance-attributes
         return self.resources
 
     def add_resource(self, resource):
+        
+
         if resource in self.resources:
             self.resources[resource] +=1
         else:
