@@ -2,7 +2,7 @@ import abc
 
 from enum import Enum
 from src.utils import DEVELOPMENT_CARDS_DIR, Abstract
-
+from src.resource_ import Resource
 
 class DevelopmentCard(Abstract):
     """_summary_
@@ -23,19 +23,10 @@ class DevelopmentCard(Abstract):
 
     def asset(self):
         return self.get_asset(DEVELOPMENT_CARDS_DIR)
+    
+    def cost(self):
+        return 0
 
-
-class Chapel(DevelopmentCard):
-    """_summary_
-
-    :param DevelopmentCard: _description_
-    :type DevelopmentCard: _type_
-    """
-    def description(self):
-        return "+1 Victory Point"
-
-    def vp_awarded(self):
-        return 1
 
 
 class Knight(DevelopmentCard):
@@ -50,6 +41,9 @@ class Knight(DevelopmentCard):
 
     def vp_awarded(self):
         return 0
+    
+    def cost(self):
+        return {Resource.WOOL: 1, Resource.GRAIN: 1, Resource.ORE: 1}
 
 
 class LargestArmy(DevelopmentCard):
@@ -65,19 +59,7 @@ class LargestArmy(DevelopmentCard):
 
     def vp_awarded(self):
         return 2
-
-
-class Library(DevelopmentCard):
-    """_summary_
-
-    :param DevelopmentCard: _description_
-    :type DevelopmentCard: _type_
-    """
-    def description(self):
-        return "+1 Victory Point"
-
-    def vp_awarded(self):
-        return 1
+    
 
 
 class LongestRoad(DevelopmentCard):
@@ -95,85 +77,27 @@ class LongestRoad(DevelopmentCard):
         return 2
 
 
-class Market(DevelopmentCard):
+class VictoryPointCard(DevelopmentCard):
     """_summary_
 
-    :param DevelopmentCard: _description_
-    :type DevelopmentCard: _type_
+    Args:
+        DevelopmentCard (_type_): _description_
+
+    Returns:
+        _type_: _description_
     """
+
     def description(self):
-        return "+1 Victor Point"
-
+        return ("Card rewards player with one victory point")
+    
     def vp_awarded(self):
-        return 1
-
-
-class Monopoly(DevelopmentCard):
-    """_summary_
-
-    :param DevelopmentCard: _description_
-    :type DevelopmentCard: _type_
-    """
-    def description(self):
-        return ("When you play this card, announce 1 type of resource."
-                " All other players must give you all their resource cards "
-                "of that type")
-
-    def vp_awarded(self):
-        return 0
-
-
-class Palace(DevelopmentCard):
-    """_summary_
-
-    :param DevelopmentCard: _description_
-    :type DevelopmentCard: _type_
-    """
-    def description(self):
-        return "+1 Victory Point"
-
-    def vp_awarded(self):
-        return 1
-
-
-class RoadBuilding(DevelopmentCard):
-    """_summary_
-
-    :param DevelopmentCard: _description_
-    :type DevelopmentCard: _type_
-    """
-    def description(self):
-        return "Place 2 new roads as if you had just built them"
-
-    def vp_awarded(self):
-        return 0
-
-
-class University(DevelopmentCard):
-    """_summary_
-
-    :param DevelopmentCard: _description_
-    :type DevelopmentCard: _type_
-    """
-    def description(self):
-        return "+1 Victory Point"
-
-    def vp_awarded(self):
-        return 1
-
-
-class YearofPlenty(DevelopmentCard):
-    """_summary_
-
-    :param DevelopmentCard: _description_
-    :type DevelopmentCard: _type_
-    """
-    def description(self):
-        return ("take any 2 resources from the bank add them to your hand."
-                " They can be 2 of the same resource or 2 different resources")
-
-    def vp_awarded(self):
-        return 0
+        return  1
+    
+    def name(self):
+        return "VP card"
+    
+    def cost(self):
+        return {Resource.WOOL: 1, Resource.GRAIN: 1, Resource.ORE: 1}
 
 
 class DevelopmentCards(Enum):
@@ -184,17 +108,12 @@ class DevelopmentCards(Enum):
     :return: _description_
     :rtype: _type_
     """
-    CHAPEL = Chapel()
+    
     KNIGHT = Knight()
     LARGEST_ARMY = LargestArmy()
-    LIBRARY = Library()
     LONGEST_ROAD = LongestRoad()
-    MARKET = Market()
-    MONOPLY = Monopoly()
-    PALACE = Palace()
-    ROAD_BUILDING = RoadBuilding()
-    UNIVERSITY = University()
-    YEAR_OF_PLENTY = YearofPlenty()
+    VP = VictoryPointCard()
+    
 
     def __init__(self, card):
         self.card = card
@@ -210,6 +129,6 @@ class DevelopmentCards(Enum):
 
     def asset(self):
         return self.card.asset()
+    def cost(self):
+        return self.card.cost()
 
-
-print(DevelopmentCards.CHAPEL.name())

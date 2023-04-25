@@ -7,6 +7,7 @@ import pygame
 from pygame.locals import *  # pylint: disable=unused-wildcard-import wildcard-import # nopep8 E501
 from hexgrid import legal_tile_ids
 from src.button import ButtonHex, ButtonRect
+from src.bank import Bank
 
 from src.player import Player
 
@@ -28,13 +29,13 @@ GAME_LOG_FONT = pygame.font.SysFont('calibri', 25)
 screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 bg_img = pygame.image.load(os.path.join(ASSET_DIR, "tile_order.png"))
 bg_img.convert()
-
-
 bg_rect = bg_img.get_rect()
 
 
 NUM_PLAYERS = 6
 player_names = ['Eddie', 'Morgan', 'Ryan', 'Noah', 'Yash', 'Nelson']
+bank = Bank()
+current_turn_number = 0
 node_buttons = []  # list of ButtonHex objects for nodes
 tile_buttons = []  # list of ButtonHex object for tiles
 built_roads = []  # list of roads built (s_node, e_node, player_owner)
@@ -202,12 +203,6 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
 
             elif event.type == pygame.KEYDOWN:  # pylint: disable=no-member
                 if event.key == pygame.K_SPACE:
-                    #if current_turn_number < len(players) *2: # condition to see if we are in the first 2 rounds of the game
-                        #game_log.append(f'{current_player}: Place settlement')
-                        #pass
-
-
-
                     if player_turn_index == len(players) - 1:
                         player_turn_index = 0
                         current_player = players[player_turn_index]
@@ -220,11 +215,10 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
                     dice_roll1, dice_roll2 = current_player.roll_dice(2)
                     dice_rolled.append((dice_roll1, dice_roll2))
                     for game_tile in board:
-                        print(game_tile.tile.generate_resource().name())
                         if dice_roll1 + dice_roll2 == game_tile.real_number:
                             
-                            current_player.add_resource(game_tile.tile.generate_resource())
-                            
+                            current_player.add_resource(game_tile.tile.generate_resource().name())
+                            print(game_tile.tile.generate_resource().name())
 
                             card = game_tile.tile.generate_resource().name()
                             game_log_txt = ''.join(
@@ -238,7 +232,7 @@ def main_game_loop(**kwargs):  # pylint: disable=unused-argument
                             # if current_round_num < num_players * 2 then special setup round
 
             elif event.type == pygame.MOUSEBUTTONDOWN:  # pylint: disable=no-member # nopep8 E501
-                click_event(event, current_player)  # handles clicking events
+                click_event(event, current_player, special_round=False)  # handles clicking events
 
             elif event.type == pygame.MOUSEMOTION:  # pylint: disable=no-member
                 mouse_motion_event()  # function handles mouse motion events
@@ -299,14 +293,15 @@ def mouse_motion_event():
         mouse_hovering = True
     elif dev_card_btn.is_hovered_over(mouse_pos):
         mouse_hovering  = True
-    elif check_inventory_btn.is_hovered_over(mouse_pos):
+    elif bank_inventory_btn.is_hovered_over(mouse_pos):
         mouse_hovering = True
 
 
     pygame.display.flip()
 
 
-def click_event(_event, player):  # _ as not used yet
+def click_event(_event, player, special_round=False):  # _ as not used yet
+    
     mouse_pos = pygame.mouse.get_pos()
 
     for button in tile_buttons:
@@ -316,8 +311,8 @@ def click_event(_event, player):  # _ as not used yet
 
     if build_road_btn.is_clicked(mouse_pos):
         road_cost = {ResourceTile.HILLS.generate_resource():1,
-                     ResourceTile.FOREST.generate_resource():1}
-    
+                    ResourceTile.FOREST.generate_resource():1}
+        
         for resource, quantity in road_cost.items(): # check to see if player has enough resources
 
             if resource not in player.resources or player.resources[resource] < quantity:
@@ -335,12 +330,12 @@ def click_event(_event, player):  # _ as not used yet
 
     elif build_settlement_btn.is_clicked(mouse_pos):
         settlement_cost = {ResourceTile.HILLS.generate_resource(): 1, 
-                           ResourceTile.PASTURE.generate_resource(): 1,
-                           ResourceTile.FOREST.generate_resource(): 1,
-                           ResourceTile.FIELDS.generate_resource(): 1
-                           }
+                            ResourceTile.PASTURE.generate_resource(): 1,
+                            ResourceTile.FOREST.generate_resource(): 1,
+                            ResourceTile.FIELDS.generate_resource(): 1
+                            }
         for resource, quantity in settlement_cost.items():
-            
+                
             if resource not in player.resources or player.resources[resource] < quantity:
                 game_log.append("Not enough resources!")
                 return None
@@ -351,9 +346,9 @@ def click_event(_event, player):  # _ as not used yet
 
     elif build_city_btn.is_clicked(mouse_pos):
         city_cost = {ResourceTile.MOUNTAIN.generate_resource(): 3, 
-                     ResourceTile.PASTURE.generate_resource(): 2}
+                    ResourceTile.PASTURE.generate_resource(): 2}
         for resource, quantity in city_cost.items():
-            
+                
             if resource not in player.resources or player.resources[resource] < quantity:
                 game_log.append("Not enough resources!")
                 return None
@@ -367,18 +362,76 @@ def click_event(_event, player):  # _ as not used yet
             built_cities.append(((node.x_pos - 20, node.y_pos - 30), player))
             game_log.append(f'{player.name} built city!')
     elif make_trade_btn.is_clicked(mouse_pos):
+        trade_open = True
+        player_buttons, trade_surface = draw_trade_screen(player)
+        while trade_open:
         
-        draw_trade_screen(player)
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    
+                    mouse_pos = pygame.mouse.get_pos()
+                    if not trade_surface.get_rect().collidepoint(event.pos):
+                        return
+                    else:
+                        for button, player in player_buttons:
+                            mouse_pos = pygame.mouse.get_pos()
+                            if button.is_clicked(mouse_pos):
+                                offered_player = player
+                                offered_player_text = WORD_FONT.render(f"{offered_player.name}'s Resources", True, BLACK)
+                                offered_player_rect = offered_player_text.get_rect(topleft = (450, 100))
+                                trade_surface.blit(offered_player_text, offered_player_rect)
+                                
 
+                                resource_y = 150
+                                for resource, quantity in offered_player.resources.items():
+                                    resource_text = WORD_FONT.render(f'{resource}: {quantity}', True, BLACK)
+                                    resource_rect = resource_text.get_rect(topleft = (400, resource_y))
+                                    trade_surface.blit(resource_text, resource_rect)
+                                    resource_y+=30
 
+                                pygame.display.flip()
+                elif event.type == pygame.MOUSEMOTION:
+                    print(event.pos)
+                    mouse_hovering = False
+                    for button, player in player_buttons:
+                    
+                        mouse_pos = pygame.mouse.get_pos()
+                        if button.is_hovered_over(mouse_pos):
+                            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                        else:
+                            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                pygame.display.flip()
+            
     elif dev_card_btn.is_clicked(mouse_pos):
         print('other button 1 clicked')
-    elif check_inventory_btn.is_clicked(mouse_pos):
+    
+    
+    
+    elif bank_inventory_btn.is_clicked(mouse_pos):
+        bank_surface, resource_buttons = draw_bank_inventory(player) # opens new screen where it shows inventory of player
+        bank_open = True
 
-        draw_inventory_screen(player) # opens new screen where it shows inventory of player
+        while bank_open:
         
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if not bank_surface.get_rect().collidepoint(event.pos):
+                        bank_open = False
+                    else:
+                        for button in resource_buttons:
+                            pass
 
-    pygame.display.flip()
+                elif event.type == pygame.MOUSEMOTION:
+                    mouse_motion_event()
+                pygame.display.flip()
+            
+
+            
+
+            
+
+        pygame.display.flip()
 
 # pylint: disable=too-many-nested-blocks
 def build_settlement(player, city=False):
@@ -730,7 +783,7 @@ def draw_buildings(city=False):
             screen.blit(city_img, city[0])
             screen.blit(highlight_overlay, city[0])
 
-def draw_dice(screen, roll_1, roll_2):
+def draw_dice(screen, roll_1, roll_2): 
 
     dice_size = 80
 
@@ -807,10 +860,9 @@ def draw_trade_screen(current_player):
     """
 
     
-
+    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
     trade_surface = pygame.Surface((800, 600))
     trade_surface.fill((WHITE))
-    trade_open = True
     offered_player = None
 
     prompt_text = WORD_FONT.render("Pick a player to trade with", True, BLACK)
@@ -818,11 +870,6 @@ def draw_trade_screen(current_player):
     trade_surface.blit(prompt_text, prompt_rect)
 
     
-
-
-
-
-
     player_name_x = 50
     player_buttons = []
     for player in players:
@@ -847,48 +894,18 @@ def draw_trade_screen(current_player):
     # create resource labels for current players resources
     resource_y = 150
     for resource, quantity in current_player.resources.items():
-        resource_text = WORD_FONT.render(f'{resource.name()}: {quantity}', True, BLACK)
+        resource_text = WORD_FONT.render(f'{resource}: {quantity}', True, BLACK)
         resource_rect = resource_text.get_rect(topleft = (150, resource_y))
         trade_surface.blit(resource_text, resource_rect)
         resource_y+=30
     
     resource_y = 150
     
-    
-
     screen.blit(trade_surface, (50,50))
+    return player_buttons, trade_surface
 
-    while trade_open:
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                if not trade_surface.get_rect().collidepoint(event.pos):
-                    return
-                else:
-                    for button, player in player_buttons:
-                        if button.is_clicked(mouse_pos):
-                            offered_player = player
-                            offered_player_text = WORD_FONT.render(f"{offered_player.name}'s Resources", True, BLACK)
-                            offered_player_rect = offered_player_text.get_rect(topleft = (450, 100))
-                            trade_surface.blit(offered_player_text, offered_player_rect)
-                            
 
-                            resource_y = 150
-                            for resource, quantity in offered_player.resources.items():
-                                resource_text = WORD_FONT.render(f'{resource.name()}: {quantity}', True, BLACK)
-                                resource_rect = resource_text.get_rect(topleft = (400, resource_y))
-                                trade_surface.blit(resource_text, resource_rect)
-                                resource_y+=30
-
-                            pygame.display.flip()
-    
-
-            
-            pygame.display.flip()
-
-    
-
-def draw_inventory_screen(player):
+def draw_bank_inventory(player):
     """draws a inventory display over the window
 
     Method is called if the current player has clicked the check inventory button
@@ -898,26 +915,33 @@ def draw_inventory_screen(player):
     :rtype: None
     """
 
-    inventory_surface = pygame.Surface((800, 600))
-    inventory_surface.fill((WHITE))
-    inventory_open = True
+    bank_surface = pygame.Surface((800, 600))
+    bank_surface.fill((WHITE))
+    resource_buttons =[]
 
-    for index, (resource, quantity) in enumerate(player.resources.items()):
-        text_surface = WORD_FONT.render(f'{resource.name()}: {quantity}', True, (0,0,0))
-        text_x = 50
-        text_y = 50 +(index*30)
-
-        inventory_surface.blit(text_surface, (text_x, text_y))
+    title_text = WORD_FONT.render("Bank Inventory", True, BLACK)
+    title_rect = title_text.get_rect(center=(400, 50))
+    bank_surface.blit(title_text, title_rect)
 
 
-    screen.blit(inventory_surface, (50,50))
-    while inventory_open:
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if not inventory_surface.get_rect().collidepoint(event.pos):
-                    return
+    for index, (resource, quantity) in enumerate(bank.resources.items()):
+        text_x = 350
+        text_y = 100 +(index*30)
+        button = ButtonRect((text_x, text_y),
+                                           (50,20),
+                                           (f'{resource.name()}: {quantity}', WORD_FONT, BLACK),
+                                           (WHITE, WHITE))
+    
+        resource_buttons.append(button)
+        button.draw(bank_surface)
 
-            pygame.display.flip()
+    screen.blit(bank_surface, (0,0))
+    
+
+
+
+    return bank_surface, resource_buttons
+    
     
 
 
@@ -966,20 +990,20 @@ def popup():
         ((51, 153, 255), WHITE))
     dev_card_btn.draw(screen)
 
-    check_inventory_btn = ButtonRect(  # pylint: disable=redefined-outer-name
+    bank_inventory_btn = ButtonRect(  # pylint: disable=redefined-outer-name
         (1230, 700),
         (190, 40),
-        ('Check Inventory', WORD_FONT, WHITE),
+        ('Bank', WORD_FONT, WHITE),
         ((255, 153, 51), WHITE))
-    check_inventory_btn.draw(screen)
-    make_trade_btn.draw(screen)
+    bank_inventory_btn.draw(screen)
+    
 
     return (build_road_btn,
             build_settlement_btn,
             build_city_btn,
             make_trade_btn,
             dev_card_btn,
-            check_inventory_btn)
+            bank_inventory_btn)
 
 
 (build_road_btn,
@@ -987,7 +1011,7 @@ def popup():
  build_city_btn,
  make_trade_btn,
  dev_card_btn,
- check_inventory_btn) = popup()
+ bank_inventory_btn) = popup()
 
 if __name__ == "__main__":
     tile_sprites, board, board_mapping, players = setup()
