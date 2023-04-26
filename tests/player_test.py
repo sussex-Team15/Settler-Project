@@ -24,21 +24,23 @@ def test_roll_dice(player):
 
 
 def test_build_settlement(player):
-    player.resources = {Resource.BRICK: 2,
-                        Resource.WOOD: 2,
-                        Resource.WOOL: 2,
-                        Resource.GRAIN: 2}
-
-    pdb.set_trace()
+    player.resources = {Resource.BRICK: 1,
+                        Resource.WOOD: 1,
+                        Resource.WOOL: 1,
+                        Resource.GRAIN: 1}
     player.build_settlement(1110, False)
+    assert {Resource.BRICK: 1,
+            Resource.WOOD: 1,
+            Resource.WOOL: 1,
+            Resource.GRAIN: 1} != player.resources
 
-    assert {Resource.BRICK: 2,
-            Resource.WOOD: 2,
-            Resource.WOOL: 2,
+
+def test_build_city(player):
+    player.resources = {Resource.ORE: 3,
+                        Resource.GRAIN: 2}
+    player.build_city(1110)
+    assert {Resource.ORE: 3,
             Resource.GRAIN: 2} != player.resources
-
-
-# TODO: test building a city
 
 
 def test_build_road(player):
