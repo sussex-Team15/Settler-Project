@@ -22,7 +22,21 @@ def test_roll_dice(player):
     assert 1 <= dice_1 <= 6
     assert 1 <= dice_2 <= 6
 
-# TODO: test building a settlement
+
+def test_build_settlement(player):
+    player.resources = {Resource.BRICK: 2,
+                        Resource.WOOD: 2,
+                        Resource.WOOL: 2,
+                        Resource.GRAIN: 2}
+
+    pdb.set_trace()
+    player.build_settlement(1110, False)
+
+    assert {Resource.BRICK: 2,
+            Resource.WOOD: 2,
+            Resource.WOOL: 2,
+            Resource.GRAIN: 2} != player.resources
+
 
 # TODO: test building a city
 
