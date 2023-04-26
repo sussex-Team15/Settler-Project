@@ -18,6 +18,7 @@ Documentation
    installation
    classes
    tests
+   class_diagram
 
 
 * :ref:`genindex`
