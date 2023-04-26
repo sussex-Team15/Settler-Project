@@ -93,16 +93,19 @@ class Player:  # pylint: disable=too-many-instance-attributes
         """
         return tuple(random.randint(1, 6) for i in range(num_dice))
 
-    def build_settlement(self, node):
+    def build_settlement(self, node, is_special_round):
         """
         Builds a settlement at specified node 
         Can only build if player has enough resources
 
         """
-        self.resources[Resource.BRICK]-=1
-        self.resources[Resource.WOOD]-=1
-        self.resources[Resource.WOOL]-=1
-        self.resources[Resource.GRAIN]-=1
+
+        if not is_special_round:
+            self.resources[Resource.BRICK]-=1
+            self.resources[Resource.WOOD]-=1
+            self.resources[Resource.WOOL]-=1
+            self.resources[Resource.GRAIN]-=1
+        
         self.settlements.append(node)
        
 
@@ -121,13 +124,12 @@ class Player:  # pylint: disable=too-many-instance-attributes
         builds a road from node1 to node2.
         Road will be set to the color of the player building
         """
-       
-        self.resources[Resource.WOOD]-=1
-        self.resources[Resource.BRICK]-=1
         
+        self.resources[Resource.WOOD.name()]-=1
+        self.resources[Resource.BRICK.name()]-=1
         
         self.roads.append((node1, node2))
-        print(f'road built from {node1} to {node2}')
+        
         
 
     def buy_dev_card(self, card_name):

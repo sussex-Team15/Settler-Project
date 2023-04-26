@@ -21,6 +21,9 @@ class Tile(Abstract):
 
     def asset(self):
         return self.get_asset(TILE_CARDS_DIR)
+    
+    def is_robber(self):
+        pass
 
 
 class Forest(Tile):
@@ -119,6 +122,7 @@ class GameTile:  # pylint: disable=too-many-instance-attributes
         self.tile = tile
         self.points = points
         self.tile_id = tile_id
+        self.has_robber = False
 
         def convert_to_number(coord):
             return int(f"{hexgrid.hex_digit(coord,digit=1)}"
@@ -175,3 +179,4 @@ class GameTile:  # pylint: disable=too-many-instance-attributes
                      'Edge <SW>': self.edge_sw,
                      'Edge <W>': self.edge_w}
         }
+    
