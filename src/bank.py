@@ -1,9 +1,22 @@
+# pylint: disable=missing-module-docstring
 from src.resource_ import Resource
 
 class Bank:
+    """Bank class that controls behaviour of the bank in the game
 
+    :param resources: bank's resources
+    :type resources: list
+    :param trade_ratios: standard ratio for all players 
+    trading with the bank, 4 of the same card for one 
+    from the bank
+    :type trade_ratios: int
+    :param dev_cards: list of development cards in the bank's inventory
+    :type dev_cards: list
+    
+    """
     def __init__(self):
-
+        """Constructor Method
+        """
         # not sure what bank starts with (to change)
         self.resources = {Resource.BRICK.name(): 19, 
                           Resource.WOOD.name(): 19,
@@ -35,6 +48,12 @@ class Bank:
     
 
     def null_method(self):
+        """Returns all current information about the bank
+
+        :return: The current values of the bank's 'resources',
+        'trade_ratios' and 'dev_cards' inventory
+        :rtype: Union[List[str],int]
+        """
         return (
             self.resources,
             self.trade_ratio,
