@@ -23,10 +23,10 @@ from src.utils import ASSET_DIR
 pygame.init()  # pylint: disable=no-member
 
 DISPLAY_WIDTH, DISPLAY_HEIGHT = 1450, 800
-NUM_FONT = pygame.font.SysFont('Palatino', 40)
-WORD_FONT = pygame.font.SysFont('Palatino', 25)
-GAME_LOG_FONT = pygame.font.SysFont('calibri', 25)
-BIG_FONT = pygame.font.SysFont("Algerian", 100, True)
+NUM_FONT = pygame.font.SysFont('arial', 40)
+WORD_FONT = pygame.font.SysFont('arial', 25)
+GAME_LOG_FONT = pygame.font.SysFont('arial', 25)
+BIG_FONT = pygame.font.SysFont("arial", 100, True)
 
 
 screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT), pygame.DOUBLEBUF)
@@ -162,7 +162,7 @@ def setup():
     # Create the board as a list of GameTile Objects
 
     
-    board = [GameTile(random.randint(0, 12),
+    board = [GameTile(random.randint(1, 12),
                       random.choice(list(ResourceTile)), 4,
                       tile_id) for tile_id in legal_tile_ids()]
 
@@ -285,12 +285,12 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
                     if node_button.is_clicked(mouse_pos):
                         if self.settlement_node1 == None:
                             self.settlement_node1 = node_button
-                            self.current_player.build_settlement(self.settlement_node1, is_special_round=True)
+                            self.current_player.build_settlement(is_special_round=True)
                             built_settlements.append((self.settlement_node1, self.current_player))
                             return
                         elif self.settlement_node2 == None:
                             self.settlement_node2 = node_button
-                            self.current_player.build_settlement(self.settlement_node2, is_special_round=True)
+                            self.current_player.build_settlement(is_special_round=True)
                             built_settlements.append((self.settlement_node2, self.current_player))
                             return
                         else:
@@ -334,7 +334,7 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
 
     def draw(self, screen):
         screen.fill(self.current_player.color)
-        WORD_FONT = pygame.font.SysFont('Palatino', 40)
+        WORD_FONT = pygame.font.SysFont('arial', 40)
         for img, rect in tile_sprites:
             screen.blit(img, rect)
             # screen.blit(bg_img, bg_rect)
@@ -470,7 +470,7 @@ class MainGameState:
                     self.current_state = DevelopmentCardState(self.current_player)
                 if self.bank_inventory_rect.collidepoint(event.pos):
                     
-                    self.current_state = BankTradeChooseResources(self.current_player)
+                    self.current_state = ChooseResources(self.current_player, None)
                 if self.build_city_rect.collidepoint(event.pos):
                     
                     self.current_state = Build(self.current_player,is_city=True)
@@ -841,7 +841,11 @@ class PlaceRobberState:
                             if game_tile.get_tile_info()['Tile id'] == id:
                                 game_tile.has_robber = True
                                 self.current_state = MainGameState(self.player, ((target_rect.x, target_rect.y)))
-                                screen.blit(self.robber_img, (target_rect.x+50, target_rect.y+50))
+                                screen.blit(self.robber_img, (100,900))
+
+                                robber_tile_text = WORD_FONT.render(f'{game_tile.real_number}', True, BLACK)
+                                robber_tile_rect = robber_tile_text.get_rect(center=(300, 700))
+                                screen.blit(robber_tile_text, robber_tile_rect)
     
 
     def draw(self, screen):
@@ -852,9 +856,10 @@ class PlaceRobberState:
     def transition(self):
         return self.current_state
 
-class BankTradeChooseResources:
-    def __init__(self, player):
+class ChooseResources:
+    def __init__(self, player, trade_partner):
         self.player = player
+        self.trade_partner = trade_partner
         self.current_state = None
         self.submit_button = pygame.Rect(600, 680, 500, 200)
         self.resource_buttons = []
@@ -878,12 +883,20 @@ class BankTradeChooseResources:
                 if self.back_button.collidepoint(event.pos):
                     self.current_state = MainGameState(self.player)
                 elif self.submit_button.collidepoint(event.pos):
-                    resource_names = [Resource.WOOD.name(), Resource.WOOL.name(), Resource.GRAIN.name(), Resource.BRICK.name(), Resource.ORE.name()]
-                    resources_trade= dict(zip(resource_names, self.offered_resources))
-                    if self.has_enough_resources(self.player.resources, resources_trade) and sum(resources_trade.values()) == 4:
-                        self.current_state = BankTrade(self.player, bank, resources_trade)
+                    if self.trade_partner is None: # submit for bank trade
+                        resource_names = [Resource.WOOD.name(), Resource.WOOL.name(), Resource.GRAIN.name(), Resource.BRICK.name(), Resource.ORE.name()]
+                        resources_trade= dict(zip(resource_names, self.offered_resources))
+                        if self.has_enough_resources(self.player.resources, resources_trade) and sum(resources_trade.values()) == 4:
+                            self.current_state = BankTrade(self.player, bank, resources_trade)
+                        else:
+                            self.current_state = NotEnoughResources(self.player)
                     else:
-                        self.current_state = NotEnoughResources(self.player)
+                        resource_names = [Resource.WOOD.name(), Resource.WOOL.name(), Resource.GRAIN.name(), Resource.BRICK.name(), Resource.ORE.name()]
+                        resources_trade= dict(zip(resource_names, self.offered_resources))
+                        if self.has_enough_resources(self.player.resources, resources_trade):
+                            self.current_state = AcceptTradeState(self.player, self.trade_partner, resources_trade)
+                        else:
+                            self.current_state = NotEnoughResources(self.player)
                         
                 
 
@@ -1129,8 +1142,8 @@ class Build:
 
     def has_enough_resources(self):
         if self.is_city:
-            city_cost = {ResourceTile.MOUNTAIN.generate_resource(): 3, 
-                                    ResourceTile.PASTURE.generate_resource(): 2}
+            city_cost = {ResourceTile.MOUNTAIN.generate_resource().name(): 3, 
+                                    ResourceTile.PASTURE.generate_resource().name(): 2}
             
             for resource, quantity in city_cost.items():
                 
@@ -1139,10 +1152,10 @@ class Build:
             return True
                 
         else: 
-            settlement_cost = {ResourceTile.HILLS.generate_resource(): 1, 
-                            ResourceTile.PASTURE.generate_resource(): 1,
-                            ResourceTile.FOREST.generate_resource(): 1,
-                            ResourceTile.FIELDS.generate_resource(): 1
+            settlement_cost = {ResourceTile.HILLS.generate_resource().name(): 1, 
+                            ResourceTile.PASTURE.generate_resource().name(): 1,
+                            ResourceTile.FOREST.generate_resource().name(): 1,
+                            ResourceTile.FIELDS.generate_resource().name(): 1
                             }
             for resource, quantity in settlement_cost.items():
                     
@@ -1180,7 +1193,7 @@ class RoadBuildState:
 
                                     self.node2 = node_button
                                     
-                                    self.player.build_road(self.node1, self.node2)
+                                    self.player.build_road(self.node1, self.node2, is_special_round = False)
                                     built_roads.append((self.node1, self.node2, self.player))
                                     self.draw(screen)
                                 else:
@@ -1211,7 +1224,16 @@ class RoadBuildState:
         return (x_diff <= max_road_len) and (y_diff <= max_road_len)
     
     def draw(self, screen):
-        pass
+        if not self.node1 is None and not self.node2 is None:
+            pygame.draw.line(screen, 
+                            self.player.color, 
+                            (self.node1.x_pos, self.node1.y_pos),
+                            (self.node2.x_pos, self.node2.y_pos),
+                            5)
+        else:
+            return
+    
+    
 
     def should_transition(self):
         return self.current_state is not None
@@ -1266,160 +1288,36 @@ class ChooseTradePartner:
                 for player in self.available_players:
                     if player[0].collidepoint(mouse_pos):
                         self.trade_partner = player[1]
-                        self.current_state = ChooseTradeResources(self.player, self.trade_partner)
+                        self.current_state = ChooseResources(self.player, self.trade_partner)
 
     def should_transition(self):
         return self.current_state is not None
     def transition(self):
         return self.current_state  
 
-class ChooseTradeResources:
-
-    def __init__(self, player, trade_partner):
-        self.player = player
-        self.trade_partner = trade_partner
-        self.current_state = None
-        self.partner_resources_buttons = []
-        self.back_button = None
-
-
-    def draw(self, screen):
-        screen.fill(BACKGROUND)
-        self.draw_player_resources(screen)
-        self.draw_partner_resources(screen)
-        
-
-        back_button_text = WORD_FONT.render("Back", True, WHITE, BLACK)
-        back_button_rect = back_button_text.get_rect(center=(700, 700))
-        self.back_button = back_button_rect
-        screen.blit(back_button_text, back_button_rect)
-
-
-    def draw_player_resources(self, screen):
-        resources = self.player.resources
-        y_offset = 100
-
-        player_name_text = WORD_FONT.render(f'Your Resources', True, BLACK)
-        player_name_rect = player_name_text.get_rect(center = (DISPLAY_WIDTH//3, 100))
-        screen.blit(player_name_text, player_name_rect)
-
-        y_offset = 150
-        for resource, quantity in resources.items():
-            button_text = WORD_FONT.render(f'{resource} : {quantity}', True, BLACK)
-            button_rect = button_text.get_rect(center = (DISPLAY_WIDTH//3, y_offset))
-            screen.blit(button_text, button_rect)
-            self.partner_resources_buttons.append((button_rect, resource))
-            
-            y_offset+=50
-        
-
-    def draw_partner_resources(self, screen):
-        if self.trade_partner is None:
-            return
-        resources = self.trade_partner.resources
-
-
-        player_name_text = WORD_FONT.render(f'{self.trade_partner.name} resources', True, BLACK)
-        player_name_rect = player_name_text.get_rect(center = (DISPLAY_WIDTH//3 + 400, 100))
-        screen.blit(player_name_text, player_name_rect)
-
-        y_offset = 150
-        for resource, quantity in resources.items():
-            button_text = WORD_FONT.render(f'{resource} : {quantity}', True, BLACK)
-            button_rect = button_text.get_rect(center = (DISPLAY_WIDTH//3 +400, y_offset))
-            screen.blit(button_text, button_rect)
-            self.partner_resources_buttons.append((button_rect, resource))
-            
-            y_offset+=50
-
-    def handle_events(self, events):
-        for event in events:
-            mouse_pos = pygame.mouse.get_pos()
-            if event.type==pygame.MOUSEBUTTONDOWN:
-                for resource_button in self.partner_resources_buttons:
-                    if resource_button[0].collidepoint(mouse_pos):
-                        self.current_state = ResourceAmountSelection(self.player, self.trade_partner)
-                if self.back_button.collidepoint(mouse_pos):
-                    self.current_state = ChooseTradePartner(self.player)
-
-    def should_transition(self):
-        return self.current_state is not None
-    def transition(self):
-        return self.current_state
                 
-class ResourceAmountSelection:
-    def __init__(self, player, trade_partner):
-        self.player = player
-        self.trade_partner = trade_partner
-        self.current_state = None
-        self.quantity = 0
-        self.font = WORD_FONT
-        self.text_surface = self.font.render("Choose Amount:", True, BLACK)
-        self.text_rect = self.text_surface.get_rect(center=(400,200))
-        self.increment_rect = None
-        self.decrement_rect = None
-        self.back_button_rect = pygame.Rect(10,10,50,50)
-        self.back_button_text = WORD_FONT.render("Back", True, WHITE, BLACK)
-        self.submit_button_text = WORD_FONT.render("Submit", True, WHITE, GREEN)
-        self.submit_button_rect = self.submit_button_text.get_rect(center=(700,700))
 
-        self.submit_button_text = pygame.transform.scale(self.submit_button_text, (self.submit_button_rect.width *5, self.submit_button_rect.height*5))
-
-    def draw(self, screen):
-        screen.fill(BACKGROUND)
-        screen.blit(self.text_surface, self.text_rect)
-
-        quantity_surface = self.font.render(str(self.quantity), True, (0, 0, 0))
-        quantity_rect = quantity_surface.get_rect(center=(400, 250))
-        screen.blit(quantity_surface, quantity_rect)
-
-        increment_surface = self.font.render("+", True, (0, 0, 0))
-        self.increment_rect = increment_surface.get_rect(center=(500, 250))
-        decrement_surface = self.font.render("-", True, (0, 0, 0))
-        self.decrement_rect = decrement_surface.get_rect(center=(300, 250))
-        screen.blit(increment_surface, self.increment_rect)
-        screen.blit(decrement_surface, self.decrement_rect)
-
-        pygame.draw.rect(screen, BLACK, self.back_button_rect)
-        screen.blit(self.back_button_text, (self.back_button_rect.x + 10, self.back_button_rect.y + 10))
-
-        pygame.draw.rect(screen, BLACK, self.submit_button_rect)
-        screen.blit(self.submit_button_text, (self.submit_button_rect.x + 10, self.submit_button_rect.y + 10))
-    
-    def handle_events(self, events):
-        for event in events:
-            mouse_pos = pygame.mouse.get_pos()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if self.increment_rect.collidepoint(mouse_pos):
-                    self.quantity +=1
-                elif self.decrement_rect.collidepoint(mouse_pos):
-                    self.quantity-=1
-                if self.back_button_rect.collidepoint(mouse_pos):
-                    self.current_state =  ChooseTradeResources(self.player, self.trade_partner)
-                if self.submit_button_rect.collidepoint(mouse_pos):
-                    self.current_state =  AcceptTradeState(self.player, self.current_state)
-
-    def should_transition(self):
-        return self.current_state is not None
-    def transition(self):
-        return self.current_state
                 
 class AcceptTradeState:
-    def __init__(self, player, trade_partner, quantity):
+    def __init__(self, player, trade_partner, player_resources, trade_partner_resources):
         self.player = player
         self.trade_partner = trade_partner
         self.current_state = None
         self.trade_accepted = False
-        self.quantity = quantity
-        
-        self.accept_rect = pygame.Rect(10, 10, 50, 50)
+        self.player_resources = player_resources
+        self.trade_partner_resources = trade_partner_resources        
+        self.accept_rect = pygame.Rect(100, 300, 50, 50)
         self.accept_text = WORD_FONT.render("Accept?", True, GREEN)
 
-        self.decline_rect = pygame.Rect(30, 30, 80, 80)
+        self.decline_rect = pygame.Rect(400, 300, 80, 80)
         self.decline_text = WORD_FONT.render("Decline?", True, RED)
 
     def draw(self, screen):
         screen.fill(BACKGROUND)
+
+        prompt_text = BIG_FONT.render(f'{self.trade_partner.name}: Accept or decline this offer', True, BLACK)
+        prompt_rect = prompt_text.get_rect(center=(500, 100))
+        screen.blit(prompt_text, prompt_rect)
          
         pygame.draw.rect(screen, BLACK, self.accept_rect)
         screen.blit(self.accept_text, (self.accept_rect.x + 10, self.accept_rect.y + 10))
@@ -1486,6 +1384,7 @@ class BuildState:
                     else:
                         game_log.append('Not enough Resources')
                         self.current_state =  MainGameState(self.player, self.current_state)
+            
     
     def should_transition(self):
         return self.current_state is not None
