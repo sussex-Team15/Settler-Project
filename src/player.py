@@ -101,10 +101,10 @@ class Player:  # pylint: disable=too-many-instance-attributes
         """
 
         if not is_special_round:
-            self.resources[Resource.BRICK]-=1
-            self.resources[Resource.WOOD]-=1
-            self.resources[Resource.WOOL]-=1
-            self.resources[Resource.GRAIN]-=1
+            self.resources[Resource.BRICK.name()]-= 1
+            self.resources[Resource.WOOD.name()]-=1
+            self.resources[Resource.WOOL.name()]-=1
+            self.resources[Resource.GRAIN.name()]-=1
         
     
        
@@ -114,8 +114,8 @@ class Player:  # pylint: disable=too-many-instance-attributes
         Builds a city at specified node
         only can build if a settlement is on the node
         """
-        self.resources[Resource.ORE]-=3
-        self.resources[Resource.GRAIN]-=2
+        self.resources[Resource.ORE.name()]-=3
+        self.resources[Resource.GRAIN.name()]-=2
         self.cities.append(node)
         
 
@@ -161,6 +161,10 @@ class Player:  # pylint: disable=too-many-instance-attributes
             self.resources[resource] +=1
         else:
             self.resources[resource] = 1
+
+    def remove_resources(self, offered_resources):
+        for resource, quantity in offered_resources.items():
+            self.resources[resource] -= quantity
 
     def get_victory_points(self):
         """_summary_

@@ -5,11 +5,11 @@ class Bank:
     def __init__(self):
 
         # not sure what bank starts with (to change)
-        self.resources = {Resource.BRICK: 19, 
-                          Resource.WOOD: 19,
-                          Resource.WOOL: 19,
-                          Resource.GRAIN: 19,
-                          Resource.ORE: 19}
+        self.resources = {Resource.BRICK.name(): 19, 
+                          Resource.WOOD.name(): 19,
+                          Resource.WOOL.name(): 19,
+                          Resource.GRAIN.name(): 19,
+                          Resource.ORE.name(): 19}
         self.trade_ratio = 4  # default trade ratio - goes to 3 if player has settlement or trades on harbour
 
     def buy_from_bank(self, player, offered_resources, resource):
@@ -32,6 +32,7 @@ class Bank:
         self.resources[resource]-=1
 
         return True
+    
 
     def null_method(self):
         return (

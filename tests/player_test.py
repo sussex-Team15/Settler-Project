@@ -22,7 +22,6 @@ def test_roll_dice(player):
     assert 1 <= dice_1 <= 6
     assert 1 <= dice_2 <= 6
 
-# TODO: test building a settlement
 
 
 
