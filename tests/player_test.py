@@ -32,7 +32,8 @@ def test_roll_dice(player):
     assert 1 <= dice_1 <= 6
     assert 1 <= dice_2 <= 6
 
-# TODO: test building a settlement
+
+
 
 # TODO: test building a city
 
@@ -48,29 +49,13 @@ def test_build_road(player):
     :type player: Player
     """
     road_count = len(player.roads)
-    player.resources = [Resource.WOOD, Resource.BRICK]
+    player.resources = {Resource.WOOD:1, Resource.BRICK:1}
     player.build_road(1, 2)
     assert len(player.roads) == road_count + 1
     assert player.roads[-1] == (1, 2)
 
 
 def test_get_resources(player):
-    """
-    Test the get_resources method of the Player class.
-
-    This test checks that the get_resources method returns 
-    the correct list of resources of the player.
-
-    :param player: A Player object representing a player in the game.
-    :type player: Player
-    """
-    player.resources = [Resource.WOOD,
-                        Resource.BRICK, Resource.GRAIN, Resource.WOOL]
-    assert player.get_resources() == [
-        Resource.WOOD, Resource.BRICK, Resource.GRAIN, Resource.WOOL]
-
-
-def test_add_resources(player):
     """
     Test the add_resources method of the Player class.
 
@@ -80,9 +65,18 @@ def test_add_resources(player):
     :param player: A Player object representing a player in the game.
     :type player: Player
     """
-    player.add_resources(Resource.WOOD)
-    player.add_resources(Resource.BRICK)
-    assert player.resources == [Resource.WOOD, Resource.BRICK]
+    player.resources = {Resource.WOOD:1,
+                        Resource.BRICK:1, Resource.GRAIN:1, Resource.WOOL:1}
+    assert player.get_resources() == {
+        Resource.WOOD:1, Resource.BRICK:1, Resource.GRAIN:1, Resource.WOOL:1}
+
+
+def test_add_resources(player):
+    player.add_resource(Resource.WOOD)
+    player.add_resource(Resource.BRICK)
+    assert player.resources == {Resource.WOOD:1, Resource.BRICK:1, 
+                                Resource.GRAIN:0, Resource.NONE:0,
+                                Resource.ORE:0, Resource.WOOL:0}
 
 
 def test_get_victory_points(player):

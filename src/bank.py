@@ -1,4 +1,6 @@
 # pylint: disable=missing-module-docstring
+from src.resource_ import Resource
+
 class Bank:
     """Bank class that controls behaviour of the bank in the game
 
@@ -12,29 +14,38 @@ class Bank:
     :type dev_cards: list
     
     """
-    def __init__(self, resources, dev_cards):
+    def __init__(self):
         """Constructor Method
         """
         # not sure what bank starts with (to change)
-        self.resources = resources
-        self.trade_ratios = 4  # default trade ratio -
-        # goes to 3 if player has settlement or trades on harbour
-        # list as stack (only uses pop and push)
-        self.dev_cards = dev_cards
+        self.resources = {Resource.BRICK.name(): 19, 
+                          Resource.WOOD.name(): 19,
+                          Resource.WOOL.name(): 19,
+                          Resource.GRAIN.name(): 19,
+                          Resource.ORE.name(): 19}
+        self.trade_ratio = 4  # default trade ratio - goes to 3 if player has settlement or trades on harbour
 
-    def get_trade_ratio(self, num_settlements):
-        """Returns the trade ratio as an integer 
-        value based on how many settlements are 
-        constructed.
+    def buy_from_bank(self, player, offered_resources, resource):
+        """ purchases a resource from the bank
 
-        :param num_settlements: Current number of settlements constructed on the board
-        :type num_settlements: int
-        :return: The trade ratio as a number
-        :rtype: int
+            Trades the offered resources for the resource
+
+            :return: True if bank or player has required num of resources, else False
+            :rtype: boolean
         """
-        if num_settlements > 0:
-            return 3
-        return self.trade_ratios
+        for resource in offered_resources:
+            if resource not in player.resources or player.resources[resource]<4:
+                return False # not enough resources 
+            player.resources[resource]-=1
+        
+        if self.resources[resource]<=0:
+            return False # bank doesnt have the resource wanted
+        
+        player.resources[resource]+=1
+        self.resources[resource]-=1
+
+        return True
+    
 
     def null_method(self):
         """Returns all current information about the bank
@@ -45,6 +56,5 @@ class Bank:
         """
         return (
             self.resources,
-            self.trade_ratios,
-            self.dev_cards
+            self.trade_ratio,
         )
