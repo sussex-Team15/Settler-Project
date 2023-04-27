@@ -1,67 +1,4 @@
 from action import *
-import random
-
-"""
-AIPlayer Class that controls the behavior of an AI player in the game.
-Attributes:
-
-- name : str
-    String representing the name of the player
-
-- victory_points: int
-    Integer representing the number of victory points the player has received.
-
-- color: tuple
-    A tuple with an r,g,b value representing the color that the player has.
-
-- resources: dict
-    a dictionary of resource type string mapped to the amount the player has
-
-- settlements: list
-    a list of settlements the player has
-
-- cities: list
-    a list of cities the player has
-
-- roads: list
-    a list of roads the player has (all of type Road)
-
-- isTurn: boolean
-    a boolean indicating if it is the players turn in the gameloop.
-
-- hasLongestRoad: boolean
-    a boolean indicating if the player has the longest road.
-
-- has_largest_army: boolean
-    a boolean indicating if the player has the largest army
-
-- trade_offers: list
-    a list of trade_offers that the player has received (of type Trade)
-
-Methods:
--take_turn(self, game_state)
-    The aiplayer will take its turn
-
--get_possible_actions(self, game_state)
-    Given the current game state, generates all possible actions the player can take
-
--_get_settlement_actions(self, settlement, game_state)
-    returns all possible actions on a vertex adjacent to the settlement
-
--_get_city_actions(self, settlement, game_state)
-    Returns all possible actions that upgrade a settlement into a city
-
--_get_trade_actions(self, resource, available_resources, game_state)
-    Returns all possible actions for trading a resource given with another resource the player has
-
--choose_action(self, action)
-    Randomly chooses an action from the array0
-
--__str__(self)
-    Returns a string representation of the AIPlayer
-
-"""
-
 
 class AIPlayer():
     def __init__(self, name, color):
@@ -69,7 +6,7 @@ class AIPlayer():
         self.name = name
         self.victory_points = 0
         self.color = color
-        self.resources = {resource.name(): 0 for resource in Resource if not resource.name() == None}
+        self.resources = []
         self.settlements = []
         self.cities = []
         self.roads = []
@@ -108,7 +45,7 @@ class AIPlayer():
     def _get_settlement_actions(self, settlement, game_state):
         # Given a settlement and current game state, returns all possible actions to build a settlement on a vertex adjacent to the settlement
         actions = []
-        for node in settlement.adjacent_vertices: # TODO doesn't work
+        for node in settlement.adjacent_vertices:
             if game_state.board.is_vertex_buildable(node):
                 action = BuildSettlementAction(node)
                 if game_state.is_valid_action(action):

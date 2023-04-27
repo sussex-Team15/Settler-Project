@@ -1,8 +1,5 @@
-from trade import Trade
-from building import Settlement, City
-from resource_ import Resource
-
-
+from src.building import Settlement
+from src.resource_ import Resource
 
 class Action:
     def __init__(self):
@@ -12,10 +9,10 @@ class Action:
         pass
 
 class BuildSettlementAction(Action):
-    def __init__(self, node):
-        self.settlements = []
-        self.resources = []
+    def __init__(self, node, ai_player):
         self.node = node
+        self.ai_player = ai_player
+        self.resources = ai_player.get_resources()
 
     def execute(self):
         settlement = Settlement(self, self.node)
@@ -36,16 +33,16 @@ class BuildSettlementAction(Action):
                 num_grain >= 1,
                 num_brick >= 1,
                 num_wool >= 1]):
-            self.settlements.append(settlement)
+            self.ai_player.add_settlement(settlement)
         else:
             print('not enough resources')
 
 class BuildRoadAction(Action):
-    def __init__(self, node1, node2):
+    def __init__(self, node1, node2, ai_player):
         self.node1 = node1
         self.node2 = node2
-        self.roads = []
-        self.resources = []
+        self.ai_player = ai_player
+        self.resources = ai_player.get_resources()
 
     def execute(self):
         """
@@ -65,43 +62,7 @@ class BuildRoadAction(Action):
 
         if num_brick >= 1 and num_lumber >= 1:
             # player has enough
-            self.roads.append((self.node1, self.node2))
+            self.ai_player.add_road((self.node1, self.node2))
             print(f'road built from {self.node1} to {self.node2}')
         else:
             print("Not enough resources")
-
-class UpgradeSettlementAction(Action):
-    def __init__(self, node):
-        self.node = node
-        self.resources = []
-
-    def execute(self):
-        """
-        Builds a city at specified node
-        only can build if a settlement is on the node
-        """
-        city = City(self, self.node)
-        num_ore = 0
-        num_grain = 0
-
-        # check to see if player has enough resources for city
-        for resource in self.resources:
-            if resource == Resource.GRAIN:
-                num_grain += 1
-            elif resource == Resource.ORE:
-                num_ore += 1
-
-        if num_ore >= 3 and num_grain >= 2:
-            # player has enough
-            self.cities.append(city)
-        else:
-            print("Not enough resources")
-
-class TradeAction(Action):
-    def __init__(self, offering_player, requesting_player, resource):
-        self.offering_player = offering_player
-        self.requesting_player = requesting_player
-        self.resource = resource
-
-    def execute(self):
-        trade = Trade(self.offering_player, self.requesting_player, self.resource)
