@@ -235,7 +235,7 @@ class StartMenu:
         background_img  = pygame.transform.scale(background_img, (DISPLAY_WIDTH, DISPLAY_HEIGHT))
         screen.blit(background_img, (0,0))
 
-        welcome_text_surface = WELCOME_FONT.render("Welcome to ugly Catan!", True, BLACK)
+        welcome_text_surface = WELCOME_FONT.render("Welcome to Catan!", True, BLACK)
         welcome_text_rect = pygame.Rect(100, 20, 500, 300)
         screen.blit(welcome_text_surface, welcome_text_rect)
 
