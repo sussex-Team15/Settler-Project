@@ -17,8 +17,6 @@ from src.resource_ import Resource
 from src.tiles import GameTile, ResourceTile
 from src.utils import ASSET_DIR
 
-from pdf2image import convert_from_path
-
 # pylint: disable=redefined-outer-name
 
 # Initialize pygame
@@ -873,13 +871,13 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
                                 self.road_1[0] = node_button
                             elif self.road_1[1] is None and self.is_adjacent(self.road_1[0], node_button):
                                 self.road_1[1] = node_button
-                                self.current_player.build_road(self.road_1[0], self.road_1[1])
+                                self.current_player.build_road(self.road_1[0], self.road_1[1], is_special_round=True)
                                 built_roads.append(((self.road_1[0], self.road_1[1], self.current_player)))
                             elif self.road_2[0] is None:
                                 self.road_2[0] = node_button
                             else:
                                 self.road_2[1] = node_button
-                                self.current_player.build_road(self.road_2[0], self.road_2[1])
+                                self.current_player.build_road(self.road_2[0], self.road_2[1], is_special_round=True)
                                 built_roads.append(((self.road_2[0], self.road_2[1], self.current_player)))
                         return
             elif event.type == pygame.KEYDOWN:
@@ -1406,8 +1404,6 @@ class BankTrade:
         resource_images.append((pygame.image.load('src\\assets\\resource\\Grain.jpg'), Resource.GRAIN))
         resource_images.append((pygame.image.load('src\\assets\\resource\\ore.jpg'), Resource.ORE))
 
-
-
         x_offset = 5
         for image, resource in resource_images:
             screen.blit(image, (x_offset, 100))
@@ -1634,13 +1630,15 @@ class ChooseTradePartner:
         for player in players:
             if player.name != self.player.name:
                 
-                player_name_text = self.font.render(player.name, True, WHITE, player.color)
+                player_name_text = WORD_FONT.render(player.name, True, WHITE, player.color)
                 player_rect = player_name_text.get_rect(center=(x_offset, DISPLAY_HEIGHT//2))
                 self.available_players.append((player_rect, player))
                 screen.blit(player_name_text, player_rect)
                 x_offset +=250
 
-
+        prompt_text = self.font.render('Choose who to trade with', True, BLACK)
+        prompt_rect = prompt_text.get_rect(center=(700,100))
+        screen.blit(prompt_text, prompt_rect)
 
         screen.blit(self.back_button_text, self.back_button_rect)
     
@@ -1696,6 +1694,7 @@ class ChooseTradeResources:
         player_name_rect = player_name_text.get_rect(center = (DISPLAY_WIDTH//3, 100))
         screen.blit(player_name_text, player_name_rect)
 
+        y_offset = 150
         for resource, quantity in resources.items():
             button_text = WORD_FONT.render(f'{resource} : {quantity}', True, BLACK)
             button_rect = button_text.get_rect(center = (DISPLAY_WIDTH//3, y_offset))
@@ -1703,16 +1702,22 @@ class ChooseTradeResources:
             self.partner_resources_buttons.append((button_rect, resource))
             
             y_offset+=50
+        
 
     def draw_partner_resources(self, screen):
         if self.trade_partner is None:
             return
         resources = self.trade_partner.resources
-        y_offset = 100
 
+
+        player_name_text = WORD_FONT.render(f'{self.trade_partner.name} resources', True, BLACK)
+        player_name_rect = player_name_text.get_rect(center = (DISPLAY_WIDTH//3 + 400, 100))
+        screen.blit(player_name_text, player_name_rect)
+
+        y_offset = 150
         for resource, quantity in resources.items():
             button_text = WORD_FONT.render(f'{resource} : {quantity}', True, BLACK)
-            button_rect = button_text.get_rect(center = (DISPLAY_WIDTH//2, y_offset))
+            button_rect = button_text.get_rect(center = (DISPLAY_WIDTH//3 +400, y_offset))
             screen.blit(button_text, button_rect)
             self.partner_resources_buttons.append((button_rect, resource))
             
