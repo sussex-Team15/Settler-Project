@@ -2,6 +2,8 @@ from trade import Trade
 from building import Settlement, City
 from resource_ import Resource
 
+
+
 class Action:
     def __init__(self):
         pass

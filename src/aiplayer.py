@@ -1,4 +1,5 @@
 from action import *
+import random
 
 """
 AIPlayer Class that controls the behavior of an AI player in the game.
