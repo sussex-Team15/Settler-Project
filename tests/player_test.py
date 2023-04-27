@@ -37,7 +37,14 @@ def test_roll_dice(player):
 
 
 def test_build_settlement(player):
-    # TODO: DocString
+    """
+    Test the build_settlement method of the Player class.
+
+    This test checks that once a settlement is built, the player's resources have decreased.
+
+    :param player: A Player object representing a player in the game.
+    :type player: Player
+    """
     player.resources = {Resource.BRICK.name(): 2,
                         Resource.WOOD.name(): 2,
                         Resource.WOOL.name(): 2,
