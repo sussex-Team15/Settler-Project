@@ -52,10 +52,7 @@ def test_build_settlement(player):
                         Resource.WOOD.name(): 2,
                         Resource.WOOL.name(): 2,
                         Resource.GRAIN.name(): 2}
-    
-    
     player.build_settlement(False)
-
     assert {Resource.BRICK.name(): 2,
             Resource.WOOD.name(): 2,
             Resource.WOOL.name(): 2,
