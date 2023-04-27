@@ -3,9 +3,12 @@
 # pylint: disable=missing-module-docstring
 # pylint: disable=fixme
 import pytest
+import pygame
 
 from src.player import Player
 from src.resource_ import Resource
+from src.button import ButtonRect
+
 
 
 @pytest.fixture
@@ -35,18 +38,18 @@ def test_roll_dice(player):
 
 def test_build_settlement(player):
     # TODO: DocString
-    player.resources = {Resource.BRICK: 2,
-                        Resource.WOOD: 2,
-                        Resource.WOOL: 2,
-                        Resource.GRAIN: 2}
+    player.resources = {Resource.BRICK.name(): 2,
+                        Resource.WOOD.name(): 2,
+                        Resource.WOOL.name(): 2,
+                        Resource.GRAIN.name(): 2}
+    
+    
+    player.build_settlement(False)
 
-    pdb.set_trace()
-    player.build_settlement(1110, False)
-
-    assert {Resource.BRICK: 2,
-            Resource.WOOD: 2,
-            Resource.WOOL: 2,
-            Resource.GRAIN: 2} != player.resources
+    assert {Resource.BRICK.name(): 2,
+            Resource.WOOD.name(): 2,
+            Resource.WOOL.name(): 2,
+            Resource.GRAIN.name(): 2} != player.resources
 
 
 # TODO: test building a city
@@ -63,8 +66,8 @@ def test_build_road(player):
     :type player: Player
     """
     road_count = len(player.roads)
-    player.resources = {Resource.WOOD:1, Resource.BRICK:1}
-    player.build_road(1, 2)
+    player.resources = {Resource.WOOD.name():1, Resource.BRICK.name():1}
+    player.build_road(1, 2, is_special_round=False)
     assert len(player.roads) == road_count + 1
     assert player.roads[-1] == (1, 2)
 
@@ -86,11 +89,12 @@ def test_get_resources(player):
 
 
 def test_add_resources(player):
-    player.add_resource(Resource.WOOD)
-    player.add_resource(Resource.BRICK)
-    assert player.resources == {Resource.WOOD:1, Resource.BRICK:1, 
-                                Resource.GRAIN:0, Resource.NONE:0,
-                                Resource.ORE:0, Resource.WOOL:0}
+    player.resources = {Resource.WOOD.name():0, Resource.BRICK.name():0, Resource.GRAIN.name():0, Resource.NONE.name():0, Resource.ORE.name():0, Resource.WOOL.name():0}
+    player.add_resource(Resource.WOOD.name())
+    player.add_resource(Resource.BRICK.name())
+    assert player.resources == {Resource.WOOD.name():1, Resource.BRICK.name():1, 
+                                Resource.GRAIN.name():0, Resource.NONE.name():0,
+                                Resource.ORE.name():0, Resource.WOOL.name():0}
 
 
 def test_get_victory_points(player):

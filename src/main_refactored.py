@@ -816,7 +816,7 @@ class InventoryGameState:
             x_offset_image+=280
 
         
-        screen.blit(BIG_FONT.render('Your Current Resources', True, BLACK), (400, 50))
+        screen.blit(BIG_FONT.render('Your Current Resources', True, BLACK), (200, 50))
         screen.blit(BIG_FONT.render('Back', True, BLACK, RED), self.back_button)
 
     def should_transition(self):
@@ -828,7 +828,7 @@ class PlaceRobberState:
     def __init__(self, player):
         self.player = player
         self.current_state = None
-        self.robber_img = pygame.image.load(('src','assets','Tiles','robber.jpg'))
+        self.robber_img = pygame.image.load(os.path.join('src','assets','Tiles','robber.jpg'))
 
     def handle_events(self, events):
         for event in events:
@@ -861,7 +861,7 @@ class ChooseResources:
         self.player = player
         self.trade_partner = trade_partner
         self.current_state = None
-        self.submit_button = pygame.Rect(600, 680, 500, 200)
+        self.submit_button = pygame.Rect(300, 680, 200, 200)
         self.resource_buttons = []
         self.back_button = pygame.Rect(20, 680, 200, 200)
         
@@ -954,7 +954,7 @@ class ChooseResources:
             self.resource_buttons.append(images[i].get_rect())
 
         
-        screen.blit(BIG_FONT.render('Your Current Resources', True, BLACK), (400, 50))
+        screen.blit(BIG_FONT.render('Your Current Resources', True, BLACK), (200, 30))
         screen.blit(BIG_FONT.render('Back', True, BLACK, RED), self.back_button)
         screen.blit(BIG_FONT.render('Submit Resources', True, BLACK), self.submit_button)
 
@@ -1033,7 +1033,7 @@ class BankTrade:
             self.resource_buttons.append((rect, resource))
             x_offset+=290
 
-        font = pygame.font.SysFont("Algerian", 100, True)
+        font = pygame.font.SysFont("arial", 100, True)
         bank_message_text = font.render("Trade with the Bank!", True, BLACK)
         bank_message_rect = pygame.Rect(20, 20, DISPLAY_WIDTH-2, 50)
         screen.blit(bank_message_text, bank_message_rect)
@@ -1045,7 +1045,7 @@ class BankTrade:
             screen.blit(text, text_rect)
             x_offset += 280
 
-        font = pygame.font.SysFont("Algerian", 100, True)
+        font = pygame.font.SysFont("arial", 100, True)
         back_button_text = font.render(f'Back', True, BLACK, RED)
         
         screen.blit(back_button_text, self.back_button)
