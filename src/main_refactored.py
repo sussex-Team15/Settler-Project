@@ -185,579 +185,6 @@ def setup():
     return tile_sprites, board, board_mapping
 
 
-    
-
-
-def mouse_motion_event():
-    mouse_pos = pygame.mouse.get_pos()
-    global mouse_hovering
-    mouse_hovering = False
-    for button in node_buttons:
-        if button.is_hovered_over(mouse_pos):
-            mouse_hovering = True
-            break
-    for button in tile_buttons:
-        if button.is_hovered_over(mouse_pos):
-            mouse_hovering = True
-            break
-
-    if build_road_btn.is_hovered_over(mouse_pos):
-        mouse_hovering = True
-    elif build_city_btn.is_hovered_over(mouse_pos):
-        mouse_hovering = True
-    elif build_settlement_btn.is_hovered_over(mouse_pos):
-        mouse_hovering = True
-    elif make_trade_btn.is_hovered_over(mouse_pos):
-        mouse_hovering = True
-    elif dev_card_btn.is_hovered_over(mouse_pos):
-        mouse_hovering  = True
-    elif bank_inventory_btn.is_hovered_over(mouse_pos):
-        mouse_hovering = True
-
-
-    pygame.display.flip()
-
-
-def click_event(_event, player, special_round=False):  # _ as not used yet
-    
-    mouse_pos = pygame.mouse.get_pos()
-
-    for button in tile_buttons:
-        if button.is_clicked(mouse_pos):
-            print(print(f'{button.x_pos}, {button.y_pos} clicked!'))
-            break
-
-    if build_road_btn.is_clicked(mouse_pos):
-        road_cost = {ResourceTile.HILLS.generate_resource():1,
-                    ResourceTile.FOREST.generate_resource():1}
-        
-        for resource, quantity in road_cost.items(): # check to see if player has enough resources
-
-            if resource not in player.resources or player.resources[resource] < quantity:
-                game_log.append("Not enough resources!")
-                return None
-        start_node = build_road()
-        end_node = build_road()
-        if is_adjacent(start_node, end_node):
-            # check to see if nodes selected are adjacent
-            built_roads.append((start_node, end_node, player))
-
-            player.build_road(start_node, end_node)
-            pygame.display.update()
-            game_log.append((f'{player.name} built road!'))
-
-    elif build_settlement_btn.is_clicked(mouse_pos):
-        settlement_cost = {ResourceTile.HILLS.generate_resource(): 1, 
-                            ResourceTile.PASTURE.generate_resource(): 1,
-                            ResourceTile.FOREST.generate_resource(): 1,
-                            ResourceTile.FIELDS.generate_resource(): 1
-                            }
-        for resource, quantity in settlement_cost.items():
-                
-            if resource not in player.resources or player.resources[resource] < quantity:
-                game_log.append("Not enough resources!")
-                return None
-        node = build_settlement(player)
-        player.build_settlement(node)
-        built_settlements.append(((node.x_pos - 20, node.y_pos - 30), player))
-        game_log.append(f'{player.name} built settlement!')
-
-    elif build_city_btn.is_clicked(mouse_pos):
-        city_cost = {ResourceTile.MOUNTAIN.generate_resource(): 3, 
-                    ResourceTile.PASTURE.generate_resource(): 2}
-        for resource, quantity in city_cost.items():
-                
-            if resource not in player.resources or player.resources[resource] < quantity:
-                game_log.append("Not enough resources!")
-                return None
-
-        if build_settlement(player, city=True) == None:
-            game_log.append("Node needs a settlement before a city can be placed")
-            return None
-        else:
-            node = build_settlement(player, city=True)
-            player.build_city(node)
-            built_cities.append(((node.x_pos - 20, node.y_pos - 30), player))
-            game_log.append(f'{player.name} built city!')
-    elif make_trade_btn.is_clicked(mouse_pos):
-        trade_open = True
-        player_buttons, trade_surface = draw_trade_screen(player)
-        while trade_open:
-        
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    
-                    mouse_pos = pygame.mouse.get_pos()
-                    if not trade_surface.get_rect().collidepoint(event.pos):
-                        return
-                    else:
-                        for button, player in player_buttons:
-                            mouse_pos = pygame.mouse.get_pos()
-                            if button.is_clicked(mouse_pos):
-                                offered_player = player
-                                offered_player_text = WORD_FONT.render(f"{offered_player.name}'s Resources", True, BLACK)
-                                offered_player_rect = offered_player_text.get_rect(topleft = (450, 100))
-                                trade_surface.blit(offered_player_text, offered_player_rect)
-                                
-
-                                resource_y = 150
-                                for resource, quantity in offered_player.resources.items():
-                                    resource_text = WORD_FONT.render(f'{resource}: {quantity}', True, BLACK)
-                                    resource_rect = resource_text.get_rect(topleft = (400, resource_y))
-                                    trade_surface.blit(resource_text, resource_rect)
-                                    resource_y+=30
-
-                                pygame.display.flip()
-                elif event.type == pygame.MOUSEMOTION:
-                    print(event.pos)
-                    mouse_hovering = False
-                    for button, player in player_buttons:
-                    
-                        mouse_pos = pygame.mouse.get_pos()
-                        if button.is_hovered_over(mouse_pos):
-                            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-                        else:
-                            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-                pygame.display.flip()
-            
-    elif dev_card_btn.is_clicked(mouse_pos):
-        print('other button 1 clicked')
-    
-    
-    
-    elif bank_inventory_btn.is_clicked(mouse_pos):
-        bank_surface, resource_buttons = draw_bank_inventory(player) # opens new screen where it shows inventory of player
-        bank_open = True
-
-        while bank_open:
-        
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = pygame.mouse.get_pos()
-                    if not bank_surface.get_rect().collidepoint(event.pos):
-                        bank_open = False
-                    else:
-                        for button in resource_buttons:
-                            pass
-
-                elif event.type == pygame.MOUSEMOTION:
-                    mouse_motion_event()
-                pygame.display.flip()
-            
-
-            
-
-            
-
-        pygame.display.flip()
-
-# pylint: disable=too-many-nested-blocks
-def build_settlement(player, city=False):
-    """places a settlement at the 
-
-    :param player: _description_
-    :type player: _type_
-    :param city: _description_, defaults to False
-    :type city: bool, optional
-    :return: _description_
-    :rtype: _type_
-    """
-    while True:
-        for event in pygame.event.get():  # pylint: disable=no-member
-            if event.type == pygame.QUIT:  # pylint: disable=no-member
-                sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:  # pylint: disable=no-member # nopep8 E501
-                mouse_pos = pygame.mouse.get_pos()
-                for button in node_buttons:
-                    if button.is_clicked(mouse_pos):
-                        if city and not button.has_settlement:
-                            return None
-                        # give player vp 
-                        if city:
-                            player.victory_points += 2
-                            # add 2 vp if player builds a city
-                        else:
-                            player.victory_points += 1
-                            button.has_settlement = True
-                        return button
-
-
-def build_road():
-    """handles the logic after the player clicks the build road button
-
-    :return: node that the player clicked
-    :rtype: ButtonHex
-    """
-    while True:
-        for event in pygame.event.get():  # pylint: disable=no-member
-            if event.type == pygame.QUIT:  # pylint: disable=no-member
-                sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:  # pylint: disable=no-member # nopep8 E501
-                mouse_pos = pygame.mouse.get_pos()
-                for button in node_buttons:
-                    if button.is_clicked(mouse_pos):
-                        return button
-
-
-def check_player_won(player):
-    """checks to see if current player has enough vp to win game 
-
-    Method is called at the end of the current players turn
-
-    :return: True if player vp value is equal or above 10, else False
-    :rtype: boolean
-    """
-    
-    if player.victory_points >= 10:
-        return True
-
-    return False
-
-
-
-
-# pylint: disable=inconsistent-return-statements
-def calc_mouse_node(mouse_pos):
-    '''
-    calculates and returns the node mouse is hovering over
-
-    Args:
-        mouse_pos: x, y coordinates of the mouse click
-
-    Returns:
-        Node_id
-    '''
-    for node_id, node_point in board_mapping['nodes'].items():
-        pos_1 = node_point[0] - mouse_pos[0]
-        pos_2 = node_point[1] - mouse_pos[1]
-        if (pos_1**2 + pos_2**2)**0.5 < 10:
-            pygame.mouse.set_cursor(
-                pygame.SYSTEM_CURSOR_HAND)  # pylint: disable=no-member
-            return node_id
-
-    pygame.mouse.set_cursor(
-        pygame.SYSTEM_CURSOR_ARROW)  # pylint: disable=no-member
-
-# pylint: disable=inconsistent-return-statements
-def calc_mouse_pos_tile(mouse_pos):
-    """
-    returns the tile that the mouse has clicked in
-
-    Args:
-        mouse_pos: x, y coordinates of the mouse click
-
-    Returns:
-        tile object from the tiles class
-    """
-    x_pos, y_pos = mouse_pos
-    hex_length = math.dist((621, 318), (699, 187))
-
-    for tile_id in board_mapping['tiles']:
-        coords = board_mapping['tiles'][tile_id]
-        # dist between mouse click and center of tile
-        dist = math.sqrt((coords[0] - x_pos)**2 + (coords[1] - y_pos)**2)
-        radius = hex_length * math.sqrt(3) / 2
-
-        # if the distance is less than or equal to the radius
-        # the mouse click falls within the tile
-        if dist <= radius:
-            return board[tile_id - 1]
-
-
-def convert_to_nodeid(x_pos, y_pos):
-    # converts the x, y coords of the
-    # node button to the nodeid stored in board_mapping
-    for node_id, node_points in board_mapping['nodes'].items():
-        if node_points[0] == x_pos and node_points[1] == y_pos:
-            return node_id
-
-    return None
-
-
-def calc_longest_road():
-    for road in built_roads:
-        road[2].total_road_num += 1
-    # calculate who has highest total_road_num value
-    highest = 0
-    for player in players:
-        if player.total_road_num > highest:
-            highest = player.total_road_num
-    for player in players:
-        if player.total_road_num == highest:
-            player.has_longest_road = True
-
-    return player
-
-
-
-
-# pylint: disable=redefined-argument-from-local
-def draw_buildings(city=False):
-    if city:
-        for settlement in built_settlements:
-
-            # Replace with the desired highlight color
-            highlight_color = settlement[1].color
-            # Replace with the desired highlight opacity (0 to 255)
-            highlight_alpha = 0
-            # Create a transparent surface
-            highlight_overlay = pygame.Surface(settlement_img.get_size(),
-                                               pygame.SRCALPHA)  # pylint: disable=no-member # nopep8 E501
-            # Fill the surface with the highlight color and opacity
-            highlight_overlay.fill(
-                (highlight_color[0],
-                 highlight_color[1],
-                 highlight_color[2],
-                 highlight_alpha
-                 ))
-            screen.blit(settlement_img, settlement[0])
-            screen.blit(highlight_overlay, settlement[0])
-    else:
-        for city in built_cities:
-
-            # Replace with the desired highlight color
-            highlight_color = city[1].color
-            # Replace with the desired highlight opacity (0 to 255)
-            highlight_alpha = 0
-            # Create a transparent surface
-            highlight_overlay = pygame.Surface(city_img.get_size(),
-                                               pygame.SRCALPHA)  # pylint: disable=no-member # nopep8 E501
-            # Fill the surface with the highlight color and opacity
-            highlight_overlay.fill(
-                (highlight_color[0],
-                 highlight_color[1],
-                 highlight_color[2],
-                 highlight_alpha
-                 ))
-            screen.blit(city_img, city[0])
-            screen.blit(highlight_overlay, city[0])
-
-def draw_dice(screen, roll_1, roll_2): 
-
-    dice_size = 80
-
-    side_1_p = os.path.join('src','assets','dice','1_sided.jpg')
-    side_2_p = os.path.join('src','assets','dice','2_sided.jpg')
-    side_3_p = os.path.join('src','assets','dice','3_sided.jpg')
-    side_4_p = os.path.join('src','assets','dice','4_sided.jpg')
-    side_5_p = os.path.join('src','assets','dice','5_sided.jpg')
-    side_6_p = os.path.join('src','assets','dice','6_sided.jpg')
-    side_1 = pygame.image.load(side_1_p)
-    side_2 = pygame.image.load(side_2_p)
-    side_3 = pygame.image.load(side_3_p)
-    side_4 = pygame.image.load(side_4_p)
-    side_5 = pygame.image.load(side_5_p)
-    side_6 = pygame.image.load(side_6_p)
-
-    # scaling all to the same size
-    side_1 = pygame.transform.scale(side_1, (dice_size, dice_size))
-    side_2 = pygame.transform.scale(side_2, (dice_size, dice_size))
-    side_3 = pygame.transform.scale(side_3, (dice_size, dice_size))
-    side_4 = pygame.transform.scale(side_4, (dice_size, dice_size))
-    side_5 = pygame.transform.scale(side_5, (dice_size, dice_size))
-    side_6 = pygame.transform.scale(side_6, (dice_size, dice_size))
-
-    if roll_1 == 1:
-        screen.blit(side_1, (10, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-    elif roll_1 == 2:
-        screen.blit(side_2, (10, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-    elif roll_1 == 3:
-        screen.blit(side_3, (10, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-    elif roll_1 == 4:
-        screen.blit(side_4, (10, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-    elif roll_1 == 5:
-        screen.blit(side_5, (10, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-    elif roll_1 == 6:
-        screen.blit(side_6, (10, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-
-    if roll_2 == 1:
-        screen.blit(side_1, (130, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-    elif roll_2 == 2:
-        screen.blit(side_2, (130, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-    elif roll_2 == 3:
-        screen.blit(side_3, (130, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-    elif roll_2 == 4:
-        screen.blit(side_4, (130, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-    elif roll_2 == 5:
-        screen.blit(side_5, (130, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-    elif roll_2 == 6:
-        screen.blit(side_6, (130, DISPLAY_HEIGHT - 90))
-        pygame.display.update()
-
-    pygame.display.update()
-
-
-
-def draw_trade_screen(current_player):
-    """draws a trading display over the window
-
-    Method is called if the current player has clicked the make tradebutton
-
-    :return: None
-    :rtype: None
-    """
-
-    
-    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-    trade_surface = pygame.Surface((800, 600))
-    trade_surface.fill((WHITE))
-    offered_player = None
-
-    prompt_text = WORD_FONT.render("Pick a player to trade with", True, BLACK)
-    prompt_rect = prompt_text.get_rect(center = (400,450))
-    trade_surface.blit(prompt_text, prompt_rect)
-
-    
-    player_name_x = 50
-    player_buttons = []
-    for player in players:
-        if player.name != current_player.name:
-            player_name_btn = ButtonRect((player_name_x, 500),
-                                         (70, 40),
-                                         (player.name, WORD_FONT, WHITE), 
-                                         (player.color, WHITE))
-            player_name_btn.draw(trade_surface)
-            player_buttons.append((player_name_btn, player))
-            player_name_x+=150
-
-    
-    title_text = WORD_FONT.render("Trade with another player", True, BLACK)
-    title_rect = title_text.get_rect(center=(400, 50))
-    trade_surface.blit(title_text, title_rect)
-
-    player_text = WORD_FONT.render("Your resources", True, BLACK)
-    player_rect = player_text.get_rect(topleft = (100,100))
-    trade_surface.blit(player_text, player_rect)
-
-    # create resource labels for current players resources
-    resource_y = 150
-    for resource, quantity in current_player.resources.items():
-        resource_text = WORD_FONT.render(f'{resource}: {quantity}', True, BLACK)
-        resource_rect = resource_text.get_rect(topleft = (150, resource_y))
-        trade_surface.blit(resource_text, resource_rect)
-        resource_y+=30
-    
-    resource_y = 150
-    
-    screen.blit(trade_surface, (50,50))
-    return player_buttons, trade_surface
-
-
-def draw_bank_inventory(player):
-    """draws a inventory display over the window
-
-    Method is called if the current player has clicked the check inventory button
-    will show the inventory of the current player only
-
-    :return: None
-    :rtype: None
-    """
-
-    bank_surface = pygame.Surface((800, 600))
-    bank_surface.fill((WHITE))
-    resource_buttons =[]
-
-    title_text = WORD_FONT.render("Bank Inventory", True, BLACK)
-    title_rect = title_text.get_rect(center=(400, 50))
-    bank_surface.blit(title_text, title_rect)
-
-
-    for index, (resource, quantity) in enumerate(bank.resources.items()):
-        text_x = 350
-        text_y = 100 +(index*30)
-        button = ButtonRect((text_x, text_y),
-                                           (50,20),
-                                           (f'{resource.name()}: {quantity}', WORD_FONT, BLACK),
-                                           (WHITE, WHITE))
-    
-        resource_buttons.append(button)
-        button.draw(bank_surface)
-
-    screen.blit(bank_surface, (0,0))
-    
-
-
-
-    return bank_surface, resource_buttons
-
-def popup():
-    '''
-    screen that contains the buttons for functionality
-    '''
-
-    popup_width = 630
-    popup_height = 160
-
-    popup_rect = pygame.Rect(810, 620, popup_width, popup_height)
-    pygame.draw.rect(screen, (255, 255, 255), popup_rect)
-
-    build_road_btn = ButtonRect(  # pylint: disable=redefined-outer-name
-        (830, 640),
-        (190, 40),
-        ('Build Road', WORD_FONT, WHITE),
-        ((17, 104, 245), WHITE))
-    build_road_btn.draw(screen)
-    build_settlement_btn = ButtonRect(  # pylint: disable=redefined-outer-name
-        (830, 700),
-        (190, 40),
-        ('Build Settlement', WORD_FONT, WHITE),
-        ((38, 140, 31), WHITE))
-    build_settlement_btn.draw(screen)
-    build_city_btn = ButtonRect(  # pylint: disable=redefined-outer-name
-        (1030, 640),
-        (190, 40),
-        ('Build City', WORD_FONT, WHITE),
-        ((181, 186, 43), WHITE))
-    build_city_btn.draw(screen)
-
-    make_trade_btn = ButtonRect(  # pylint: disable=redefined-outer-name
-        (1030, 700),
-        (190, 40),
-        ('Make Trade', WORD_FONT, WHITE),
-        ((255, 51, 153), WHITE))
-    make_trade_btn.draw(screen)
-
-    dev_card_btn = ButtonRect(  # pylint: disable=redefined-outer-name
-        (1230, 640),
-        (190, 40),
-        ('Development Card', WORD_FONT, WHITE),
-        ((51, 153, 255), WHITE))
-    dev_card_btn.draw(screen)
-
-    bank_inventory_btn = ButtonRect(  # pylint: disable=redefined-outer-name
-        (1230, 700),
-        (190, 40),
-        ('Bank', WORD_FONT, WHITE),
-        ((255, 153, 51), WHITE))
-    bank_inventory_btn.draw(screen)
-    
-
-    return (build_road_btn,
-            build_settlement_btn,
-            build_city_btn,
-            make_trade_btn,
-            dev_card_btn,
-            bank_inventory_btn)
-
-(build_road_btn,
- build_settlement_btn,
- build_city_btn,
- make_trade_btn,
- dev_card_btn,
- bank_inventory_btn) = popup()
-
-
 
 class StartMenu:
     def __init__(self):
@@ -1031,6 +458,7 @@ class MainGameState:
         self.bank_inventory_rect = pygame.Rect(1230, 700, 190, 40)
         self.dice_rolled = [1,1]
         self.robber_coords = robber_coords
+        self.invent_button_rect = pygame.Rect(1030, 760, 190, 40)
 
     def handle_events(self, events):
         for event in events:
@@ -1044,12 +472,14 @@ class MainGameState:
                     self.current_state = DevelopmentCardState(self.current_player)
                 if self.bank_inventory_rect.collidepoint(event.pos):
                     
-                    self.current_state = BankTrade(self.current_player, self.bank)
+                    self.current_state = BankTradeChooseResources(self.current_player)
                 if self.build_city_rect.collidepoint(event.pos):
                     
                     self.current_state = Build(self.current_player,is_city=True)
                 if self.build_road_rect.collidepoint(event.pos):
                     self.current_state = RoadBuildState(self.current_player)
+                if self.invent_button_rect.collidepoint(event.pos):
+                    self.current_state = InventoryGameState(self.current_player)
                 for node_button in node_buttons:
                     if node_button.is_clicked(event.pos):
                         pass
@@ -1230,11 +660,13 @@ class MainGameState:
             rect_surf.blit(game_log_text, (50, 460))
             screen.blit(rect_surf, (rect_x, rect_y))
 
+
         # player turn text being drawn
         player_turn_text = WORD_FONT.render(f'Current turn: {player_turn.name}',
                                             True, WHITE)
         rect_surf.blit(player_turn_text, (250, 540))
         screen.blit(rect_surf, (rect_x, rect_y))
+    
     
     def draw_buttons(self):
         button_radius = [10, 22]
@@ -1272,6 +704,10 @@ class MainGameState:
         
         bank_inventory_text = WORD_FONT.render('Bank', True, WHITE, (255, 153, 51))
         screen.blit(bank_inventory_text, self.bank_inventory_rect)
+
+        invent_button_text = WORD_FONT.render("Inventory", True, WHITE, GREEN)
+        screen.blit(invent_button_text, self.invent_button_rect)
+
     
     def draw_dice(self, roll_1, roll_2): # TODO add to MainGame state
 
@@ -1338,11 +774,57 @@ class MainGameState:
 
         pygame.display.update()
 
+        
+
     def should_transition(self):
         return self.current_state is not None
     def transition(self):
         return self.current_state
             
+class InventoryGameState:
+    def __init__(self, player):
+        self.player = player
+        self.current_state = None
+        self.back_button = pygame.Rect(20, 700, 300, 200)
+
+    def handle_events(self, events):
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if self.back_button.collidepoint(event.pos):
+                    self.current_state = MainGameState(self.player)
+
+    def draw(self, screen):
+        screen.fill(BACKGROUND)
+        images = []
+        images.append(pygame.image.load('src\\assets\\resource\\lumber.jpg'))
+        images.append(pygame.image.load('src\\assets\\resource\\wool.jpg'))
+        images.append(pygame.image.load('src\\assets\\resource\\Grain.jpg'))
+        images.append(pygame.image.load('src\\assets\\resource\\brick.jpg'))
+        images.append(pygame.image.load('src\\assets\\resource\\ore.jpg'))
+        
+        x_offset_image = 20
+        x_offset__text = 50
+        for i , (resource, quantity) in enumerate(self.player.resources.items()):
+            if resource is None:
+                continue 
+
+            screen.blit(images[i], (x_offset_image, 200))
+            
+
+            resource_info_text = WORD_FONT.render(f'{resource} : {quantity}', True, BLACK)
+            resource_info_rect = resource_info_text.get_rect(center=(x_offset__text, 650))
+            screen.blit(resource_info_text, resource_info_rect)
+            x_offset__text+=280
+            x_offset_image+=280
+
+        
+        screen.blit(BIG_FONT.render('Your Current Resources', True, BLACK), (400, 50))
+        screen.blit(BIG_FONT.render('Back', True, BLACK, RED), self.back_button)
+
+    def should_transition(self):
+        return self.current_state is not None
+    def transition(self):
+        return self.current_state
 
 class PlaceRobberState:
     def __init__(self, player):
@@ -1355,13 +837,13 @@ class PlaceRobberState:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for id, coord in board_mapping['tiles'].items():
-                    target_rect = pygame.Rect(coord[0] - 50, coord[1] - 50, 200, 200)
+                    target_rect = pygame.Rect(coord[0], coord[1], 200, 200)
                     if target_rect.collidepoint(mouse_pos):
                         for game_tile in board:
                             if game_tile.get_tile_info()['Tile id'] == id:
                                 game_tile.has_robber = True
                                 self.current_state = MainGameState(self.player, ((target_rect.x, target_rect.y)))
-                                screen.blit(self.robber_img, (target_rect.x, target_rect.y))
+                                screen.blit(self.robber_img, (target_rect.x+50, target_rect.y+50))
     
 
     def draw(self, screen):
@@ -1372,26 +854,153 @@ class PlaceRobberState:
     def transition(self):
         return self.current_state
 
+class BankTradeChooseResources:
+    def __init__(self, player):
+        self.player = player
+        self.current_state = None
+        self.submit_button = pygame.Rect(600, 680, 500, 200)
+        self.resource_buttons = []
+        self.back_button = pygame.Rect(20, 680, 200, 200)
+        
+        self.offered_resources = [0,0,0,0,0]
+        self.plus_buttons = []
+        self.minus_buttons = []
+    
+    def handle_events(self, events):
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print(len(self.plus_buttons))
+                print(len(self.offered_resources))
+                for i, plus_button in enumerate(self.plus_buttons):
+                    if plus_button.collidepoint(event.pos):
+                        self.offered_resources[i] +=1
+                for i, minus_button in enumerate(self.minus_buttons):
+                    if minus_button.collidepoint(event.pos) and self.offered_resources[i]>0:
+                        self.offered_resources[i]-=1
+                if self.back_button.collidepoint(event.pos):
+                    self.current_state = MainGameState(self.player)
+                elif self.submit_button.collidepoint(event.pos):
+                    resource_names = [Resource.WOOD.name(), Resource.WOOL.name(), Resource.GRAIN.name(), Resource.BRICK.name(), Resource.ORE.name()]
+                    resources_trade= dict(zip(resource_names, self.offered_resources))
+                    if self.has_enough_resources(self.player.resources, resources_trade) and sum(resources_trade.values()) == 4:
+                        self.current_state = BankTrade(self.player, bank, resources_trade)
+                    else:
+                        self.current_state = NotEnoughResources(self.player)
+                        
+                
+
+    def draw(self, screen):
+        screen.fill(BACKGROUND)
+
+        images = []
+        images.append(pygame.image.load('src\\assets\\resource\\lumber.jpg'))
+        images.append(pygame.image.load('src\\assets\\resource\\wool.jpg'))
+        images.append(pygame.image.load('src\\assets\\resource\\Grain.jpg'))
+        images.append(pygame.image.load('src\\assets\\resource\\brick.jpg'))
+        images.append(pygame.image.load('src\\assets\\resource\\ore.jpg'))
+        
+        x_offset_image = 20
+        x_offset__button = 50
+        button_width = 30  
+        button_height = 30
+
+        self.plus_buttons.clear()
+        self.minus_buttons.clear()
+
+        for i in range(len(images)):
+            screen.blit(images[i], (x_offset_image, 200))
+            
+            plus_button = pygame.Surface((button_width, button_height))
+            plus_button.fill(GREEN)
+            plus_button_rect = plus_button.get_rect()
+            plus_button_rect.centerx = x_offset_image + images[i].get_width() / 2
+            plus_button_rect.y = 120
+            screen.blit(plus_button, plus_button_rect)
+            screen.blit(WORD_FONT.render("+", True, WHITE), plus_button_rect)
+
+            # Draw the '-' button
+            minus_button = pygame.Surface((button_width, button_height))
+            minus_button.fill(RED)
+            minus_button_rect = minus_button.get_rect()
+            minus_button_rect.centerx = x_offset_image + images[i].get_width() / 2
+            minus_button_rect.y = 170
+            screen.blit(minus_button, minus_button_rect)
+            screen.blit(WORD_FONT.render("-", True, WHITE), minus_button_rect)
+
+            self.plus_buttons.append(plus_button_rect)
+            self.minus_buttons.append(minus_button_rect)
+
+            # Draw resource quantity next to the + and - minus buttons
+            quantity_text = WORD_FONT.render(str(self.offered_resources[i]), True, BLACK)
+            quantity_rect = quantity_text.get_rect()
+            quantity_rect.centerx = x_offset_image + images[i].get_width() / 2 + 25
+            quantity_rect.y = 160
+            screen.blit(quantity_text, quantity_rect)
+
+            x_offset__button+=280
+            x_offset_image+=280
+
+            self.resource_buttons.append(images[i].get_rect())
+
+        
+        screen.blit(BIG_FONT.render('Your Current Resources', True, BLACK), (400, 50))
+        screen.blit(BIG_FONT.render('Back', True, BLACK, RED), self.back_button)
+        screen.blit(BIG_FONT.render('Submit Resources', True, BLACK), self.submit_button)
+
+    
+    def has_enough_resources(self, player_resources, offered_resources):
+        for resource, quantity in offered_resources.items(): # check to see if player has enough resources
+
+            if resource not in player_resources or player_resources[resource] < quantity:
+                return False
+        return True
+            
+
+    def should_transition(self):
+        return self.current_state is not None
+    def transition(self):
+        return self.current_state
+
 class BankTrade:
-    def __init__(self, player, bank):
+    def __init__(self, player, bank, offered_resources):
         self.player = player
         self.bank = bank
         self.current_state = None
         self.resource_buttons = []
         self.back_button = pygame.Rect(1000, 700, 200, 200)
-    
+        self.offered_resources = offered_resources
+
     def handle_events(self, events):
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                for button, resource in self.resource_buttons:
+                for i, (button, resource) in enumerate(self.resource_buttons):
                     if button.collidepoint(mouse_pos):
-                        if has_enough_resources(self.player, resource):
-                            self.player.add_resource(resource)
-                            # TODO add logic to remove players resources
+                        if i == 0:
+                           self.player.add_resource(Resource.BRICK.name())
+                           self.bank.resources[Resource.BRICK.name()]-=1
+                           self.player.remove_resources(self.offered_resources)
+                           self.current_state = MainGameState(self.player)
+                        elif i == 1:
+                            self.player.add_resource(Resource.WOOD.name())
+                            self.bank.resources[Resource.WOOD.name()]-=1
+                            self.player.remove_resources(self.offered_resources)
                             self.current_state = MainGameState(self.player)
-                        else:
-                            self.current_state = NotEnoughResources(self.player)
+                        elif i == 2:
+                            self.player.add_resource(Resource.WOOL.name())
+                            self.bank.resources[Resource.WOOL.name()]-=1
+                            self.player.remove_resources(self.offered_resources)
+                            self.current_state = MainGameState(self.player)
+                        elif i == 3:
+                            self.player.add_resource(Resource.GRAIN.name())
+                            self.bank.resources[Resource.GRAIN.name()]-=1
+                            self.player.remove_resources(self.offered_resources)
+                            self.current_state = MainGameState(self.player)
+                        elif i == 4:
+                            self.player.add_resource(Resource.ORE.name())
+                            self.bank.resources[Resource.ORE.name()]-=1
+                            self.player.remove_resources(self.offered_resources)
+                            self.current_state = MainGameState(self.player)
                     elif self.back_button.collidepoint(mouse_pos):
                         self.current_state = MainGameState(self.player)
                         
@@ -1422,7 +1031,7 @@ class BankTrade:
         
         x_offset = 100
         for resource, quantity in self.bank.resources.items():
-            text = WORD_FONT.render(f'{resource.name()} : {quantity}', True, BLACK)
+            text = WORD_FONT.render(f'{resource} : {quantity}', True, BLACK)
             text_rect = pygame.Rect(x_offset, 600, 100, 100)
             screen.blit(text, text_rect)
             x_offset += 280
