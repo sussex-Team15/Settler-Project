@@ -2,8 +2,11 @@
 # pylint: disable=wrong-import-position
 # pylint: disable=missing-module-docstring
 # pylint: disable=fixme
+
 import pytest
-import pygame
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 
 from src.player import Player
 from src.resource_ import Resource
