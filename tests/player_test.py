@@ -108,9 +108,21 @@ def test_get_resources(player):
 
 
 def test_add_resources(player):
+    """
+    Test the 'add_resource' method of the player class.
+
+    :param player: The player object on which the test is performed.
+    :type player: Player
+
+    :return: None
+    :rtype: None
+
+    :raises AssertionError: If the player's resources dictionary 
+    doesn't match the expected values after adding two resources.
+    """
     player.add_resource(Resource.WOOD)
     player.add_resource(Resource.BRICK)
-    assert player.resources == {Resource.WOOD:1, Resource.BRICK:1, 
+    assert player.resources == {Resource.WOOD:1, Resource.BRICK:1,
                                 Resource.GRAIN:0, Resource.NONE:0,
                                 Resource.ORE:0, Resource.WOOL:0}
 
