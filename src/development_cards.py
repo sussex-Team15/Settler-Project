@@ -64,6 +64,14 @@ class DevelopmentCard(Abstract):
         return 0
 
 
+class VictoryPointCard(DevelopmentCard):
+    def description(self):
+        return "+1 Victory Point"
+
+    def vp_awarded(self):
+        return 1
+
+
 class Chapel(DevelopmentCard):
     """Derived Class from DevelopmentCard abstract class
     """
