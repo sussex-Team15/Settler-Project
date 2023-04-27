@@ -231,7 +231,7 @@ class StartMenu:
         WELCOME_FONT = pygame.font.SysFont("Algerian", 100, True)
         WORD_FONT = pygame.font.SysFont('Palatino', 40)
 
-        background_img = pygame.image.load('src\\assets\\images\\start-menu-background.jpg')
+        background_img = pygame.image.load(os.path.join('src','assets','images','start-menu-background.jpg'))
         background_img  = pygame.transform.scale(background_img, (DISPLAY_WIDTH, DISPLAY_HEIGHT))
         screen.blit(background_img, (0,0))
 
@@ -274,7 +274,7 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
         self.settlement_node2 = None
         self.road_1 = [None, None] # (road_node1, road_node2)
         self.road_2 = [None, None]
-        self.settlement_img = pygame.image.load('src\\assets\\buildings\\settlement.png')
+        self.settlement_img = pygame.image.load(os.path.join('src','assets','buildings','settlement.png'))
         
 
     def handle_events(self, events):
@@ -520,7 +520,7 @@ class MainGameState:
         print("drawing")
         
         screen.fill(BACKGROUND)
-        robber_img = pygame.image.load('src\\assets\\Tiles\\robber.jpg')
+        robber_img = pygame.image.load(os.path.join('src','assets','Tiles','robber.jpg'))
         robber_img = pygame.transform.scale(robber_img, (robber_img.get_width()*0.05, robber_img.get_height()*0.05))
 
         for img, rect in tile_sprites:
@@ -794,11 +794,11 @@ class InventoryGameState:
     def draw(self, screen):
         screen.fill(BACKGROUND)
         images = []
-        images.append(pygame.image.load('src\\assets\\resource\\lumber.jpg'))
-        images.append(pygame.image.load('src\\assets\\resource\\wool.jpg'))
-        images.append(pygame.image.load('src\\assets\\resource\\Grain.jpg'))
-        images.append(pygame.image.load('src\\assets\\resource\\brick.jpg'))
-        images.append(pygame.image.load('src\\assets\\resource\\ore.jpg'))
+        images.append(pygame.image.load(os.path.join('src','assets','resource','lumber.jpg')))
+        images.append(pygame.image.load(os.path.join('src','assets','resource','wool.jpg')))
+        images.append(pygame.image.load(os.path.join('src','assets','resource','Grain.jpg')))
+        images.append(pygame.image.load(os.path.join('src','assets','resource','brick.jpg')))
+        images.append(pygame.image.load(os.path.join('src','assets','resource','ore.jpg')))
         
         x_offset_image = 20
         x_offset__text = 50
@@ -828,7 +828,7 @@ class PlaceRobberState:
     def __init__(self, player):
         self.player = player
         self.current_state = None
-        self.robber_img = pygame.image.load('src\\assets\\Tiles\\robber.jpg')
+        self.robber_img = pygame.image.load(('src','assets','Tiles','robber.jpg'))
 
     def handle_events(self, events):
         for event in events:
@@ -891,11 +891,11 @@ class BankTradeChooseResources:
         screen.fill(BACKGROUND)
 
         images = []
-        images.append(pygame.image.load('src\\assets\\resource\\lumber.jpg'))
-        images.append(pygame.image.load('src\\assets\\resource\\wool.jpg'))
-        images.append(pygame.image.load('src\\assets\\resource\\Grain.jpg'))
-        images.append(pygame.image.load('src\\assets\\resource\\brick.jpg'))
-        images.append(pygame.image.load('src\\assets\\resource\\ore.jpg'))
+        images.append(pygame.image.load(os.path.join('src','assets','resource','lumber.jpg')))
+        images.append(pygame.image.load(os.path.join('src','assets','resource','wool.jpg')))
+        images.append(pygame.image.load(os.path.join('src','assets','resource','Grain.jpg')))
+        images.append(pygame.image.load(os.path.join('src','assets','resource','brick.jpg')))
+        images.append(pygame.image.load(os.path.join('src','assets','resource','ore.jpg')))
         
         x_offset_image = 20
         x_offset__button = 50
@@ -1007,11 +1007,11 @@ class BankTrade:
         screen.fill(BACKGROUND)
 
         resource_images = []
-        resource_images.append((pygame.image.load('src\\assets\\resource\\brick.jpg'), Resource.BRICK))
-        resource_images.append((pygame.image.load('src\\assets\\resource\\lumber.jpg'), Resource.WOOD))
-        resource_images.append((pygame.image.load('src\\assets\\resource\\wool.jpg'), Resource.WOOL))
-        resource_images.append((pygame.image.load('src\\assets\\resource\\Grain.jpg'), Resource.GRAIN))
-        resource_images.append((pygame.image.load('src\\assets\\resource\\ore.jpg'), Resource.ORE))
+        resource_images.append((pygame.image.load(os.path.join('src','assets','resource','brick.jpg')),Resource.BRICK))
+        resource_images.append((pygame.image.load(os.path.join('src','assets','resource','lumber.jpg'), Resource.WOOD)))
+        resource_images.append((pygame.image.load(os.path.join('src','assets','resource','wool.jpg'), Resource.WOOL)))
+        resource_images.append((pygame.image.load(os.path.join('src','assets','resource','Grain.jpg'), Resource.GRAIN)))
+        resource_images.append((pygame.image.load(os.path.join('src','assets','resource','ore.jpg'), Resource.ORE)))
 
         x_offset = 5
         for image, resource in resource_images:
@@ -1048,8 +1048,8 @@ class DevelopmentCardState:
         self.card_bought = False
         self.card_image = False
         self.current_state = None
-        self.card_images = {DevelopmentCards.KNIGHT: (pygame.image.load('src\\assets\\Development\\knight.jpg'), pygame.Rect(300, 50, 100, 150)),
-                            DevelopmentCards.VP: (pygame.image.load('src\\assets\\Development\\palace.jpg'), pygame.Rect(700, 50, 100, 150))}                                                            
+        self.card_images = {DevelopmentCards.KNIGHT: (pygame.image.load(os.path.join('src','assets','Development','knight.jpg')), pygame.Rect(300, 50, 100, 150)),
+                            DevelopmentCards.VP: (pygame.image.load(('src','assets','Development','palace.jpg')), pygame.Rect(700, 50, 100, 150))}                                                            
         self.back_button_rect = pygame.Rect(1100, 600, 400, 200)
     
     def handle_events(self, events):
