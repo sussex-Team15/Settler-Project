@@ -54,7 +54,6 @@ class DevelopmentCard(Abstract):
         """
         return self.get_asset(DEVELOPMENT_CARDS_DIR)
     
-    @abc.abstractmethod
     def cost(self):
         """
         Returns cost of development card
