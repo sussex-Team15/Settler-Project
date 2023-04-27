@@ -3,7 +3,7 @@ Inheritance Diagram
 
 **Inheritance Diagram**
 
-.. figure:: _static/classes_my_project.png
+.. figure:: _static/classes_my_project_final.png
    :alt: Inheritance Diagram
    :width: 1400
    :height: 250
@@ -12,7 +12,7 @@ Inheritance Diagram
 
 **Class Diagram**
 
-.. figure:: _static/packages_my_project.png
+.. figure:: _static/packages_my_project_final.png
    :alt: Class Diagram
    :align: center
    :width: 400
