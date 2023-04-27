@@ -52,7 +52,23 @@ def test_build_settlement(player):
             Resource.GRAIN.name(): 2} != player.resources
 
 
-# TODO: test building a city
+def test_build_city(player):
+    """
+    Test the build_city method of the Player class.
+
+    This test checks that once a city is built, the player's resources have decreased.
+
+    :param player: A Player object representing a player in the game.
+    :type player: Player
+    """
+    player.resources = {Resource.ORE: 3,
+                        Resource.GRAIN: 2}
+
+    player.build_city(1110)
+
+    assert {Resource.ORE: 3,
+             Resource.GRAIN: 2} != player.resources
+
 
 
 def test_build_road(player):
@@ -66,8 +82,13 @@ def test_build_road(player):
     :type player: Player
     """
     road_count = len(player.roads)
+<<<<<<< HEAD
     player.resources = {Resource.WOOD.name():1, Resource.BRICK.name():1}
     player.build_road(1, 2, is_special_round=False)
+=======
+    player.resources = {Resource.WOOD:1, Resource.BRICK:1}
+    player.build_road(1, 2,False)
+>>>>>>> 95dba5578ca5ce32a0652f6ab052857ac83b4077
     assert len(player.roads) == road_count + 1
     assert player.roads[-1] == (1, 2)
 
@@ -89,12 +110,32 @@ def test_get_resources(player):
 
 
 def test_add_resources(player):
+<<<<<<< HEAD
     player.resources = {Resource.WOOD.name():0, Resource.BRICK.name():0, Resource.GRAIN.name():0, Resource.NONE.name():0, Resource.ORE.name():0, Resource.WOOL.name():0}
     player.add_resource(Resource.WOOD.name())
     player.add_resource(Resource.BRICK.name())
     assert player.resources == {Resource.WOOD.name():1, Resource.BRICK.name():1, 
                                 Resource.GRAIN.name():0, Resource.NONE.name():0,
                                 Resource.ORE.name():0, Resource.WOOL.name():0}
+=======
+    """
+    Test the 'add_resource' method of the player class.
+
+    :param player: The player object on which the test is performed.
+    :type player: Player
+
+    :return: None
+    :rtype: None
+
+    :raises AssertionError: If the player's resources dictionary 
+    doesn't match the expected values after adding two resources.
+    """
+    player.add_resource(Resource.WOOD)
+    player.add_resource(Resource.BRICK)
+    assert player.resources == {Resource.WOOD:1, Resource.BRICK:1,
+                                Resource.GRAIN:0, Resource.NONE:0,
+                                Resource.ORE:0, Resource.WOOL:0}
+>>>>>>> 95dba5578ca5ce32a0652f6ab052857ac83b4077
 
 
 def test_get_victory_points(player):
