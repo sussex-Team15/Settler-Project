@@ -34,13 +34,19 @@ def test_roll_dice(player):
 
 
 def test_build_settlement(player):
-    # TODO: DocString
+    """
+    Test the build_settlement method of the Player class.
+
+    This test checks that once a settlement is built, the player's resources have decreased.
+
+    :param player: A Player object representing a player in the game.
+    :type player: Player
+    """
     player.resources = {Resource.BRICK: 2,
                         Resource.WOOD: 2,
                         Resource.WOOL: 2,
                         Resource.GRAIN: 2}
 
-    pdb.set_trace()
     player.build_settlement(1110, False)
 
     assert {Resource.BRICK: 2,
@@ -49,7 +55,23 @@ def test_build_settlement(player):
             Resource.GRAIN: 2} != player.resources
 
 
-# TODO: test building a city
+def test_build_city(player):
+    """
+    Test the build_city method of the Player class.
+
+    This test checks that once a city is built, the player's resources have decreased.
+
+    :param player: A Player object representing a player in the game.
+    :type player: Player
+    """
+    player.resources = {Resource.ORE: 3,
+                        Resource.GRAIN: 2}
+
+    player.build_city(1110)
+
+    assert {Resource.ORE: 3,
+             Resource.GRAIN: 2} != player.resources
+
 
 
 def test_build_road(player):
@@ -64,7 +86,7 @@ def test_build_road(player):
     """
     road_count = len(player.roads)
     player.resources = {Resource.WOOD:1, Resource.BRICK:1}
-    player.build_road(1, 2)
+    player.build_road(1, 2,False)
     assert len(player.roads) == road_count + 1
     assert player.roads[-1] == (1, 2)
 
