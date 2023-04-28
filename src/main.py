@@ -48,6 +48,7 @@ built_cities = []  # list of cities built(node, player_owner)
 player_colors = {} 
 game_log = []  # list for storing game events as strings
 dice_rolled = []
+adjacent_nodes = [] #list of all adjacent nodes
 
 
 settlement_img_path = os.path.join(
@@ -148,6 +149,25 @@ board_mapping = {'tiles': {
 
 }}
 
+def create_adjacent_nodes(nodes_dict, adjacent_nodes):
+        for node1_id, node1_pos in nodes_dict.items():
+            for node2_id, node2_pos in nodes_dict.items():
+                if node1_id != node2_id:  # Skip comparison of a node with itself
+                    if is_adjacent(node1_id, node2_id):
+                        adjacent_nodes.append((node1_id, node2_id))
+
+def is_adjacent(self, node1, node2):
+    x1_pos, y1_pos = node1.x_pos, node1.y_pos
+    x2_pos, y2_pos = node2.x_pos, node2.y_pos
+    x_diff = abs(x1_pos - x2_pos)
+    y_diff = abs(y1_pos - y2_pos)
+    max_road_len = 100  # road lens are diff so this is maximum road len
+    print(f'x_diff: {x_diff}')
+    print(f'y_diff: {y_diff}')
+    # return true if x_diff and y_diff is less than radius of tiles
+    return (x_diff <= max_road_len) and (y_diff <= max_road_len)
+
+create_adjacent_nodes(board_mapping['nodes'], adjacent_nodes)
 
 def setup():
     """
