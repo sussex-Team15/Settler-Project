@@ -255,7 +255,27 @@ class StartMenu:
     """
     Represents the start menu of the game.
 
-    Attributes:
+    :param start_button_rect :
+    :type  start_button_rect :
+    :param  start_button_text:
+    :type   start_button_text:
+    :param  rule_book_button_rect:
+    :type   rule_book_button_rect:
+    :param  rule_book_button_text:
+    :type  rule_book_button_text :
+    :param  input_box:
+    :type   input_box:
+    :param  current_state:
+    :type  current_state :
+    :param text :
+    :type text  :
+    :param type_active :
+    :type  type_active :
+    :param checkbox_rect :
+    :type  checkbox_rect :
+    :param checked :
+    :type  checked :
+    
         start_button_rect (pygame.Rect): The rectangle of the 'Start Game' button.
         start_button_text (pygame.Surface): The rendered text of the 'Start Game' button.
         rule_book_button_rect (pygame.Rect): The rectangle of the 'Rules' button.
