@@ -1114,18 +1114,51 @@ class MainGameState:
         return self.current_state
             
 class InventoryGameState:
+    """
+    A class representing the inventory game state of a player in the game.
+
+    Attributes:
+        player (Player): The player whose inventory is being displayed.
+        current_state (GameState): The current state of the game.
+        back_button (pygame.Rect): A rectangle representing the "Back" button on the screen.
+
+    Methods:
+        handle_events(events): Handle the events that occur during the inventory game state.
+        draw(screen): Draw the inventory game state on the screen.
+        should_transition(): Check if there is a transition to another game state.
+        transition(): Transition to the next game state.
+    """
     def __init__(self, player):
+        """Constructor Class
+        """
         self.player = player
         self.current_state = None
         self.back_button = pygame.Rect(20, 700, 300, 200)
 
     def handle_events(self, events):
+        """
+        Handles events for the InventoryGameState object.
+
+        :param events: A list of events to be handled.
+        :type events: list
+
+        :return: None
+        """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.back_button.collidepoint(event.pos):
                     self.current_state = MainGameState(self.player)
 
     def draw(self, screen):
+        """
+        Draw the inventory screen with the current state of the player's resources.
+
+        Parameters:
+        screen (pygame.Surface): The game screen to draw on.
+
+        Returns:
+        None
+        """
         screen.fill(BACKGROUND)
         images = []
         images.append(pygame.image.load(os.path.join('src','assets','resource','lumber.jpg')))
@@ -1154,8 +1187,18 @@ class InventoryGameState:
         screen.blit(BIG_FONT.render('Back', True, BLACK, RED), self.back_button)
 
     def should_transition(self):
+        """Determine whether a state transition should occur.
+
+        Returns:
+            bool: True if a state transition should occur, False otherwise.
+        """
         return self.current_state is not None
     def transition(self):
+        """Return the next state to transition to.
+
+        Returns:
+            object: The next state to transition to.
+        """
         return self.current_state
 
 class PlaceRobberState:
