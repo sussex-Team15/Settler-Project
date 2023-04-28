@@ -255,34 +255,27 @@ class StartMenu:
     """
     Represents the start menu of the game.
 
-    :param start_button_rect :
-    :type  start_button_rect :
-    :param  start_button_text:
-    :type   start_button_text:
-    :param  rule_book_button_rect:
-    :type   rule_book_button_rect:
-    :param  rule_book_button_text:
-    :type  rule_book_button_text :
-    :param  input_box:
-    :type   input_box:
-    :param  current_state:
-    :type  current_state :
-    :param text :
-    :type text  :
-    :param type_active :
-    :type  type_active :
-    :param checkbox_rect :
-    :type  checkbox_rect :
-    :param checked :
-    :type  checked :
-    
-        start_button_rect (pygame.Rect): The rectangle of the 'Start Game' button.
-        start_button_text (pygame.Surface): The rendered text of the 'Start Game' button.
-        rule_book_button_rect (pygame.Rect): The rectangle of the 'Rules' button.
-        rule_book_button_text (pygame.Surface): The rendered text of the 'Rules' button.
-        input_box (pygame.Rect): The rectangle of the input box for player names.
-        current_state: The current state of the game.
-        text (str): The text entered in the input box.
+    :param start_button_rect : the rectangle of the 'Start Game' button.
+    :type  start_button_rect : pygame.Rect
+    :param  start_button_text: The rendered text of the 'Start Game' button.
+    :type   start_button_text: pygame.Surface
+    :param  rule_book_button_rect: The rendered text of the 'Rules' button.
+    :type   rule_book_button_rect: pygame.Rect
+    :param  rule_book_button_text: The rectangle of the input box for player names.
+    :type  rule_book_button_text : pygame.Surface
+    :param  input_box: The current state of the game.
+    :type   input_box: pygame.Rect
+    :param  current_state: The text entered in the input box.
+    :type  current_state : game_state
+    :param text : The text entered in the input box.
+    :type text  : str
+    :type  type_active : bool
+    :param checkbox_rect : The rectangle of the checkbox for AI player.
+    :type  checkbox_rect : pygame.Rect
+    :param checked : A flag indicating if the checkbox is checked.
+    :type  checked : bool
+   
+        text (str): 
         type_active (bool): A flag indicating if the input box is currently active.
         checkbox_rect (pygame.Rect): The rectangle of the checkbox for AI player.
         checked (bool): A flag indicating if the checkbox is checked.
