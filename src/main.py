@@ -687,43 +687,41 @@ class MainGameState:
     """
     This class represents the main game state of a game of Settlers of Catan.
 
-    yaml
 
     :param player: the player who starts the game
     :type player: Player
     :param robber_coords: the coordinates of the robber on the board, defaults to None
     :type robber_coords: Tuple[int, int] or None
-
-    :ivar current_turn_number: the current turn number of the game
-    :vartype current_turn_number: int
-    :ivar player_turn_index: the index of the current player's turn in the list of players
-    :vartype player_turn_index: int
-    :ivar current_player: the current player whose turn it is
-    :vartype current_player: Player
-    :ivar bank: the bank object that holds the resources available to players
-    :vartype bank: Bank
-    :ivar players: the list of players in the game
-    :vartype players: List[Player]
-    :ivar current_state: the current state of the game
-    :vartype current_state: GameState or None
-    :ivar build_road_rect: the rectangle representing the "Build Road" button on the screen
-    :vartype build_road_rect: pygame.Rect
-    :ivar build_settlement_rect: the rectangle representing the "Build Settlement" button on the screen
-    :vartype build_settlement_rect: pygame.Rect
-    :ivar build_city_rect: the rectangle representing the "Build City" button on the screen
-    :vartype build_city_rect: pygame.Rect
-    :ivar make_trade_rect: the rectangle representing the "Make Trade" button on the screen
-    :vartype make_trade_rect: pygame.Rect
-    :ivar dev_card_rect: the rectangle representing the "Buy Development Card" button on the screen
-    :vartype dev_card_rect: pygame.Rect
-    :ivar bank_inventory_rect: the rectangle representing the "Bank Inventory" button on the screen
-    :vartype bank_inventory_rect: pygame.Rect
-    :ivar dice_rolled: the list containing the values of the dice rolled in the current turn
-    :vartype dice_rolled: List[int]
-    :ivar robber_coords: the coordinates of the robber on the board
-    :vartype robber_coords: Tuple[int, int] or None
-    :ivar invent_button_rect: the rectangle representing the "My Inventory" button on the screen
-    :vartype invent_button_rect: pygame.Rect
+    :param current_turn_number: the current turn number of the game
+    :type current_turn_number: int
+    :param player_turn_index: the index of the current player's turn in the list of players
+    :type player_turn_index: int
+    :param current_player: the current player whose turn it is
+    :type current_player: Player
+    :param bank: the bank object that holds the resources available to players
+    :type bank: Bank
+    :param players: the list of players in the game
+    :type players: List[Player]
+    :param current_state: the current state of the game
+    :type current_state: GameState or None
+    :param build_road_rect: the rectangle representing the "Build Road" button on the screen
+    :type build_road_rect: pygame.Rect
+    :param build_settlement_rect: the rectangle representing the "Build Settlement" button on the screen
+    :type build_settlement_rect: pygame.Rect
+    :param build_city_rect: the rectangle representing the "Build City" button on the screen
+    :type build_city_rect: pygame.Rect
+    :param make_trade_rect: the rectangle representing the "Make Trade" button on the screen
+    :type make_trade_rect: pygame.Rect
+    :param dev_card_rect: the rectangle representing the "Buy Development Card" button on the screen
+    :type dev_card_rect: pygame.Rect
+    :param bank_inventory_rect: the rectangle representing the "Bank Inventory" button on the screen
+    :type bank_inventory_rect: pygame.Rect
+    :param dice_rolled: the list containing the values of the dice rolled in the current turn
+    :type dice_rolled: List[int]
+    :param robber_coords: the coordinates of the robber on the board
+    :type robber_coords: Tuple[int, int] or None
+    :param invent_button_rect: the rectangle representing the "My Inventory" button on the screen
+    :type invent_button_rect: pygame.Rect
     """
     def __init__(self, player, robber_coords = None):
         # TODO check if restart is true. if so re-initialize all values to there start values, else maintain.
@@ -757,7 +755,7 @@ class MainGameState:
 
         :param events: list of pygame events
         :type events: list
-        
+
         :return: none
         :rtype: none
         """
