@@ -194,9 +194,12 @@ def setup():
     """
     Sets up the initial catan board positions and the ids for each tile
 
-    Returns: boardList of tile objects
-        tile_sprites: list of images for each tile
-        board_mapping: dictionary that maps the tile object to an id and nodes to respective coordinates.
+    :return: boardList of tile objects
+    :rtype: list
+    :return: tile_sprites list of images for each tile
+    :rtype: list
+    :returns: board_mapping: dictionary that maps the tile object to an id and nodes to respective coordinates.
+    :rtype: dictionary
     """
     # maps the tile_id to the x, y, coordinates for the screen
 
