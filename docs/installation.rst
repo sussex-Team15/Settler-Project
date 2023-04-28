@@ -26,3 +26,11 @@ To run the game open the terminal inside your IDE or globally on your system and
     python3 -m src.main
     python -m src.main
 
+
+Gameplay instructions
+---------------------
+
+Once the game window has opened, first enter the player names and/or choose to include an AI player(s). Next read the rules then press start game. The game will prompt you to choose two places for your starting settlement and to consequently build your starting road. You must then press the 'space bar' once you are done to allow the next person to choose.
+
+When you have all completed this steps you will be in the normal game state and can continue as a normal game of catan. It is worth noting that in the trading screen the green and red buttons above the resource images allow you to choose how many of a particular resource you wish to trade after which you must press submit to confirm the trade.
+
