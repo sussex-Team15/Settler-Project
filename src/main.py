@@ -544,9 +544,9 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
     def draw(self, screen):
         """
         Draws the game state on the screen.
-
-        Args:
-        - screen (pygame.Surface): The surface on which to draw the game state.
+        
+        :param screen: The surface on which to draw the game state.
+        :type screen: pygame.Surface
         """
         screen.fill(self.current_player.color)
         WORD_FONT = pygame.font.SysFont('arial', 40)
@@ -605,12 +605,13 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
         """
         Determines whether two nodes are adjacent.
 
-        Args:
-        - node1 (ButtonHex): The first node.
-        - node2 (ButtonHex): The second node.
+        :param node1: ButtonHex: The first node.
+        :type node1: ButtonHex
+        :param node2: The second node.
+        :type node2: Button Hex
 
-        Returns:
-        - bool: True if the nodes are adjacent, False otherwise.
+        :return: True if the nodes are adjacent, False otherwise.
+        :rtype bool: 
         """
         adjacent_to_building = False
 
@@ -632,8 +633,8 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
     def should_transition(self):
         """Checks whether the current state is not None.
 
-        Returns:
-            bool: True if the current state is not None, False otherwise.
+        :return: True if the current state is not None, False otherwise.
+        :rtype: bool: 
         """
         return self.current_state is not None
     def transition(self):
