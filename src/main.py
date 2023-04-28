@@ -205,9 +205,32 @@ def setup():
     # Create the board as a list of GameTile Objects
 
     
-    board = [GameTile(random.randint(1, 12),
-                      random.choice(list(ResourceTile)), 4,
-                      tile_id) for tile_id in legal_tile_ids()]
+    # Random Map
+    # board = [GameTile(random.randint(1, 12),random.choice(list(ResourceTile)), 4,
+    #                   tile_id) for tile_id in legal_tile_ids()]
+
+    # Hard Coded Map
+    board = [
+        GameTile(random.randint(1, 12),ResourceTile.MOUNTAIN,4, 1),
+        GameTile(random.randint(1, 12),ResourceTile.FIELDS,4, 2),
+        GameTile(random.randint(1, 12),ResourceTile.FIELDS,4, 3),
+        GameTile(random.randint(1, 12),ResourceTile.FOREST,4, 4),
+        GameTile(random.randint(1, 12),ResourceTile.HILLS,4, 5),
+        GameTile(random.randint(1, 12),ResourceTile.FIELDS,4, 6),
+        GameTile(random.randint(1, 12),ResourceTile.PASTURE,4, 7),
+        GameTile(random.randint(1, 12),ResourceTile.PASTURE,4, 8),
+        GameTile(random.randint(1, 12),ResourceTile.MOUNTAIN,4, 9),
+        GameTile(random.randint(1, 12),ResourceTile.HILLS,4,10),
+        GameTile(random.randint(1, 12),ResourceTile.FOREST,4,11),
+        GameTile(random.randint(1, 12),ResourceTile.PASTURE,4,12),
+        GameTile(random.randint(1, 12),ResourceTile.HILLS,4,13),
+        GameTile(random.randint(1, 12),ResourceTile.FOREST,4,14),
+        GameTile(random.randint(1, 12),ResourceTile.MOUNTAIN,4,15),
+        GameTile(random.randint(1, 12),ResourceTile.FIELDS,4,16),
+        GameTile(random.randint(1, 12),ResourceTile.FOREST,4,17),
+        GameTile(random.randint(1, 12),ResourceTile.PASTURE,4,18),
+        GameTile(random.randint(1, 12),ResourceTile.DESERT,4,19)
+    ]
 
     # fill the tile_sprites list with the correct Gametile assets
     tile_sprites = []
