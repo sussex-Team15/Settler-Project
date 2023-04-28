@@ -2277,6 +2277,7 @@ class AcceptTradeState:
     :type decline_rect: pygame.Rect
     :param decline_text: The text to be displayed on the "Decline" button.
     :type decline_text: pygame.Surface
+    
     """
     def __init__(self, player, trade_partner, player_resources, trade_partner_resources):
         """Constructor class
