@@ -194,11 +194,12 @@ def setup():
     """
     Sets up the initial catan board positions and the ids for each tile
 
-    Returns:
-        board: List of tile objects
-        tile_sprites: list of images for each tile
-        board_mapping: dictionary that maps the tile
-        object to an id and nodes to respective coordinates.
+    :return: boardList of tile objects
+    :rtype: list
+    :return: tile_sprites list of images for each tile
+    :rtype: list
+    :returns: board_mapping: dictionary that maps the tile object to an id and nodes to respective coordinates.
+    :rtype: dictionary
     """
     # maps the tile_id to the x, y, coordinates for the screen
 
@@ -254,14 +255,27 @@ class StartMenu:
     """
     Represents the start menu of the game.
 
-    Attributes:
-        start_button_rect (pygame.Rect): The rectangle of the 'Start Game' button.
-        start_button_text (pygame.Surface): The rendered text of the 'Start Game' button.
-        rule_book_button_rect (pygame.Rect): The rectangle of the 'Rules' button.
-        rule_book_button_text (pygame.Surface): The rendered text of the 'Rules' button.
-        input_box (pygame.Rect): The rectangle of the input box for player names.
-        current_state: The current state of the game.
-        text (str): The text entered in the input box.
+    :param start_button_rect : the rectangle of the 'Start Game' button.
+    :type  start_button_rect : pygame.Rect
+    :param  start_button_text: The rendered text of the 'Start Game' button.
+    :type   start_button_text: pygame.Surface
+    :param  rule_book_button_rect: The rendered text of the 'Rules' button.
+    :type   rule_book_button_rect: pygame.Rect
+    :param  rule_book_button_text: The rectangle of the input box for player names.
+    :type  rule_book_button_text : pygame.Surface
+    :param  input_box: The current state of the game.
+    :type   input_box: pygame.Rect
+    :param  current_state: The text entered in the input box.
+    :type  current_state : game_state
+    :param text : The text entered in the input box.
+    :type text  : str
+    :type  type_active : bool
+    :param checkbox_rect : The rectangle of the checkbox for AI player.
+    :type  checkbox_rect : pygame.Rect
+    :param checked : A flag indicating if the checkbox is checked.
+    :type  checked : bool
+   
+        text (str): 
         type_active (bool): A flag indicating if the input box is currently active.
         checkbox_rect (pygame.Rect): The rectangle of the checkbox for AI player.
         checked (bool): A flag indicating if the checkbox is checked.
@@ -292,23 +306,9 @@ class StartMenu:
 
         Args:
             events (List[pygame.event.Event]): A list of pygame events.
-
-        Returns:
-            None
-
-        Raises:
-            None
-
-        This method updates the game state based on the events that occur during the game loop.
-        It handles mouse clicks and key presses, and updates the player's settlements and roads accordingly.
-
-        If the left mouse button is clicked on a node button, the method checks if the player can build a settlement or a road at that location,
-        based on the current game state. If a settlement can be built, the method adds it to the player's settlements and to the list of built settlements.
-        If a road can be built, the method adds it to the player's roads and to the list of built roads.
-
-        If the space key is pressed, the method advances the game state to the next turn, updates the current player, and clears the variables
-        used to track the player's settlements and roads that were built during the turn.
-
+            
+        returns: none
+        rtype: none
         """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -368,7 +368,7 @@ class StartMenu:
         background_img  = pygame.transform.scale(background_img, (DISPLAY_WIDTH, DISPLAY_HEIGHT))
         screen.blit(background_img, (0,0))
 
-        welcome_text_surface = WELCOME_FONT.render("Welcome to ugly Catan!", True, BLACK)
+        welcome_text_surface = WELCOME_FONT.render("Welcome to Catan!", True, BLACK)
         welcome_text_rect = pygame.Rect(100, 20, 500, 300)
         screen.blit(welcome_text_surface, welcome_text_rect)
 
@@ -394,7 +394,7 @@ class StartMenu:
         checkbox_prompt_rect = checkbox_prompt_text.get_rect(center=(700,  DISPLAY_HEIGHT//2+150))
         screen.blit(checkbox_prompt_text, checkbox_prompt_rect)
 
-        input_prompt_text = WORD_FONT.render("Enter name hear: ", True, BLACK)
+        input_prompt_text = WORD_FONT.render("Enter name here: ", True, BLACK)
         input_prompt_rect = input_prompt_text.get_rect(center=(DISPLAY_WIDTH//2-320, DISPLAY_HEIGHT//2+70))
         screen.blit(input_prompt_text, input_prompt_rect)
 
@@ -423,8 +423,8 @@ class StartMenu:
         """
         Transition to a new state.
 
-        Returns:
-            The new state.
+        :return: The new state.
+        :rtype: GameState
         """
         return self.current_state
         
@@ -473,6 +473,14 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
         
 
     def handle_events(self, events):
+        turn_taken = None
+        for player in players:
+            if isinstance(player, AIPlayer):
+                #import pdb 
+                #pdb.set_trace() 
+                player.take_turn(adjacent_nodes, board_mapping, node_buttons)
+            
+    
         """
         Handles user input events.
 
@@ -718,8 +726,8 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
     def transition(self):
         """Returns the current state of the game.
 
-        Returns:
-            obj: The current state of the game.
+        :return: The current state of the game.
+        :rtype: CurrentGameState
         """
         return self.current_state
     
@@ -727,8 +735,7 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
         """Draws the lines between the nodes on the game board.
 
         This method iterates over all tiles on the board and draws the six lines 
-        that connect the nodes of each tile. The lines are drawn in white with a 
-        thickness of 5 pixels.
+        that connect the nodes of each tile. The lines are drawn in white with a thickness of 5 pixels.
         """
         for tile in board:
             pygame.draw.line(screen,
@@ -766,43 +773,41 @@ class MainGameState:
     """
     This class represents the main game state of a game of Settlers of Catan.
 
-    yaml
 
     :param player: the player who starts the game
     :type player: Player
     :param robber_coords: the coordinates of the robber on the board, defaults to None
     :type robber_coords: Tuple[int, int] or None
-
-    :ivar current_turn_number: the current turn number of the game
-    :vartype current_turn_number: int
-    :ivar player_turn_index: the index of the current player's turn in the list of players
-    :vartype player_turn_index: int
-    :ivar current_player: the current player whose turn it is
-    :vartype current_player: Player
-    :ivar bank: the bank object that holds the resources available to players
-    :vartype bank: Bank
-    :ivar players: the list of players in the game
-    :vartype players: List[Player]
-    :ivar current_state: the current state of the game
-    :vartype current_state: GameState or None
-    :ivar build_road_rect: the rectangle representing the "Build Road" button on the screen
-    :vartype build_road_rect: pygame.Rect
-    :ivar build_settlement_rect: the rectangle representing the "Build Settlement" button on the screen
-    :vartype build_settlement_rect: pygame.Rect
-    :ivar build_city_rect: the rectangle representing the "Build City" button on the screen
-    :vartype build_city_rect: pygame.Rect
-    :ivar make_trade_rect: the rectangle representing the "Make Trade" button on the screen
-    :vartype make_trade_rect: pygame.Rect
-    :ivar dev_card_rect: the rectangle representing the "Buy Development Card" button on the screen
-    :vartype dev_card_rect: pygame.Rect
-    :ivar bank_inventory_rect: the rectangle representing the "Bank Inventory" button on the screen
-    :vartype bank_inventory_rect: pygame.Rect
-    :ivar dice_rolled: the list containing the values of the dice rolled in the current turn
-    :vartype dice_rolled: List[int]
-    :ivar robber_coords: the coordinates of the robber on the board
-    :vartype robber_coords: Tuple[int, int] or None
-    :ivar invent_button_rect: the rectangle representing the "My Inventory" button on the screen
-    :vartype invent_button_rect: pygame.Rect
+    :param current_turn_number: the current turn number of the game
+    :type current_turn_number: int
+    :param player_turn_index: the index of the current player's turn in the list of players
+    :type player_turn_index: int
+    :param current_player: the current player whose turn it is
+    :type current_player: Player
+    :param bank: the bank object that holds the resources available to players
+    :type bank: Bank
+    :param players: the list of players in the game
+    :type players: List[Player]
+    :param current_state: the current state of the game
+    :type current_state: GameState or None
+    :param build_road_rect: the rectangle representing the "Build Road" button on the screen
+    :type build_road_rect: pygame.Rect
+    :param build_settlement_rect: the rectangle representing the "Build Settlement" button on the screen
+    :type build_settlement_rect: pygame.Rect
+    :param build_city_rect: the rectangle representing the "Build City" button on the screen
+    :type build_city_rect: pygame.Rect
+    :param make_trade_rect: the rectangle representing the "Make Trade" button on the screen
+    :type make_trade_rect: pygame.Rect
+    :param dev_card_rect: the rectangle representing the "Buy Development Card" button on the screen
+    :type dev_card_rect: pygame.Rect
+    :param bank_inventory_rect: the rectangle representing the "Bank Inventory" button on the screen
+    :type bank_inventory_rect: pygame.Rect
+    :param dice_rolled: the list containing the values of the dice rolled in the current turn
+    :type dice_rolled: List[int]
+    :param robber_coords: the coordinates of the robber on the board
+    :type robber_coords: Tuple[int, int] or None
+    :param invent_button_rect: the rectangle representing the "My Inventory" button on the screen
+    :type invent_button_rect: pygame.Rect
     """
     def __init__(self, player, robber_coords = None):
         # TODO check if restart is true. if so re-initialize all values to there start values, else maintain.
@@ -837,11 +842,11 @@ class MainGameState:
         """
         Handles the events of the game, updating the current game state based on player interactions with the screen.
 
-        Args:
-        - events: list of pygame events
+        :param events: list of pygame events
+        :type events: list
 
-        Returns:
-        None
+        :return: none
+        :rtype: none
         """
 
         for _node_id, node_point in board_mapping['nodes'].items():
@@ -995,10 +1000,11 @@ class MainGameState:
 
     def draw(self, screen):
         """
-        Draws the pygame display
+        Draws the game board, including the tiles, numbers, settlements, cities, roads, dice, scoreboard, and buttons on the given screen.
+
+        :param screen: The pygame screen to draw on.
+        :ptype: 
         """
-       
-        
         screen.fill(BACKGROUND)
         robber_img = pygame.image.load(os.path.join('src','assets','Tiles','robber.jpg'))
         robber_img = pygame.transform.scale(robber_img, (robber_img.get_width()*0.05, robber_img.get_height()*0.05))
@@ -1059,6 +1065,9 @@ class MainGameState:
 
 
     def draw_lines(self):
+        """
+        Draws the lines connecting the nodes of the tiles on the game board.
+        """
         for tile in board:
             pygame.draw.line(screen,
                             'white',
@@ -1091,6 +1100,16 @@ class MainGameState:
                             board_mapping['nodes'][tile.node_coord_ne], 5)
             
     def draw_roads(self):
+        """
+        Draws all built roads on the game screen.
+
+        This method iterates through the `built_roads` list and draws a line for each road
+        using Pygame's `draw.line` method. The color of the line is set to the color of the player
+        who built the road. The line thickness is set to 5 pixels.
+
+        :return: None
+        :rtype: None
+        """
         for road in built_roads:
             pygame.draw.line(screen,
                             road[2].color, # player who build roads color
@@ -1102,11 +1121,11 @@ class MainGameState:
         """
         Draws the scoreboard on the screen.
 
-        Args:
-        player_turn (Player): The current player whose turn it is.
+        :param player_turn: The current player whose turn it is.
+        :type player_turn: Player
 
-        Returns:
-        None
+        :return: None
+        :rtype: None
         """
         rect_width = DISPLAY_WIDTH - 800
         rect_height = DISPLAY_HEIGHT
@@ -1166,6 +1185,9 @@ class MainGameState:
     
     
     def draw_buttons(self):
+        """
+        Draws the buttons on the game board.
+        """
         button_radius = [10, 22]
         # draw node buttons
         for _node_id, node_point in board_mapping['nodes'].items():
@@ -1207,7 +1229,14 @@ class MainGameState:
 
     
     def draw_dice(self, roll_1, roll_2): # TODO add to MainGame state
+        """
+        Draws the dice with the given rolls.
 
+        :param roll_1: the roll value of the first dice
+        :type roll_1: int
+        :param roll_2: the roll value of the second dice
+        :type roll_2: int
+        """
         dice_size = 80
 
         side_1_p = os.path.join('src','assets','dice','1_sided.jpg')
@@ -1274,8 +1303,21 @@ class MainGameState:
         
 
     def should_transition(self):
+        """
+        Determines whether a transition to a new game state should occur.
+
+        :return: True if a transition should occur, False otherwise
+        :rtype: bool
+        """
         return self.current_state is not None
+    
     def transition(self):
+        """
+        Returns the new game state to transition to.
+
+        :return: the new game state to transition to
+        :rtype: GameState
+        """
         return self.current_state
             
 class InventoryGameState:
@@ -1367,12 +1409,30 @@ class InventoryGameState:
         return self.current_state
 
 class PlaceRobberState:
+    """
+    A class representing the state of the game where the player is placing the robber.
+
+    :param player: The player whose turn it is.
+    :type player: Player
+    """
     def __init__(self, player):
+        """
+        Initialize the PlaceRobberState.
+
+        :param player: The player whose turn it is.
+        :type player: Player
+        """
         self.player = player
         self.current_state = None
         self.robber_img = pygame.image.load(os.path.join('src','assets','Tiles','robber.jpg'))
 
     def handle_events(self, events):
+        """
+        Handle events for the PlaceRobberState.
+
+        :param events: The events to handle.
+        :type events: List[pygame.event.Event]
+        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1382,21 +1442,62 @@ class PlaceRobberState:
                         for game_tile in board:
                             if game_tile.get_tile_info()['Tile id'] == id:
                                 game_tile.has_robber = True
+                                game_log.append(f'{self.player.name} placed a robber')
                                 self.current_state = MainGameState(self.player, (mouse_pos[0]-60, mouse_pos[1]-50))
-                            
+
     
 
     def draw(self, screen):
+        """
+        Draw the PlaceRobberState on the given screen.
+
+        :param screen: The screen to draw on.
+        :type screen: pygame.Surface
+        """
         prompt_text = WORD_FONT.render(f'Place the robber on a tile', True, BLACK, RED)
         prompt_rect = prompt_text.get_rect(center=(500, 750))
         screen.blit(prompt_text, prompt_rect)
     
     def should_transition(self):
+        """
+        Check if the PlaceRobberState should transition to a new state.
+
+        :return: True if the current state is not None, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
+    
     def transition(self):
+        """
+        Transition to the next state.
+
+        :return: The next state.
+        :rtype: GameState
+        """
         return self.current_state
 
 class ChooseResources:
+    """
+    This class represents a state in which a player can choose the desired resources for a trade.
+
+    Attributes:
+    - player (Player): The player object who initiates the trade.
+    - trade_partner (Player): The player object who is the trade partner, if any.
+    - offered_resources (dict): The resources offered by the trade partner, if any.
+    - current_state (State): The current game state.
+    - submit_button (pygame.Rect): The button used to submit the desired resources.
+    - resource_buttons (list): The resource buttons of the trade partner the player desires.
+    - back_button (pygame.Rect): The button used to return to the main game state.
+    - desired_resources (list): The quantities of desired resources.
+    - plus_buttons (list): The buttons used to increment the quantity of desired resources.
+    - minus_buttons (list): The buttons used to decrement the quantity of desired resources.
+
+    Methods:
+    - init(self, player, trade_partner, offered_resources): Initializes a new instance of the ChooseDesiredResources class.
+    - handle_events(self, events): Handles events during this state.
+    - draw(self, screen): Renders the current state of the game on the given screen.
+    - has_enough_resources(self, player_resources, offered_resources): Checks if the player has enough resources for the trade.
+    """
     def __init__(self, player, trade_partner):
         self.player = player
         self.trade_partner = trade_partner
@@ -1526,6 +1627,22 @@ class ChooseResources:
         return self.current_state
     
 class ChooseDesiredResources:
+    """
+    ChooseDesiredResources class allows the player to select the resources they want to trade with their opponent or the bank.
+    This class has the following methods:
+
+    init(self, player, trade_partner, offered_resources):
+    Initializes a ChooseDesiredResources instance with the given player, trade_partner, and offered_resources.
+
+    handle_events(self, events):
+    Handles the events that occur when the player interacts with the game screen.
+
+    draw(self, screen):
+    Draws the ChooseDesiredResources screen on the game window.
+
+    has_enough_resources(self, player_resources, offered_resources):
+    Checks if the player has enough resources to carry out the desired trade.
+    """
     def __init__(self, player, trade_partner, offered_resources):
         self.player = player
         self.trade_partner = trade_partner
@@ -1796,7 +1913,21 @@ class DevelopmentCardState:
 
     
 class Build:
+    """
+    Represents the state in which the player is building a settlement or a city.
+
+    :param player: The player that is building the settlement or city.
+    :type player: Player
+    :param is_city: A flag indicating whether the player is building a city or a settlement.
+    :type is_city: bool
+    :param node: The node where the player wants to build the settlement or city.
+    :type node: NodeButton
+    :param current_state: The current state of the game.
+    :type current_state: GameState or None
+    """
     def __init__(self, player, is_city):
+        """Constructor method
+        """
         self.player = player
         self.is_city = is_city
         self.node = None
@@ -1804,6 +1935,12 @@ class Build:
 
     
     def handle_events(self, events):
+        """
+        Handles user events while the player is building a settlement or city.
+
+        :param events: A list of events to handle.
+        :type events: List[pygame.event.Event]
+        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1815,20 +1952,34 @@ class Build:
                                 self.player.build_city(self.node)
                                 self.player.victory_points +=2
                                 built_cities.append((self.node, self.player))
+                                game_log.append(f'{self.player.name} built a city!')
                                 self.current_state = MainGameState(self.player)
                             else:
                                 self.player.build_settlement(self.node, False)
                                 self.player.victory_points +=1
                                 built_settlements.append((self.node, self.player))
+                                game_log.append(f'{self.player.name} built a settlement!')
                                 self.current_state =  MainGameState(self.player)
                         else:
                             self.current_state = NotEnoughResources(self.player)
 
     def draw(self, screen):
+        """
+        Draws the current state of the game.
+
+        :param screen: The screen to draw on.
+        :type screen: pygame.Surface
+        """
         pass
         
 
     def has_enough_resources(self):
+        """
+        Checks if the player has enough resources to build a settlement or city.
+
+        :return: True if the player has enough resources, False otherwise.
+        :rtype: bool
+        """
         if self.is_city:
             city_cost = {ResourceTile.MOUNTAIN.generate_resource().name(): 3, 
                                     ResourceTile.PASTURE.generate_resource().name(): 2}
@@ -1851,14 +2002,32 @@ class Build:
             return True
     
     def should_transition(self):
+        """
+        Checks if the current state should transition to a new state.
+
+        :return: True if the state should transition, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
     def transition(self):
+        """
+        Returns the new state if the current state should transition.
+
+        :return: The new state if the current state should transition, None otherwise.
+        :rtype: GameState or None
+        """
         return self.current_state
 
 class RoadBuildState:
-    
+    """
+    Represents the state in which the player is building a road.
 
+    :param player: The player that is building the road.
+    :type player: Player
+    """
     def __init__(self, player):
+        """Constructor Method
+        """
         self.player = player      
         self.node1 = None
         self.node2 = None
@@ -1868,6 +2037,12 @@ class RoadBuildState:
         self.building_road = False
 
     def handle_events(self, events):
+        """
+        Handles user events while the player is building a road.
+
+        :param events: A list of events to handle.
+        :type events: List[pygame.event.Event]
+        """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
@@ -1884,6 +2059,7 @@ class RoadBuildState:
                             if self.has_enough_resources():
                                 self.player.build_road(self.node1, self.node2, is_special_round=False)
                                 built_roads.append((self.node1, self.node2, self.player))
+                                game_log.append(f'{self.player.name} built a road!')
                                 self.current_state = MainGameState(self.player)
                             else:
                                 self.current_state = NotEnoughResources(self.player)
@@ -1901,12 +2077,28 @@ class RoadBuildState:
                         return
     
     def has_enough_resources(self):
+        """
+        Checks if the player has enough resources to build a road.
+
+        :return: True if the player has enough resources, False otherwise.
+        :rtype: bool
+        """
         for resource, amount in self.cost.items():
             if resource not in self.player.resources or self.player.resources[resource] < amount:
                 return False
         return True
     
     def is_adjacent(self, node1, node2):
+        """
+        Checks if two nodes are adjacent to each other.
+
+        :param node1: The first node to check.
+        :type node1: NodeButton
+        :param node2: The second node to check.
+        :type node2: NodeButton
+        :return: True if the two nodes are adjacent, False otherwise.
+        :rtype: bool
+        """
         adjacent_to_building = False
 
         x1_pos, y1_pos = node1.x_pos, node1.y_pos
@@ -1927,6 +2119,12 @@ class RoadBuildState:
         return (x_diff <= max_road_len) and (y_diff <= max_road_len) and adjacent_to_building
     
     def draw(self, screen):
+        """
+        Draws the choose trade partner screen on the given screen.
+
+        :param screen: The pygame screen to draw the choose trade partner screen on.
+        :type screen: pygame.Surface
+        """
         prompt_text = WORD_FONT.render('click two adjacent nodes to build a road!', True, BLACK, RED)
         prompt_rect = pygame.Rect(300, 750, 100, 100)
         screen.blit(prompt_text, prompt_rect)
@@ -1934,12 +2132,21 @@ class RoadBuildState:
         cancel_text = WORD_FONT.render('Cancel', True, BLACK, RED)
         screen.blit(cancel_text, self.cancel_button)
     
-    
-    
-
     def should_transition(self):
+        """
+        Returns True if the game should transition to a new state, False otherwise.
+
+        :return: True if the game should transition to a new state, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
     def transition(self):
+        """
+        Returns the new state of the game after transitioning.
+
+        :return: The new state of the game after transitioning.
+        :rtype: None
+        """
         return self.current_state
         
 
