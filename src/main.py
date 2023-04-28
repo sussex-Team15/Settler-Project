@@ -1153,12 +1153,16 @@ class InventoryGameState:
     """
     A class representing the inventory game state of a player in the game.
 
-    :param player: The player whose inventory is being displayed.
-    :type player: Player 
-    :param current_state:  The current state of the game.
-    :type current_state: GameState
-    :param back_button: A rectangle representing the "Back" button on the screen.
-    :type back_button: pygame.Rect
+    Attributes:
+        player (Player): The player whose inventory is being displayed.
+        current_state (GameState): The current state of the game.
+        back_button (pygame.Rect): A rectangle representing the "Back" button on the screen.
+
+    Methods:
+        handle_events(events): Handle the events that occur during the inventory game state.
+        draw(screen): Draw the inventory game state on the screen.
+        should_transition(): Check if there is a transition to another game state.
+        transition(): Transition to the next game state.
     """
     def __init__(self, player):
         """Constructor Class
@@ -1185,11 +1189,11 @@ class InventoryGameState:
         """
         Draw the inventory screen with the current state of the player's resources.
 
-        :param screen: The game screen to draw on.
-        :type screen: screen (pygame.Surface): 
+        Parameters:
+        screen (pygame.Surface): The game screen to draw on.
 
-        :return: None
-        :rtype: none
+        Returns:
+        None
         """
         screen.fill(BACKGROUND)
         images = []
@@ -1301,6 +1305,27 @@ class PlaceRobberState:
         return self.current_state
 
 class ChooseResources:
+    """
+    This class represents a state in which a player can choose the desired resources for a trade.
+
+    Attributes:
+    - player (Player): The player object who initiates the trade.
+    - trade_partner (Player): The player object who is the trade partner, if any.
+    - offered_resources (dict): The resources offered by the trade partner, if any.
+    - current_state (State): The current game state.
+    - submit_button (pygame.Rect): The button used to submit the desired resources.
+    - resource_buttons (list): The resource buttons of the trade partner the player desires.
+    - back_button (pygame.Rect): The button used to return to the main game state.
+    - desired_resources (list): The quantities of desired resources.
+    - plus_buttons (list): The buttons used to increment the quantity of desired resources.
+    - minus_buttons (list): The buttons used to decrement the quantity of desired resources.
+
+    Methods:
+    - init(self, player, trade_partner, offered_resources): Initializes a new instance of the ChooseDesiredResources class.
+    - handle_events(self, events): Handles events during this state.
+    - draw(self, screen): Renders the current state of the game on the given screen.
+    - has_enough_resources(self, player_resources, offered_resources): Checks if the player has enough resources for the trade.
+    """
     def __init__(self, player, trade_partner):
         self.player = player
         self.trade_partner = trade_partner
@@ -1430,6 +1455,22 @@ class ChooseResources:
         return self.current_state
     
 class ChooseDesiredResources:
+    """
+    ChooseDesiredResources class allows the player to select the resources they want to trade with their opponent or the bank.
+    This class has the following methods:
+
+    init(self, player, trade_partner, offered_resources):
+    Initializes a ChooseDesiredResources instance with the given player, trade_partner, and offered_resources.
+
+    handle_events(self, events):
+    Handles the events that occur when the player interacts with the game screen.
+
+    draw(self, screen):
+    Draws the ChooseDesiredResources screen on the game window.
+
+    has_enough_resources(self, player_resources, offered_resources):
+    Checks if the player has enough resources to carry out the desired trade.
+    """
     def __init__(self, player, trade_partner, offered_resources):
         self.player = player
         self.trade_partner = trade_partner
@@ -1557,19 +1598,7 @@ class ChooseDesiredResources:
 
 
 class BankTrade:
-    """
-    Represents the state in which the player is trading resources with the bank.
-
-    :param player: The player who is trading.
-    :type player: Player
-    :param bank: The bank that the player is trading with.
-    :type bank: Bank
-    :param offered_resources: The resources that the player is offering in exchange for bank resources.
-    :type offered_resources: Dict[str, int]
-    """
     def __init__(self, player, bank, offered_resources):
-        """Constructor Method
-        """
         self.player = player
         self.bank = bank
         self.current_state = None
@@ -1578,12 +1607,6 @@ class BankTrade:
         self.offered_resources = offered_resources
 
     def handle_events(self, events):
-        """
-        Handles user events while the player is trading resources with the bank.
-
-        :param events: A list of events to handle.
-        :type events: List[pygame.event.Event]
-        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1624,12 +1647,6 @@ class BankTrade:
                         
 
     def draw(self, screen):
-        """
-        Draws the bank trade screen.
-
-        :param screen: The screen to draw the elements on.
-        :type screen: pygame.Surface
-        """
         screen.fill(BACKGROUND)
 
         resource_images = []
@@ -1664,28 +1681,14 @@ class BankTrade:
         screen.blit(back_button_text, self.back_button)
 
     def should_transition(self):
-        """
-        Checks if the current state should transition to a new state.
-
-        :return: True if the state should transition, False otherwise.
-        :rtype: bool
-        """
         return self.current_state is not None
     def transition(self):
-        """
-        Returns the new state if the current state should transition.
-
-        :return: The new state if the current state should transition, None otherwise.
-        :rtype: GameState or None
-        """
         return self.current_state
 
 
         
 class DevelopmentCardState:
     def __init__(self, player):
-        """Constructor Method
-        """
         self.player = player
         self.card_bought = False
         self.card_image = False
@@ -1694,12 +1697,6 @@ class DevelopmentCardState:
         self.back_button_rect = pygame.Rect(1100, 600, 400, 200)
     
     def handle_events(self, events):
-        """
-        Handles user events on the development card state screen.
-
-        :param events: A list of events to handle.
-        :type events: List[pygame.event.Event]
-        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1712,12 +1709,6 @@ class DevelopmentCardState:
                     self.current_state = MainGameState(self.player)
 
     def draw(self, screen):
-        """
-        Draws the development card state screen.
-
-        :param screen: The screen to draw the elements on.
-        :type screen: pygame.Surface
-        """
         screen.fill(BACKGROUND)
         
         for card, (image, rect) in self.card_images.items():
@@ -1744,20 +1735,8 @@ class DevelopmentCardState:
         screen.blit(back_button_text, self.back_button_rect)
 
     def should_transition(self):
-        """
-        Checks if the current state should transition to a new state.
-
-        :return: True if the state should transition, False otherwise.
-        :rtype: bool
-        """
         return self.current_state is not None
     def transition(self):
-        """
-        Returns the new state if the current state should transition.
-
-        :return: The new state if the current state should transition, None otherwise.
-        :rtype: GameState or None
-        """
         return self.current_state
 
     
