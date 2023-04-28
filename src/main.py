@@ -1691,6 +1691,8 @@ class BankTrade:
         
 class DevelopmentCardState:
     def __init__(self, player):
+        """Constructor Method
+        """
         self.player = player
         self.card_bought = False
         self.card_image = False
@@ -1699,6 +1701,12 @@ class DevelopmentCardState:
         self.back_button_rect = pygame.Rect(1100, 600, 400, 200)
     
     def handle_events(self, events):
+        """
+        Handles user events on the development card state screen.
+
+        :param events: A list of events to handle.
+        :type events: List[pygame.event.Event]
+        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1711,6 +1719,12 @@ class DevelopmentCardState:
                     self.current_state = MainGameState(self.player)
 
     def draw(self, screen):
+        """
+        Draws the development card state screen.
+
+        :param screen: The screen to draw the elements on.
+        :type screen: pygame.Surface
+        """
         screen.fill(BACKGROUND)
         
         for card, (image, rect) in self.card_images.items():
