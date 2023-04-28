@@ -1704,9 +1704,15 @@ class Build:
         return self.current_state
 
 class RoadBuildState:
-    
+    """
+    Represents the state in which the player is building a road.
 
+    :param player: The player that is building the road.
+    :type player: Player
+    """
     def __init__(self, player):
+        """Constructor Method
+        """
         self.player = player      
         self.node1 = None
         self.node2 = None
@@ -1716,6 +1722,12 @@ class RoadBuildState:
         self.building_road = False
 
     def handle_events(self, events):
+        """
+        Handles user events while the player is building a road.
+
+        :param events: A list of events to handle.
+        :type events: List[pygame.event.Event]
+        """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
@@ -1749,12 +1761,28 @@ class RoadBuildState:
                         return
     
     def has_enough_resources(self):
+        """
+        Checks if the player has enough resources to build a road.
+
+        :return: True if the player has enough resources, False otherwise.
+        :rtype: bool
+        """
         for resource, amount in self.cost.items():
             if resource not in self.player.resources or self.player.resources[resource] < amount:
                 return False
         return True
     
     def is_adjacent(self, node1, node2):
+        """
+        Checks if two nodes are adjacent to each other.
+
+        :param node1: The first node to check.
+        :type node1: NodeButton
+        :param node2: The second node to check.
+        :type node2: NodeButton
+        :return: True if the two nodes are adjacent, False otherwise.
+        :rtype: bool
+        """
         adjacent_to_building = False
 
         x1_pos, y1_pos = node1.x_pos, node1.y_pos
@@ -1775,6 +1803,12 @@ class RoadBuildState:
         return (x_diff <= max_road_len) and (y_diff <= max_road_len) and adjacent_to_building
     
     def draw(self, screen):
+        """
+        Draws the choose trade partner screen on the given screen.
+
+        :param screen: The pygame screen to draw the choose trade partner screen on.
+        :type screen: pygame.Surface
+        """
         prompt_text = WORD_FONT.render('click two adjacent nodes to build a road!', True, BLACK, RED)
         prompt_rect = pygame.Rect(300, 750, 100, 100)
         screen.blit(prompt_text, prompt_rect)
@@ -1782,12 +1816,21 @@ class RoadBuildState:
         cancel_text = WORD_FONT.render('Cancel', True, BLACK, RED)
         screen.blit(cancel_text, self.cancel_button)
     
-    
-    
-
     def should_transition(self):
+        """
+        Returns True if the game should transition to a new state, False otherwise.
+
+        :return: True if the game should transition to a new state, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
     def transition(self):
+        """
+        Returns the new state of the game after transitioning.
+
+        :return: The new state of the game after transitioning.
+        :rtype: None
+        """
         return self.current_state
         
 
