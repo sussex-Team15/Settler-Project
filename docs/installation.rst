@@ -30,7 +30,18 @@ To run the game open the terminal inside your IDE or globally on your system and
 Gameplay instructions
 ---------------------
 
-Once the game window has opened, first enter the player names and/or choose to include an AI player(s). Next read the rules then press start game. The game will prompt you to choose two places for your starting settlement and to consequently build your starting road. You must then press the 'space bar' once you are done to allow the next person to choose.
+Once the game window has opened, first enter the player names and/or choose to include an AI player(s). Next read the rules then press start game. The game will prompt you to choose two places for your starting settlement and to consequently build your starting road. You must then press the 'space bar' once you are done to allow the next person to choose. The space-bar is used across the game as an action to go the next player's turn.
 
 When you have all completed this steps you will be in the normal game state and can continue as a normal game of catan. It is worth noting that in the trading screen the green and red buttons above the resource images allow you to choose how many of a particular resource you wish to trade after which you must press submit to confirm the trade.
+
+
+
+Additional Known Code Defects
+-----------------------------
+
+As with many projects, there are known glitches that either have not or were not able to be fixed as of yet, these are as follows:
+ 1. When running the main file, you will receive some errors about the ai_player class, however that is fine as the game still works
+ 2. When playing an ai player against another ai player occassionally neither player will take their turn and the game will need to be restarted.
+ 3. The AI player does not make sophisticated decisions in regards to trading and will choose randomly and can occasionally build without the necessary 
+    resource amount.
 
