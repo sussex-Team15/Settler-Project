@@ -194,11 +194,9 @@ def setup():
     """
     Sets up the initial catan board positions and the ids for each tile
 
-    Returns:
-        board: List of tile objects
+    Returns: boardList of tile objects
         tile_sprites: list of images for each tile
-        board_mapping: dictionary that maps the tile
-        object to an id and nodes to respective coordinates.
+        board_mapping: dictionary that maps the tile object to an id and nodes to respective coordinates.
     """
     # maps the tile_id to the x, y, coordinates for the screen
 
@@ -292,23 +290,9 @@ class StartMenu:
 
         Args:
             events (List[pygame.event.Event]): A list of pygame events.
-
-        Returns:
-            None
-
-        Raises:
-            None
-
-        This method updates the game state based on the events that occur during the game loop.
-        It handles mouse clicks and key presses, and updates the player's settlements and roads accordingly.
-
-        If the left mouse button is clicked on a node button, the method checks if the player can build a settlement or a road at that location,
-        based on the current game state. If a settlement can be built, the method adds it to the player's settlements and to the list of built settlements.
-        If a road can be built, the method adds it to the player's roads and to the list of built roads.
-
-        If the space key is pressed, the method advances the game state to the next turn, updates the current player, and clears the variables
-        used to track the player's settlements and roads that were built during the turn.
-
+            
+        returns: none
+        rtype: none
         """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -432,35 +416,32 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
     """
     Represents the game state for the first 2 turns of the game, during which players can build 1 road and settlement for free.
 
-    :param current_player: The player whose turn it is.
-    :type current_player: Player
-    :param players: A list of all players in the game.
-    :type players: list
-    :param current_turn_number: The number of turns that have been played so far.
-    :type current_turn_number: int
-    :param player_turn_index: The index of the player whose turn it currently is.
-    :type player_turn_index: int
-    :param current_state: The current game state.
-    :type current_state: GameState
-    :param node_buttons: A list of all the node buttons on the board.
-    :type node_buttons: list
-    :param settlement_node1: The first node where the player has built a settlement.
-    :type settlement_node1: ButtonHex
-    :param settlement_node2: The second node where the player has built a settlement.
-    :type settlement_node2: ButtonHex
-    :param road_1: The first road built by the player, represented as a list of two ButtonHex objects.
-    :type road_1: list
-    :param road_2: The second road built by the player, represented as a list of two ButtonHex objects.
-    :type road_2: list
-    :param settlement_img: The image of a settlement.
-    :type settlement_img: pygame.Surface
+    Args:
+        player (Player): The player whose turn it is.
+
+    Attributes:
+        current_player (Player): The player whose turn it is.
+        players (list): A list of all players in the game.
+        current_turn_number (int): The number of turns that have been played so far.
+        player_turn_index (int): The index of the player whose turn it currently is.
+        current_state (GameState): The current game state.
+        node_buttons (list): A list of all the node buttons on the board.
+        settlement_node1 (ButtonHex): The first node where the player has built a settlement.
+        settlement_node2 (ButtonHex): The second node where the player has built a settlement.
+        road_1 (list): The first road built by the player, represented as a list of two ButtonHex objects.
+        road_2 (list): The second road built by the player, represented as a list of two ButtonHex objects.
+        settlement_img (pygame.Surface): The image of a settlement.
+
+    Methods:
+        handle_events(events): Handles events in the game.
+        draw(screen): Draws the game state on the screen.
     """
     def __init__(self, player):
         """
         Initializes a new instance of the SpecialRoundGameState class.
 
-        :param player: The current player.
-        :type player: Player
+        Args:
+        - player (Player): The current player.
         """
         self.current_player = player
         self.players = players
@@ -476,19 +457,20 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
         
 
     def handle_events(self, events):
-        """
-        Handles user input events.
-
-        :param events: A list of pygame events.
-        :type events: List
-        """
         turn_taken = None
         for player in players:
             if isinstance(player, AIPlayer):
                 #import pdb 
                 #pdb.set_trace() 
                 player.take_turn(adjacent_nodes, board_mapping, node_buttons)
-        
+            
+    
+        """
+        Handles user input events.
+
+        Args:
+        - events (List): A list of pygame events.
+        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -546,9 +528,9 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
     def draw(self, screen):
         """
         Draws the game state on the screen.
-        
-        :param screen: The surface on which to draw the game state.
-        :type screen: pygame.Surface
+
+        Args:
+        - screen (pygame.Surface): The surface on which to draw the game state.
         """
         screen.fill(self.current_player.color)
         WORD_FONT = pygame.font.SysFont('arial', 40)
@@ -607,13 +589,12 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
         """
         Determines whether two nodes are adjacent.
 
-        :param node1: ButtonHex: The first node.
-        :type node1: ButtonHex
-        :param node2: The second node.
-        :type node2: Button Hex
+        Args:
+        - node1 (ButtonHex): The first node.
+        - node2 (ButtonHex): The second node.
 
-        :return: True if the nodes are adjacent, False otherwise.
-        :rtype bool: 
+        Returns:
+        - bool: True if the nodes are adjacent, False otherwise.
         """
         adjacent_to_building = False
 
@@ -635,8 +616,8 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
     def should_transition(self):
         """Checks whether the current state is not None.
 
-        :return: True if the current state is not None, False otherwise.
-        :rtype: bool: 
+        Returns:
+            bool: True if the current state is not None, False otherwise.
         """
         return self.current_state is not None
     def transition(self):
@@ -833,6 +814,7 @@ class MainGameState:
         Draws the game board, including the tiles, numbers, settlements, cities, roads, dice, scoreboard, and buttons on the given screen.
 
         :param screen: The pygame screen to draw on.
+        :ptype: 
         """
         screen.fill(BACKGROUND)
         robber_img = pygame.image.load(os.path.join('src','assets','Tiles','robber.jpg'))
