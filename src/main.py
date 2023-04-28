@@ -755,11 +755,11 @@ class MainGameState:
         """
         Handles the events of the game, updating the current game state based on player interactions with the screen.
 
-        Args:
-        - events: list of pygame events
-
-        Returns:
-        None
+        :param events: list of pygame events
+        :type events: list
+        
+        :return: none
+        :rtype: none
         """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
