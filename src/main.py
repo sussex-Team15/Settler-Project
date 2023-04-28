@@ -287,6 +287,29 @@ class StartMenu:
     
     
     def handle_events(self, events):
+        """
+        Handle events in the game loop.
+
+        Args:
+            events (List[pygame.event.Event]): A list of pygame events.
+
+        Returns:
+            None
+
+        Raises:
+            None
+
+        This method updates the game state based on the events that occur during the game loop.
+        It handles mouse clicks and key presses, and updates the player's settlements and roads accordingly.
+
+        If the left mouse button is clicked on a node button, the method checks if the player can build a settlement or a road at that location,
+        based on the current game state. If a settlement can be built, the method adds it to the player's settlements and to the list of built settlements.
+        If a road can be built, the method adds it to the player's roads and to the list of built roads.
+
+        If the space key is pressed, the method advances the game state to the next turn, updates the current player, and clears the variables
+        used to track the player's settlements and roads that were built during the turn.
+
+        """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.start_button_rect.collidepoint(event.pos):
