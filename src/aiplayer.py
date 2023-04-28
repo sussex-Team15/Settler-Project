@@ -1,4 +1,6 @@
-from action import *
+from src.action import *
+
+
 
 class AIPlayer():
     def __init__(self, name, color):

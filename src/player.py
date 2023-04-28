@@ -145,9 +145,9 @@ class Player:  # pylint: disable=too-many-instance-attributes
         else:
             self.resources[resource] = 1
 
-    def remove_resources(self, offered_resources):
-        for resource, quantity in offered_resources.items():
-            self.resources[resource] -= quantity
+    def remove_resource(self, resource):
+        self.resources[resource] -= 1
+
 
     def get_victory_points(self):
         """Returns current players victory points
