@@ -1707,7 +1707,21 @@ class DevelopmentCardState:
 
     
 class Build:
+    """
+    Represents the state in which the player is building a settlement or a city.
+
+    :param player: The player that is building the settlement or city.
+    :type player: Player
+    :param is_city: A flag indicating whether the player is building a city or a settlement.
+    :type is_city: bool
+    :param node: The node where the player wants to build the settlement or city.
+    :type node: NodeButton
+    :param current_state: The current state of the game.
+    :type current_state: GameState or None
+    """
     def __init__(self, player, is_city):
+        """Constructor method
+        """
         self.player = player
         self.is_city = is_city
         self.node = None
@@ -1715,6 +1729,12 @@ class Build:
 
     
     def handle_events(self, events):
+        """
+        Handles user events while the player is building a settlement or city.
+
+        :param events: A list of events to handle.
+        :type events: List[pygame.event.Event]
+        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1736,10 +1756,22 @@ class Build:
                             self.current_state = NotEnoughResources(self.player)
 
     def draw(self, screen):
+        """
+        Draws the current state of the game.
+
+        :param screen: The screen to draw on.
+        :type screen: pygame.Surface
+        """
         pass
         
 
     def has_enough_resources(self):
+        """
+        Checks if the player has enough resources to build a settlement or city.
+
+        :return: True if the player has enough resources, False otherwise.
+        :rtype: bool
+        """
         if self.is_city:
             city_cost = {ResourceTile.MOUNTAIN.generate_resource().name(): 3, 
                                     ResourceTile.PASTURE.generate_resource().name(): 2}
@@ -1762,8 +1794,20 @@ class Build:
             return True
     
     def should_transition(self):
+        """
+        Checks if the current state should transition to a new state.
+
+        :return: True if the state should transition, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
     def transition(self):
+        """
+        Returns the new state if the current state should transition.
+
+        :return: The new state if the current state should transition, None otherwise.
+        :rtype: GameState or None
+        """
         return self.current_state
 
 class RoadBuildState:
