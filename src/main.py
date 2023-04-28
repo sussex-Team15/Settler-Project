@@ -1156,16 +1156,12 @@ class InventoryGameState:
     """
     A class representing the inventory game state of a player in the game.
 
-    Attributes:
-        player (Player): The player whose inventory is being displayed.
-        current_state (GameState): The current state of the game.
-        back_button (pygame.Rect): A rectangle representing the "Back" button on the screen.
-
-    Methods:
-        handle_events(events): Handle the events that occur during the inventory game state.
-        draw(screen): Draw the inventory game state on the screen.
-        should_transition(): Check if there is a transition to another game state.
-        transition(): Transition to the next game state.
+    :param player: The player whose inventory is being displayed.
+    :type player: Player 
+    :param current_state:  The current state of the game.
+    :type current_state: GameState
+    :param back_button: A rectangle representing the "Back" button on the screen.
+    :type back_button: pygame.Rect
     """
     def __init__(self, player):
         """Constructor Class
