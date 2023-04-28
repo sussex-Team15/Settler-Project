@@ -411,8 +411,21 @@ class StartMenu:
         pygame.display.flip()
 
     def should_transition(self):
+        """
+        Check whether the current state should transition to a new state.
+
+        Returns:
+            A boolean indicating whether the current state should transition to a new state.
+        """
         return self.current_state is not None
+    
     def transition(self):
+        """
+        Transition to a new state.
+
+        Returns:
+            The new state.
+        """
         return self.current_state
         
 class SpecialRoundGameState: # gamestate for the first 2 turns of the game (players can build 1 road and settlement free)
