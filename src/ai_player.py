@@ -32,16 +32,16 @@ class AIPlayer(Player):
     :param trade_offers: a list of trade_offers that the player has received (of type Trade)
     :type trade_offers: list
     """
-    def take_turn(self, adjacent_nodes, board_mapping):
+    def take_turn(self, adjacent_nodes, board_mapping, node_buttons):
         """Constructor Class
         """
         # Given the current game state, generates all possible actions and chooses one to take
-        actions = self.get_possible_actions(adjacent_nodes, board_mapping)
+        actions = self.get_possible_actions(adjacent_nodes, board_mapping, node_buttons)
         if not actions:
             return None
         return self.choose_action(actions)
 
-    def get_possible_actions(self, adjacent_nodes, board_mapping):
+    def get_possible_actions(self, adjacent_nodes, board_mapping, node_buttons):
         """
         Given the current game state, generates all possible actions the player can take. This includes
         settlement or city building actions, road building actions, and trade actions.
@@ -52,12 +52,14 @@ class AIPlayer(Player):
         # Given the current game state, generates all possible actions the player can take
         actions = []
         # Adds all possible settlement or city building actions for each settlement
-        for node in board_mapping.board_mapping["nodes"]:
-            actions += self._get_settlement_actions(node)
+        for node_button in node_buttons:
+            actions += self._get_settlement_actions(node_button)
         # Adds all possible road building actions for each road
-        actions += self._get_road_actions(adjacent_nodes.adjacent_nodes)
+        actions += self._get_road_actions(adjacent_nodes[0])
         # Adds all possible trade actions for each resource the player has
         return actions
+    
+
 
     def _get_settlement_actions(self, all_nodes):
         """
@@ -86,7 +88,7 @@ class AIPlayer(Player):
         """
         # Given a road and current game state, returns all possible actions to build a road on an edge adjacent to the road
         actions = []
-        for road in all_roads.adjacent_edges:
+        for road in all_roads:
             current_road = all_roads[road]
             node1, node2 = current_road[0], current_road[1]
             action = BuildRoadAction(node1, node2, self)

@@ -270,7 +270,7 @@ class StartMenu:
         background_img  = pygame.transform.scale(background_img, (DISPLAY_WIDTH, DISPLAY_HEIGHT))
         screen.blit(background_img, (0,0))
 
-        welcome_text_surface = WELCOME_FONT.render("Welcome to ugly Catan!", True, BLACK)
+        welcome_text_surface = WELCOME_FONT.render("Welcome to Catan!", True, BLACK)
         welcome_text_rect = pygame.Rect(100, 20, 500, 300)
         screen.blit(welcome_text_surface, welcome_text_rect)
 
@@ -296,7 +296,7 @@ class StartMenu:
         checkbox_prompt_rect = checkbox_prompt_text.get_rect(center=(700,  DISPLAY_HEIGHT//2+150))
         screen.blit(checkbox_prompt_text, checkbox_prompt_rect)
 
-        input_prompt_text = WORD_FONT.render("Enter name hear: ", True, BLACK)
+        input_prompt_text = WORD_FONT.render("Enter name here: ", True, BLACK)
         input_prompt_rect = input_prompt_text.get_rect(center=(DISPLAY_WIDTH//2-320, DISPLAY_HEIGHT//2+70))
         screen.blit(input_prompt_text, input_prompt_rect)
 
@@ -333,6 +333,14 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
         
 
     def handle_events(self, events):
+        turn_taken = None
+        for player in players:
+            if isinstance(player, AIPlayer):
+                #import pdb 
+                #pdb.set_trace() 
+                player.take_turn(adjacent_nodes, board_mapping, node_buttons)
+            
+    
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
