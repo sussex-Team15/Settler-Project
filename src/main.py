@@ -151,13 +151,33 @@ board_mapping = {'tiles': {
 }}
 
 def create_adjacent_nodes(nodes_dict, adjacent_nodes):
-        for node1_id, node1_pos in nodes_dict.items():
-            for node2_id, node2_pos in nodes_dict.items():
-                if node1_id != node2_id:  # Skip comparison of a node with itself
-                    if is_adjacent(node1_id, node2_id):
-                        adjacent_nodes.append((node1_id, node2_id))
+    """
+    Create a list of adjacent node pairs based on the given nodes_dict.
+
+    :param nodes_dict: A dictionary of nodes, where the keys are node IDs and the values are tuples of (x, y) positions.
+    :type nodes_dict: dict
+    :param adjacent_nodes: The list to append the adjacent node pairs to.
+    :type adjacent_nodes: list
+    :return: None
+    :rtype: None
+    """
+    for node1_id, node1_pos in nodes_dict.items():
+        for node2_id, node2_pos in nodes_dict.items():
+            if node1_id != node2_id:  # Skip comparison of a node with itself
+                if is_adjacent(node1_id, node2_id):
+                    adjacent_nodes.append((node1_id, node2_id))
 
 def is_adjacent(node1, node2):
+    """
+    Determine if two nodes are adjacent to each other on a game board.
+
+    :param node1: The ID of the first node.
+    :type node1: str
+    :param node2: The ID of the second node.
+    :type node2: str
+    :return: True if the two nodes are adjacent to each other, False otherwise.
+    :rtype: bool
+    """
     x1_pos, y1_pos = board_mapping['nodes'][node1]
     x2_pos, y2_pos = board_mapping['nodes'][node2]
     x_diff = abs(x1_pos - x2_pos)
