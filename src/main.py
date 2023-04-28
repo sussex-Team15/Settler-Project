@@ -1241,12 +1241,30 @@ class InventoryGameState:
         return self.current_state
 
 class PlaceRobberState:
+    """
+    A class representing the state of the game where the player is placing the robber.
+
+    :param player: The player whose turn it is.
+    :type player: Player
+    """
     def __init__(self, player):
+        """
+        Initialize the PlaceRobberState.
+
+        :param player: The player whose turn it is.
+        :type player: Player
+        """
         self.player = player
         self.current_state = None
         self.robber_img = pygame.image.load(os.path.join('src','assets','Tiles','robber.jpg'))
 
     def handle_events(self, events):
+        """
+        Handle events for the PlaceRobberState.
+
+        :param events: The events to handle.
+        :type events: List[pygame.event.Event]
+        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1261,13 +1279,32 @@ class PlaceRobberState:
     
 
     def draw(self, screen):
+        """
+        Draw the PlaceRobberState on the given screen.
+
+        :param screen: The screen to draw on.
+        :type screen: pygame.Surface
+        """
         prompt_text = WORD_FONT.render(f'Place the robber on a tile', True, BLACK, RED)
         prompt_rect = prompt_text.get_rect(center=(500, 750))
         screen.blit(prompt_text, prompt_rect)
     
     def should_transition(self):
+        """
+        Check if the PlaceRobberState should transition to a new state.
+
+        :return: True if the current state is not None, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
+    
     def transition(self):
+        """
+        Transition to the next state.
+
+        :return: The next state.
+        :rtype: GameState
+        """
         return self.current_state
 
 class ChooseResources:
