@@ -1017,6 +1017,9 @@ class MainGameState:
     
     
     def draw_buttons(self):
+        """
+        Draws the buttons on the game board.
+        """
         button_radius = [10, 22]
         # draw node buttons
         for _node_id, node_point in board_mapping['nodes'].items():
@@ -1058,7 +1061,14 @@ class MainGameState:
 
     
     def draw_dice(self, roll_1, roll_2): # TODO add to MainGame state
+        """
+        Draws the dice with the given rolls.
 
+        :param roll_1: the roll value of the first dice
+        :type roll_1: int
+        :param roll_2: the roll value of the second dice
+        :type roll_2: int
+        """
         dice_size = 80
 
         side_1_p = os.path.join('src','assets','dice','1_sided.jpg')
