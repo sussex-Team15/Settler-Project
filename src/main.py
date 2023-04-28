@@ -521,6 +521,10 @@ class MainGameState:
             elif event.type == pygame.KEYDOWN:
             
                 if event.key == pygame.K_SPACE:
+
+                    for player in players:
+                        if player.victory_points >9:
+                            self.current_state = EndMenu(players, )
                     if self.player_turn_index == len(self.players) - 1:
                         self.player_turn_index = 0
                         self.current_player = self.players[self.player_turn_index]
@@ -1612,9 +1616,9 @@ class NotEnoughResources:
     
 
 class EndMenu:
-    def __init__(self, players, current_state):
+    def __init__(self, players):
         self.players = players
-        self.current_state = current_state
+        self.current_state = None
         self.players.sort(key=lambda p:p.victory_points, reverse=True)
         self.main_menu_button_text = WORD_FONT.render("Main Menu", True, BLACK)
         self.main_menu_button_rect = pygame.Rect(400, 600, 200, 200)
