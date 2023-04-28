@@ -1667,7 +1667,27 @@ class BuildState:
         return self.current_state
     
 class NotEnoughResources:
+    """
+    Represents the screen that displays a message when the player doesn't have enough resources to perform an action.
+
+    :param player: The Player object representing the current player.
+    :type player: Player
+    :param current_state: The current state of the game (unused in this class).
+    :type current_state: None
+    :param font: The font to be used for the message text.
+    :type font: pygame.font.Font
+    :param message_text: The text to be displayed on the screen.
+    :type message_text: pygame.Surface
+    :param message_rect: The rectangular area where the message will be displayed.
+    :type message_rect: pygame.Rect
+    """
     def __init__(self, player):
+        """
+        Initializes a new instance of the NotEnoughResources class.
+
+        :param player: The Player object representing the current player.
+        :type player: Player
+        """
         self.player = player
         self.current_state  = None
         self.font = pygame.font.SysFont("Algerian", 100, True)
@@ -1675,6 +1695,12 @@ class NotEnoughResources:
         self.message_rect  = self.message_text.get_rect(center=(DISPLAY_WIDTH//2, DISPLAY_HEIGHT//2))
 
     def handle_events(self, events):
+        """
+        Handles the given events for the not enough resources screen.
+
+        :param events: The list of pygame events to handle.
+        :type events: list
+        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1682,11 +1708,29 @@ class NotEnoughResources:
                     self.current_state = MainGameState(self.player)
 
     def draw(self, screen):
+        """
+        Draws the not enough resources screen on the given screen.
+
+        :param screen: The pygame screen to draw the not enough resources screen on.
+        :type screen: pygame.Surface
+        """
         screen.blit(self.message_text, self.message_rect)
 
     def should_transition(self):
+        """
+        Returns True if the game should transition to a new state, False otherwise.
+
+        :return: True if the game should transition to a new state, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
     def transition(self):
+        """
+        Returns the new state of the game after transitioning.
+
+        :return: The new state of the game after transitioning.
+        :rtype: None
+        """
         return self.current_state
     
 
