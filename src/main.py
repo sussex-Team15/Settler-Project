@@ -1691,7 +1691,28 @@ class NotEnoughResources:
     
 
 class EndMenu:
+    """
+    Represents the end menu screen that displays the final scores and the winner.
+
+    :param players: A list of Player objects representing the players in the game.
+    :type players: list
+
+    :param current_state: The current state of the game (unused in this class).
+    :type current_state: None
+
+    :param main_menu_button_text: The text to be displayed on the main menu button.
+    :type main_menu_button_text: pygame.Surface
+
+    :param main_menu_button_rect: The rectangular area where the main menu button will be displayed.
+    :type main_menu_button_rect: pygame.Rect
+    """
     def __init__(self, players):
+        """
+        Initializes a new instance of the EndMenu class.
+
+        :param players: A list of Player objects representing the players in the game.
+        :type players: list
+        """
         self.players = players
         self.current_state = None
         self.players.sort(key=lambda p:p.victory_points, reverse=True)
@@ -1699,6 +1720,12 @@ class EndMenu:
         self.main_menu_button_rect = pygame.Rect(400, 600, 200, 200)
 
     def draw(self, screen):
+        """
+        Draws the end menu screen on the given screen.
+
+        :param screen: The pygame screen to draw the end menu screen on.
+        :type screen: pygame.Surface
+        """
         screen.fill(BACKGROUND)
 
         y = 50
@@ -1715,14 +1742,32 @@ class EndMenu:
         screen.blit(self.main_menu_button_rect, self.main_menu_button_text)
 
     def handle_events(self, events):
+        """
+        Handles the given events for the end menu screen.
+
+        :param events: The list of pygame events to handle.
+        :type events: list
+        """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.main_menu_button_rect.collidepoint(event.pos):
                     self.current_state = StartMenu()
 
     def should_transition(self):
+        """
+        Returns True if the game should transition to a new state, False otherwise.
+
+        :return: True if the game should transition to a new state, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
     def transition(self):
+        """
+        Returns the new state of the game after transitioning.
+
+        :return: The new state of the game after transitioning.
+        :rtype: None
+        """
         return self.current_state
                 
 
