@@ -1230,8 +1230,9 @@ class PlaceRobberState:
                         for game_tile in board:
                             if game_tile.get_tile_info()['Tile id'] == id:
                                 game_tile.has_robber = True
+                                game_log.append(f'{self.player.name} placed a robber')
                                 self.current_state = MainGameState(self.player, (mouse_pos[0]-60, mouse_pos[1]-50))
-                            
+
     
 
     def draw(self, screen):
@@ -1663,11 +1664,13 @@ class Build:
                                 self.player.build_city(self.node)
                                 self.player.victory_points +=2
                                 built_cities.append((self.node, self.player))
+                                game_log.append(f'{self.player.name} built a city!')
                                 self.current_state = MainGameState(self.player)
                             else:
                                 self.player.build_settlement(self.node, False)
                                 self.player.victory_points +=1
                                 built_settlements.append((self.node, self.player))
+                                game_log.append(f'{self.player.name} built a settlement!')
                                 self.current_state =  MainGameState(self.player)
                         else:
                             self.current_state = NotEnoughResources(self.player)
@@ -1732,6 +1735,7 @@ class RoadBuildState:
                             if self.has_enough_resources():
                                 self.player.build_road(self.node1, self.node2, is_special_round=False)
                                 built_roads.append((self.node1, self.node2, self.player))
+                                game_log.append(f'{self.player.name} built a road!')
                                 self.current_state = MainGameState(self.player)
                             else:
                                 self.current_state = NotEnoughResources(self.player)
