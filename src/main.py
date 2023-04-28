@@ -1564,7 +1564,19 @@ class ChooseDesiredResources:
 
 
 class BankTrade:
+    """
+    Represents the state in which the player is trading resources with the bank.
+
+    :param player: The player who is trading.
+    :type player: Player
+    :param bank: The bank that the player is trading with.
+    :type bank: Bank
+    :param offered_resources: The resources that the player is offering in exchange for bank resources.
+    :type offered_resources: Dict[str, int]
+    """
     def __init__(self, player, bank, offered_resources):
+        """Constructor Method
+        """
         self.player = player
         self.bank = bank
         self.current_state = None
@@ -1573,6 +1585,12 @@ class BankTrade:
         self.offered_resources = offered_resources
 
     def handle_events(self, events):
+        """
+        Handles user events while the player is trading resources with the bank.
+
+        :param events: A list of events to handle.
+        :type events: List[pygame.event.Event]
+        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1613,6 +1631,12 @@ class BankTrade:
                         
 
     def draw(self, screen):
+        """
+        Draws the bank trade screen.
+
+        :param screen: The screen to draw the elements on.
+        :type screen: pygame.Surface
+        """
         screen.fill(BACKGROUND)
 
         resource_images = []
@@ -1647,8 +1671,20 @@ class BankTrade:
         screen.blit(back_button_text, self.back_button)
 
     def should_transition(self):
+        """
+        Checks if the current state should transition to a new state.
+
+        :return: True if the state should transition, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
     def transition(self):
+        """
+        Returns the new state if the current state should transition.
+
+        :return: The new state if the current state should transition, None otherwise.
+        :rtype: GameState or None
+        """
         return self.current_state
 
 
@@ -1701,8 +1737,20 @@ class DevelopmentCardState:
         screen.blit(back_button_text, self.back_button_rect)
 
     def should_transition(self):
+        """
+        Checks if the current state should transition to a new state.
+
+        :return: True if the state should transition, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
     def transition(self):
+        """
+        Returns the new state if the current state should transition.
+
+        :return: The new state if the current state should transition, None otherwise.
+        :rtype: GameState or None
+        """
         return self.current_state
 
     
