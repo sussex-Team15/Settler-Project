@@ -926,6 +926,19 @@ class MainGameState:
                             board_mapping['nodes'][tile.node_coord_ne], 5)
             
     def draw_roads(self):
+        """
+        Draws all built roads on the game screen.
+
+        This method iterates through the `built_roads` list and draws a line for each road
+        using Pygame's `draw.line` method. The color of the line is set to the color of the player
+        who built the road. The line thickness is set to 5 pixels.
+
+        Args:
+            self: The Game object itself.
+
+        Returns:
+            None
+        """
         for road in built_roads:
             pygame.draw.line(screen,
                             road[2].color, # player who build roads color
