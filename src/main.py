@@ -1638,7 +1638,33 @@ class ChooseTradePartner:
 
                 
 class AcceptTradeState:
+    """
+    Represents the state of the game where the player can accept or decline a trade offer.
+
+    :param player: The Player object representing the current player.
+    :type player: Player
+    :param trade_partner: The Player object representing the player who initiated the trade offer.
+    :type trade_partner: Player
+    :param player_resources: A dictionary containing the resources that the current player will give in the trade.
+    :type player_resources: dict
+    :param trade_partner_resources: A dictionary containing the resources that the trade partner will give in the trade.
+    :type trade_partner_resources: dict
+    :param current_state: The current state of the game (unused in this class).
+    :type current_state: None
+    :param trade_accepted: A boolean that is True if the trade was accepted, False otherwise.
+    :type trade_accepted: bool
+    :param accept_rect: A rectangular area where the "Accept" button will be displayed.
+    :type accept_rect: pygame.Rect
+    :param accept_text: The text to be displayed on the "Accept" button.
+    :type accept_text: pygame.Surface
+    :param decline_rect: A rectangular area where the "Decline" button will be displayed.
+    :type decline_rect: pygame.Rect
+    :param decline_text: The text to be displayed on the "Decline" button.
+    :type decline_text: pygame.Surface
+    """
     def __init__(self, player, trade_partner, player_resources, trade_partner_resources):
+        """Constructor class
+        """
         self.player = player
         self.trade_partner = trade_partner
         self.current_state = None
@@ -1652,6 +1678,12 @@ class AcceptTradeState:
         self.decline_text = WORD_FONT.render("Decline?", True, RED)
 
     def draw(self, screen):
+        """
+        Draws the accept trade screen on the given screen.
+
+        :param screen: The pygame screen to draw the accept trade screen on.
+        :type screen: pygame.Surface
+        """
         screen.fill(BACKGROUND)
 
         prompt_text = BIG_FONT.render(f'{self.trade_partner.name}: Accept or decline this offer', True, BLACK)
@@ -1665,6 +1697,12 @@ class AcceptTradeState:
         screen.blit(self.decline_text, (self.decline_rect.x + 10, self.decline_rect.y + 10))
 
     def handle_events(self, events):
+        """
+        Handles the given events for the accept trade state of the game.
+
+        :param events: The list of pygame events to handle.
+        :type events: list
+        """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.accept_rect.collidepoint(event.pos):
@@ -1688,8 +1726,20 @@ class AcceptTradeState:
                 
 
     def should_transition(self):
+        """
+        Returns True if the game should transition to a new state, False otherwise.
+
+        :return: True if the game should transition to a new state, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
     def transition(self):
+        """
+        Returns the new state of the game after transitioning.
+
+        :return: The new state of the game after transitioning.
+        :rtype: None
+        """
         return self.current_state
 
 
