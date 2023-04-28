@@ -7,7 +7,7 @@ import pygame
 
 from src.player import Player
 from src.resource_ import Resource
-from src.button import ButtonRect
+from src.button import ButtonHex
 
 
 
@@ -61,13 +61,19 @@ def test_build_city(player):
     :param player: A Player object representing a player in the game.
     :type player: Player
     """
-    player.resources = {Resource.ORE: 3,
-                        Resource.GRAIN: 2}
+    player.resources = {Resource.ORE.name(): 3,
+                        Resource.GRAIN.name(): 2}
 
-    player.build_city(1110)
+    node_point = (621, 318)
+    node = ButtonHex(
+            (node_point[0], node_point[1]),
+            10,
+            (255,255,255), False)
+    
+    player.build_city(node)
 
-    assert {Resource.ORE: 3,
-             Resource.GRAIN: 2} != player.resources
+    assert {Resource.ORE.name(): 3,
+             Resource.GRAIN.name(): 2} != player.resources
 
 
 
@@ -111,6 +117,15 @@ def test_add_resources(player):
     assert player.resources == {Resource.WOOD.name():1, Resource.BRICK.name():1, 
                                 Resource.GRAIN.name():0, Resource.NONE.name():0,
                                 Resource.ORE.name():0, Resource.WOOL.name():0}
+    
+def test_remove_resources(player):
+    player.resources = {Resource.WOOD.name():4, Resource.BRICK.name():4, Resource.GRAIN.name():4, Resource.NONE.name():4, Resource.ORE.name():4, Resource.WOOL.name():4}
+    player.remove_resource(Resource.WOOD.name())
+    player.remove_resource(Resource.WOOD.name())
+    player.remove_resource(Resource.BRICK.name())
+    player.remove_resource(Resource.GRAIN.name())
+
+    assert player.resources == {Resource.WOOD.name():2, Resource.BRICK.name():3, Resource.GRAIN.name():3, Resource.NONE.name():4, Resource.ORE.name():4, Resource.WOOL.name():4}
 
 
 def test_get_victory_points(player):
