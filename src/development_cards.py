@@ -113,7 +113,7 @@ class Knight(DevelopmentCard):
         return 0
     
     def cost(self):
-        return {Resource.WOOL: 1, Resource.GRAIN: 1, Resource.ORE: 1}
+        return {Resource.WOOL.name(): 1, Resource.GRAIN.name(): 1, Resource.ORE.name(): 1}
 
 
 class LargestArmy(DevelopmentCard):
