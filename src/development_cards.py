@@ -6,29 +6,31 @@ from enum import Enum
 from src.utils import DEVELOPMENT_CARDS_DIR, Abstract
 from src.resource_ import Resource
 
+
 class DevelopmentCard(Abstract):
-    """Abstract class template for development cards 
-    and controls behaviour for all development card 
+    """Abstract class template for development cards
+    and controls behaviour for all development card
     types, also inherits behaviour from abstract class
-    so that the correct image files are retrieved for 
+    so that the correct image files are retrieved for
     each development card.
 
     :param Abstract: abstract base class in utils.py
     :type Abstract: type
     """
+
     def name(self):
         """Returns name of development card
 
         :return: Development Card name
         :rtype: Development Card class
         """
-        return self.__class__.__name__.title().replace('_', ' ')
+        return self.__class__.__name__.title().replace("_", " ")
 
     @abc.abstractmethod
     def description(self):
         """
         Abstract method representing description of a development card and the outcome
-        
+
         Should be implemented by derived classes to return card's description
 
         :return: A String representing the description
@@ -39,7 +41,7 @@ class DevelopmentCard(Abstract):
     def vp_awarded(self):
         """
         Abstract method representing how many victory points should be awarded
-        
+
         Should be implemented by derived classes to return number of victory points
 
         :return: An integer representing victory points
@@ -53,7 +55,7 @@ class DevelopmentCard(Abstract):
         :rtype: str
         """
         return self.get_asset(DEVELOPMENT_CARDS_DIR)
-    
+
     def cost(self):
         """
         Returns cost of development card
@@ -73,8 +75,8 @@ class VictoryPointCard(DevelopmentCard):
 
 
 class Chapel(DevelopmentCard):
-    """Derived Class from DevelopmentCard abstract class
-    """
+    """Derived Class from DevelopmentCard abstract class"""
+
     def description(self):
         """Displays a string indicating the amount of victory points gained from building a Chapel
 
@@ -93,16 +95,18 @@ class Chapel(DevelopmentCard):
 
 
 class Knight(DevelopmentCard):
-    """Derived Class from DevelopmentCard abstract class
-    """
+    """Derived Class from DevelopmentCard abstract class"""
+
     def description(self):
         """Displays a string indicating how the player is now allowed to move the robber
 
         :return: A string displaying player's new priviledges
         :rtype: str
         """
-        return ("Move the Robber. Steal 1 resource card "
-                "from the owner of an adjacent settlement")
+        return (
+            "Move the Robber. Steal 1 resource card "
+            "from the owner of an adjacent settlement"
+        )
 
     def vp_awarded(self):
         """Amount of victory points awarded
@@ -111,23 +115,29 @@ class Knight(DevelopmentCard):
         :rtype: int
         """
         return 0
-    
+
     def cost(self):
-        return {Resource.WOOL.name(): 1, Resource.GRAIN.name(): 1, Resource.ORE.name(): 1}
+        return {
+            Resource.WOOL.name(): 1,
+            Resource.GRAIN.name(): 1,
+            Resource.ORE.name(): 1,
+        }
 
 
 class LargestArmy(DevelopmentCard):
-    """Derived Class from DevelopmentCard abstract class
-    """
+    """Derived Class from DevelopmentCard abstract class"""
+
     def description(self):
         """Displays a string indicating the requirements met to obtain this card
 
         :return: A string displaying the rules around this card
         :rtype: str
         """
-        return ("The first player to play 3 Knight cards "
-                "gets this card. Another player who plays more "
-                "Knight cards will take this card")
+        return (
+            "The first player to play 3 Knight cards "
+            "gets this card. Another player who plays more "
+            "Knight cards will take this card"
+        )
 
     def vp_awarded(self):
         """Amount of victory points awarded
@@ -139,8 +149,8 @@ class LargestArmy(DevelopmentCard):
 
 
 class Library(DevelopmentCard):
-    """Derived Class from DevelopmentCard abstract class
-    """
+    """Derived Class from DevelopmentCard abstract class"""
+
     def description(self):
         """Displays a string indicating that the player has gained a victory point
 
@@ -159,17 +169,19 @@ class Library(DevelopmentCard):
 
 
 class LongestRoad(DevelopmentCard):
-    """Derived Class from DevelopmentCard abstract class
-    """
+    """Derived Class from DevelopmentCard abstract class"""
+
     def description(self):
         """Displays a string indicating the requirements the player has met to gain this card
 
         :return: A string displaying the rules associated with this card
         :rtype: str
         """
-        return ("This Card Goes to the player with the longes unbroken"
-                " road of at least 5 segments. Another player who builds"
-                " a longer Road will take this card")
+        return (
+            "This Card Goes to the player with the longes unbroken"
+            " road of at least 5 segments. Another player who builds"
+            " a longer Road will take this card"
+        )
 
     def vp_awarded(self):
         """Amount of victory points awarded
@@ -181,8 +193,8 @@ class LongestRoad(DevelopmentCard):
 
 
 class Market(DevelopmentCard):
-    """Derived Class from DevelopmentCard abstract class
-    """
+    """Derived Class from DevelopmentCard abstract class"""
+
     def description(self):
         """Displays a string indicating that the player has gained a victory point
 
@@ -201,17 +213,19 @@ class Market(DevelopmentCard):
 
 
 class Monopoly(DevelopmentCard):
-    """Derived Class from DevelopmentCard abstract class
-    """
+    """Derived Class from DevelopmentCard abstract class"""
+
     def description(self):
         """Displays a string indicating that the player's new priviledges
 
         :return: A string outlining what resources the player is now entitled to
         :rtype: str
         """
-        return ("When you play this card, announce 1 type of resource."
-                " All other players must give you all their resource cards "
-                "of that type")
+        return (
+            "When you play this card, announce 1 type of resource."
+            " All other players must give you all their resource cards "
+            "of that type"
+        )
 
     def vp_awarded(self):
         """Amount of victory points awarded
@@ -223,8 +237,8 @@ class Monopoly(DevelopmentCard):
 
 
 class Palace(DevelopmentCard):
-    """Derived Class from DevelopmentCard abstract class
-    """
+    """Derived Class from DevelopmentCard abstract class"""
+
     def description(self):
         """Displays a string indicating that the player has gained a victory point
 
@@ -243,8 +257,8 @@ class Palace(DevelopmentCard):
 
 
 class RoadBuilding(DevelopmentCard):
-    """Derived Class from DevelopmentCard abstract class
-    """
+    """Derived Class from DevelopmentCard abstract class"""
+
     def description(self):
         """Displays a string indicating that the player can place 2 new roads
 
@@ -263,8 +277,8 @@ class RoadBuilding(DevelopmentCard):
 
 
 class University(DevelopmentCard):
-    """Derived Class from DevelopmentCard abstract class
-    """
+    """Derived Class from DevelopmentCard abstract class"""
+
     def description(self):
         """Displays a string indicating that the player has gained a victory point
 
@@ -283,16 +297,18 @@ class University(DevelopmentCard):
 
 
 class YearofPlenty(DevelopmentCard):
-    """Derived Class from DevelopmentCard abstract class
-    """
+    """Derived Class from DevelopmentCard abstract class"""
+
     def description(self):
         """Displays a string indicating that the player can pick 2 resources from the bank
 
         :return: A string displaying the player's new resource priviledges
         :rtype: str
         """
-        return ("take any 2 resources from the bank add them to your hand."
-                " They can be 2 of the same resource or 2 different resources")
+        return (
+            "take any 2 resources from the bank add them to your hand."
+            " They can be 2 of the same resource or 2 different resources"
+        )
 
     def vp_awarded(self):
         """Amount of victory points awarded
@@ -312,7 +328,7 @@ class DevelopmentCards(Enum):
     :return: The DevelopmentCards object with corresponding card object.
     :rtype: DevelopmentCards
     """
-    
+
     CHAPEL = Chapel()
     KNIGHT = Knight()
     LARGEST_ARMY = LargestArmy()
@@ -368,6 +384,6 @@ class DevelopmentCards(Enum):
         :rtype: str
         """
         return self.card.asset()
+
     def cost(self):
         return self.card.cost()
-

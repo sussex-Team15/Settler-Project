@@ -9,20 +9,21 @@ from src.utils import TILE_CARDS_DIR, Abstract
 
 
 class Tile(Abstract):
-    """Abstract class template for Tiles and 
-    controls behaviour for all tile card types, 
-    also inherits behaviour from abstract class 
-    so that the correct image files are retrieved 
+    """Abstract class template for Tiles and
+    controls behaviour for all tile card types,
+    also inherits behaviour from abstract class
+    so that the correct image files are retrieved
     for each tile
 
     :param Abstract: abstract base class in utils.py
     :type Abstract: type
     """
+
     @abc.abstractmethod
     def name(self):
         """
         Abstract method representing description of a game tile
-        
+
         Should be implemented by derived classes to return tile's description
 
         :return: A String representing the description of a tile
@@ -33,7 +34,7 @@ class Tile(Abstract):
     def generate_resource(self):
         """
         Abstract method representing description of a game tile
-        
+
         Should be implemented by derived classes to return tile's description
 
         :return: 1 new resource based on which tile is in use
@@ -44,7 +45,7 @@ class Tile(Abstract):
     def short_name(self):
         """
         Abstract method representing short name description of a game tile
-        
+
         Should be implemented by derived classes to return short tile's description
 
         :return: A String representing the short name description of a tile
@@ -58,14 +59,14 @@ class Tile(Abstract):
         :rtype: str
         """
         return self.get_asset(TILE_CARDS_DIR)
-    
+
     def is_robber(self):
         pass
 
 
 class Forest(Tile):
-    """Derived Class from Tile abstract class
-    """
+    """Derived Class from Tile abstract class"""
+
     def name(self):
         """Displays a string indicating the Name of the Tile - Forest
 
@@ -92,8 +93,8 @@ class Forest(Tile):
 
 
 class Pasture(Tile):
-    """Derived Class from Tile abstract class
-    """
+    """Derived Class from Tile abstract class"""
+
     def name(self):
         """Displays a string indicating the Name of the Tile - Pasture
 
@@ -120,8 +121,8 @@ class Pasture(Tile):
 
 
 class Fields(Tile):
-    """Derived Class from Tile abstract class
-    """
+    """Derived Class from Tile abstract class"""
+
     def name(self):
         """Displays a string indicating the Name of the Tile - Fields
 
@@ -148,8 +149,8 @@ class Fields(Tile):
 
 
 class Hills(Tile):
-    """Derived Class from Tile abstract class
-    """
+    """Derived Class from Tile abstract class"""
+
     def name(self):
         """Displays a string indicating the Name of the Tile - Hills
 
@@ -176,8 +177,8 @@ class Hills(Tile):
 
 
 class Mountain(Tile):
-    """Derived Class from Tile abstract class
-    """
+    """Derived Class from Tile abstract class"""
+
     def name(self):
         """Displays a string indicating the Name of the Tile - Mountain
 
@@ -204,8 +205,8 @@ class Mountain(Tile):
 
 
 class Desert(Tile):
-    """Derived Class from Tile abstract class
-    """
+    """Derived Class from Tile abstract class"""
+
     def name(self):
         """Displays a string indicating the Name of the Tile - Desert
 
@@ -233,16 +234,17 @@ class Desert(Tile):
 
 class ResourceTile(Enum):
     """
-    Represents a resource tile in the game, with 
+    Represents a resource tile in the game, with
     associated properties and methods.
 
-    This class is an enumeration of the different types 
-    of resource tiles in the game, including Forest, 
-    Pasture, Fields, Hills, Mountain, and Desert. 
-    Each type of tile has a corresponding `Tile` object, 
-    which is used to generate resources and provide other 
+    This class is an enumeration of the different types
+    of resource tiles in the game, including Forest,
+    Pasture, Fields, Hills, Mountain, and Desert.
+    Each type of tile has a corresponding `Tile` object,
+    which is used to generate resources and provide other
     information.
     """
+
     FOREST = Forest()
     PASTURE = Pasture()
     FIELDS = Fields()
@@ -313,9 +315,9 @@ class GameTile:  # pylint: disable=too-many-instance-attributes
     the tile's real number, the tile object, its points, and its unique ID. It also has properties
     that represent its coordinates and edges, which are calculated using the Hexgrid module.
     """
+
     def __init__(self, real_number, tile, points, tile_id):
-        """Constructor Class
-        """
+        """Constructor Class"""
         self.real_number = real_number  # number that will show on GUI
         self.tile = tile
         self.points = points
@@ -323,37 +325,52 @@ class GameTile:  # pylint: disable=too-many-instance-attributes
         self.has_robber = False
 
         def convert_to_number(coord):
-            return int(f"{hexgrid.hex_digit(coord,digit=1)}"
-                       f"{hexgrid.hex_digit(coord,digit=2)}")
+            return int(
+                f"{hexgrid.hex_digit(coord,digit=1)}"
+                f"{hexgrid.hex_digit(coord,digit=2)}"
+            )
 
         self.tile_coord = convert_to_number(
-            hexgrid.tile_id_to_coord(self.tile_id))
+            hexgrid.tile_id_to_coord(self.tile_id)
+        )
 
         self.node_coord_n = convert_to_number(
-            hexgrid.from_location(hexgrid.NODE, self.tile_id, 'N'))
+            hexgrid.from_location(hexgrid.NODE, self.tile_id, "N")
+        )
         self.node_coord_ne = convert_to_number(
-            hexgrid.from_location(hexgrid.NODE, self.tile_id, 'NE'))
+            hexgrid.from_location(hexgrid.NODE, self.tile_id, "NE")
+        )
         self.node_coord_nw = convert_to_number(
-            hexgrid.from_location(hexgrid.NODE, self.tile_id, 'NW'))
+            hexgrid.from_location(hexgrid.NODE, self.tile_id, "NW")
+        )
         self.node_coord_s = convert_to_number(
-            hexgrid.from_location(hexgrid.NODE, self.tile_id, 'S'))
+            hexgrid.from_location(hexgrid.NODE, self.tile_id, "S")
+        )
         self.node_coord_se = convert_to_number(
-            hexgrid.from_location(hexgrid.NODE, self.tile_id, 'SE'))
+            hexgrid.from_location(hexgrid.NODE, self.tile_id, "SE")
+        )
         self.node_coord_sw = convert_to_number(
-            hexgrid.from_location(hexgrid.NODE, self.tile_id, 'SW'))
+            hexgrid.from_location(hexgrid.NODE, self.tile_id, "SW")
+        )
 
         self.edge_ne = convert_to_number(
-            hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'NE'))
+            hexgrid.from_location(hexgrid.EDGE, self.tile_id, "NE")
+        )
         self.edge_nw = convert_to_number(
-            hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'NW'))
+            hexgrid.from_location(hexgrid.EDGE, self.tile_id, "NW")
+        )
         self.edge_se = convert_to_number(
-            hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'SE'))
+            hexgrid.from_location(hexgrid.EDGE, self.tile_id, "SE")
+        )
         self.edge_sw = convert_to_number(
-            hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'SW'))
+            hexgrid.from_location(hexgrid.EDGE, self.tile_id, "SW")
+        )
         self.edge_s = convert_to_number(
-            hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'E'))
+            hexgrid.from_location(hexgrid.EDGE, self.tile_id, "E")
+        )
         self.edge_w = convert_to_number(
-            hexgrid.from_location(hexgrid.EDGE, self.tile_id, 'W'))
+            hexgrid.from_location(hexgrid.EDGE, self.tile_id, "W")
+        )
 
     def __repr__(self):
         """
@@ -372,20 +389,22 @@ class GameTile:  # pylint: disable=too-many-instance-attributes
         :rtype: dict
         """
         return {
-            'Tile id': self.tile_id,
-            'Coord': self.tile_coord,
-            'Node': {'Node <N>': self.node_coord_n,
-                     'Node <NE>': self.node_coord_ne,
-                     'Node <NW>': self.node_coord_nw,
-                     'Node <S>': self.node_coord_s,
-                     'Node <SE>': self.node_coord_se,
-                     'Node <SW>': self.node_coord_sw},
-
-            'Edge': {'Edge <E>': self.edge_s,
-                     'Edge <NE>': self.edge_ne,
-                     'Edge <NW>': self.edge_nw,
-                     'Edge <SE>': self.edge_se,
-                     'Edge <SW>': self.edge_sw,
-                     'Edge <W>': self.edge_w}
+            "Tile id": self.tile_id,
+            "Coord": self.tile_coord,
+            "Node": {
+                "Node <N>": self.node_coord_n,
+                "Node <NE>": self.node_coord_ne,
+                "Node <NW>": self.node_coord_nw,
+                "Node <S>": self.node_coord_s,
+                "Node <SE>": self.node_coord_se,
+                "Node <SW>": self.node_coord_sw,
+            },
+            "Edge": {
+                "Edge <E>": self.edge_s,
+                "Edge <NE>": self.edge_ne,
+                "Edge <NW>": self.edge_nw,
+                "Edge <SE>": self.edge_se,
+                "Edge <SW>": self.edge_sw,
+                "Edge <W>": self.edge_w,
+            },
         }
-    

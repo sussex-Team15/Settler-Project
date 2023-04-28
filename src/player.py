@@ -7,16 +7,16 @@ from src.resource_ import Resource
 
 
 class Player:  # pylint: disable=too-many-instance-attributes
-    """Player class that controls the behaviour of 
+    """Player class that controls the behaviour of
     an indivdual player of the game. Contains attributes
     such as the player name and number of VP'S.
 
-    :param name: String representing the name of the 
+    :param name: String representing the name of the
     player
     :type name: str
-    :param victory_points: Integer representing the number 
+    :param victory_points: Integer representing the number
     of victory points the player has received.
-    :type victory_points: int  
+    :type victory_points: int
     :param color: A tuple with an r,g,b value representing the color that the player has.
     :type color: tuple
     :param resources: A list of resources that the player has (all of type Resource)
@@ -28,7 +28,7 @@ class Player:  # pylint: disable=too-many-instance-attributes
     :param roads: a list of roads the player has (all of type Road)
     :type roads: list
     :param isTurn: a boolean indicating if it is the players turn in the gameloop.
-    :type is Turn: bool  
+    :type is Turn: bool
     :param hasLongestRoad: a boolean indicating if the player has the longest road.
     :type hasLongestRoad: bool
     :param has_largest_army: a boolean indicating if the player has the largest army
@@ -38,12 +38,15 @@ class Player:  # pylint: disable=too-many-instance-attributes
     """
 
     def __init__(self, name, color):
-        """Constructor Class
-        """
+        """Constructor Class"""
         self.name = name
         self.victory_points = 0
         self.color = color
-        self.resources = {resource.name(): 0 for resource in Resource if not resource.name() == None}
+        self.resources = {
+            resource.name(): 0
+            for resource in Resource
+            if not resource.name() == None
+        }
 
         self.settlements = []
         self.cities = []
@@ -75,36 +78,30 @@ class Player:  # pylint: disable=too-many-instance-attributes
         """
 
         if not is_special_round:
-            self.resources[Resource.BRICK.name()]-= 1
-            self.resources[Resource.WOOD.name()]-=1
-            self.resources[Resource.WOOL.name()]-=1
-            self.resources[Resource.GRAIN.name()]-=1
+            self.resources[Resource.BRICK.name()] -= 1
+            self.resources[Resource.WOOD.name()] -= 1
+            self.resources[Resource.WOOL.name()] -= 1
+            self.resources[Resource.GRAIN.name()] -= 1
         self.settlements.append(settlement)
-        
-    
-       
 
     def build_city(self, node):
         """
         Builds a city at specified node
         only can build if a settlement is on the node
         """
-        self.resources[Resource.ORE.name()]-=3
-        self.resources[Resource.GRAIN.name()]-=2
+        self.resources[Resource.ORE.name()] -= 3
+        self.resources[Resource.GRAIN.name()] -= 2
         self.cities.append(node)
-        
 
     def build_road(self, node1, node2, is_special_round):
         """
         Builds a road from node1 to node2. Road will be set to the color of the player building
         """
         if not is_special_round:
-            self.resources[Resource.WOOD.name()]-=1
-            self.resources[Resource.BRICK.name()]-=1
-        
+            self.resources[Resource.WOOD.name()] -= 1
+            self.resources[Resource.BRICK.name()] -= 1
+
         self.roads.append((node1, node2))
-        
-        
 
     def buy_dev_card(self, card_name):
         """
@@ -123,8 +120,7 @@ class Player:  # pylint: disable=too-many-instance-attributes
         new_trade.execute_trade()
 
     def end_turn(self):
-        """Ends a players turn
-        """
+        """Ends a players turn"""
         self.is_turn = False
 
     def get_resources(self):
@@ -142,13 +138,12 @@ class Player:  # pylint: disable=too-many-instance-attributes
         :type resources: list
         """
         if resource in self.resources:
-            self.resources[resource] +=1
+            self.resources[resource] += 1
         else:
             self.resources[resource] = 1
 
     def remove_resource(self, resource):
         self.resources[resource] -= 1
-
 
     def get_victory_points(self):
         """Returns current players victory points

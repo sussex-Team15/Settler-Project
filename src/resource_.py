@@ -7,20 +7,21 @@ from src.utils import RESOURCE_CARDS_DIR, Abstract
 
 
 class ResourceCard(Abstract):
-    """Abstract class template for Resource cards and 
-    controls behaviour for all resource card types, 
-    also inherits behaviour from abstract class so 
-    that the correct image files are retrieved for 
+    """Abstract class template for Resource cards and
+    controls behaviour for all resource card types,
+    also inherits behaviour from abstract class so
+    that the correct image files are retrieved for
     each resource card
 
     :param Abstract: abstract base class in utils.py
     :type Abstract: type
     """
+
     @abc.abstractmethod
     def name(self):
         """
         Abstract method representing description of a resource card and the outcome
-        
+
         Should be implemented by derived classes to return card's description
 
         :return: A String representing the description of a resource card
@@ -37,8 +38,8 @@ class ResourceCard(Abstract):
 
 
 class Lumber(ResourceCard):
-    """Derived Class from ResourceCard abstract class
-    """
+    """Derived Class from ResourceCard abstract class"""
+
     def name(self):
         """Displays a string indicating the Name of the resource card - Lumber
 
@@ -49,8 +50,8 @@ class Lumber(ResourceCard):
 
 
 class Wool(ResourceCard):
-    """Derived Class from ResourceCard abstract class
-    """
+    """Derived Class from ResourceCard abstract class"""
+
     def name(self):
         """Displays a string indicating the Name of the resource card - Wool
 
@@ -61,8 +62,8 @@ class Wool(ResourceCard):
 
 
 class Grain(ResourceCard):
-    """Derived Class from ResourceCard abstract class
-    """
+    """Derived Class from ResourceCard abstract class"""
+
     def name(self):
         """Displays a string indicating the Name of the resource card - Grain
 
@@ -73,8 +74,8 @@ class Grain(ResourceCard):
 
 
 class Brick(ResourceCard):
-    """Derived Class from ResourceCard abstract class
-    """
+    """Derived Class from ResourceCard abstract class"""
+
     def name(self):
         """Displays a string indicating the Name of the resource card - Brick
 
@@ -85,8 +86,8 @@ class Brick(ResourceCard):
 
 
 class Ore(ResourceCard):
-    """Derived Class from ResourceCard abstract class
-    """
+    """Derived Class from ResourceCard abstract class"""
+
     def name(self):
         """Displays a string indicating the Name of the resource card - Brick
 
@@ -100,13 +101,15 @@ class Null(ResourceCard):
     """
     A class representing a null resource card.
     """
+
     def name(self):
         """
         Returns None, since a null resource card has no name.
-        
+
         :return: None
         """
         return None
+
 
 # pylint: disable=function-redefined
 
@@ -117,6 +120,7 @@ class Resource(Enum):
     :param card: The corresponding ResourceCard object for this resource.
     :type card: ResourceCard
     """
+
     WOOD = Lumber()
     WOOL = Wool()
     GRAIN = Grain()
@@ -126,8 +130,7 @@ class Resource(Enum):
     NONE = Null()
 
     def __init__(self, card):
-        """Constructor class
-        """
+        """Constructor class"""
         self.card = card
 
     def name(self):

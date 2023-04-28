@@ -1,12 +1,14 @@
 from src.building import Settlement
 from src.resource_ import Resource
 
+
 class Action:
     def __init__(self):
         pass
 
     def execute(self):
         pass
+
 
 class BuildSettlementAction(Action):
     def __init__(self, node, ai_player):
@@ -29,10 +31,9 @@ class BuildSettlementAction(Action):
                 num_grain += 1
                 num_wool += 1
 
-        if any([num_lumber >= 1,
-                num_grain >= 1,
-                num_brick >= 1,
-                num_wool >= 1]):
+        if any(
+            [num_lumber >= 1, num_grain >= 1, num_brick >= 1, num_wool >= 1]
+        ):
             self.ai_player.add_settlement(settlement)
 
 
@@ -62,4 +63,3 @@ class BuildRoadAction(Action):
         if num_brick >= 1 and num_lumber >= 1:
             # player has enough
             self.ai_player.add_road((self.node1, self.node2))
-

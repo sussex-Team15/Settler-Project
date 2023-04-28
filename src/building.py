@@ -9,7 +9,7 @@ from src.resource_ import Resource
 class Building(abc.ABC):
     """Abstract class template for building types controls behaviour or
     settlements and builidngs
-   
+
     :param owner: player that owns current building
     :type owner: str
     :param node: which node the building has been constructed on
@@ -17,9 +17,9 @@ class Building(abc.ABC):
     :param cost: cost of resources required to construct the building
     :type cost: list
     """
+
     def __init__(self, owner, node):
-        """Constructor Method
-        """
+        """Constructor Method"""
         self.owner = owner
         self.node = node
         self.cost = []
@@ -38,11 +38,14 @@ class Building(abc.ABC):
     def asset(self):
         """Retrieves corresponding image files for either a city or settlement
 
-        :raises NotImplementedError: If a type of building 
+        :raises NotImplementedError: If a type of building
         besides a city or settlement is attempted to be built
         """
-        found_files = [file for file in os.listdir(
-            BUILDINGS_DIR) if self.__class__.__name__.lower() in file]
+        found_files = [
+            file
+            for file in os.listdir(BUILDINGS_DIR)
+            if self.__class__.__name__.lower() in file
+        ]
         if found_files:
             for file in found_files:
                 extension = f".{file.split('.')[1]}"
@@ -51,9 +54,9 @@ class Building(abc.ABC):
 
         act_class = self.__class__.__name__.lower()
         base_class = self.__class__.__bases__[0].__name__.lower()
-        raise NotImplementedError(f"no asset files found for "
-                                  f"'{act_class}' "
-                                  f"{base_class}")
+        raise NotImplementedError(
+            f"no asset files found for " f"'{act_class}' " f"{base_class}"
+        )
 
 
 class Settlement(Building):
@@ -68,11 +71,14 @@ class Settlement(Building):
     """
 
     def __init__(self, owner, node):
-        """Constructor Method
-        """
+        """Constructor Method"""
         super().__init__(owner, node)
-        self.cost = [Resource.BRICK, Resource.WOOL,
-                     Resource.GRAIN, Resource.WOOD]
+        self.cost = [
+            Resource.BRICK,
+            Resource.WOOL,
+            Resource.GRAIN,
+            Resource.WOOD,
+        ]
 
 
 class City(Building):
@@ -85,12 +91,17 @@ class City(Building):
     :param cost: cost of resources required to construct the building
     :type cost: list
     """
+
     def __init__(self, owner, node):
-        """Constructor Method
-        """
+        """Constructor Method"""
         super().__init__(owner, node)
         self.valid_node = False
         if self.node.has_settlement:
             self.valid_node = True
-        self.cost = [Resource.GRAIN, Resource.GRAIN,
-                     Resource.ORE, Resource.ORE, Resource.ORE]
+        self.cost = [
+            Resource.GRAIN,
+            Resource.GRAIN,
+            Resource.ORE,
+            Resource.ORE,
+            Resource.ORE,
+        ]

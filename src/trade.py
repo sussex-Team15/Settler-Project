@@ -12,10 +12,8 @@ class Trade:
     :type is_accepted: bool
     """
 
-    def __init__(self, offering_player, offered_resources,
-                 recieving_player):
-        """Constructor Class
-        """
+    def __init__(self, offering_player, offered_resources, recieving_player):
+        """Constructor Class"""
         self.offering_player = offering_player
         self.offered_resources = offered_resources
         self.recieving_player = recieving_player
@@ -36,7 +34,7 @@ class Trade:
         :rtype: Union[str, bool]
         """
         if not self.is_accepted:
-            print('Must have accepted trade')
+            print("Must have accepted trade")
         else:
             self.is_accepted = False
 
@@ -57,10 +55,10 @@ class Trade:
         return self.offered_resources
 
     def execute_trade(self):
-        """Executes the trade process so that the 
-        resources move from the offering_player to 
-        the receiving_player and ensures the 
-        offering_player no longer has the resources 
+        """Executes the trade process so that the
+        resources move from the offering_player to
+        the receiving_player and ensures the
+        offering_player no longer has the resources
         available.
         """
         if self.is_accepted:

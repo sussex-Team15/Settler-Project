@@ -4,6 +4,7 @@ from src.resource_ import Resource
 
 from src.player import Player
 
+
 class AIPlayer(Player):
     """
     AIPlayer Class that controls the behavior of an AI player in the game.
@@ -32,16 +33,20 @@ class AIPlayer(Player):
     :param trade_offers: a list of trade_offers that the player has received (of type Trade)
     :type trade_offers: list
     """
+
     def take_turn(self, adjacent_nodes, board_mapping, node_buttons):
-        """Constructor Class
-        """
+        """Constructor Class"""
         # Given the current game state, generates all possible actions and chooses one to take
-        actions = self.get_possible_actions(adjacent_nodes, board_mapping, node_buttons)
+        actions = self.get_possible_actions(
+            adjacent_nodes, board_mapping, node_buttons
+        )
         if not actions:
             return None
         return self.choose_action(actions)
 
-    def get_possible_actions(self, adjacent_nodes, board_mapping, node_buttons):
+    def get_possible_actions(
+        self, adjacent_nodes, board_mapping, node_buttons
+    ):
         """
         Given the current game state, generates all possible actions the player can take. This includes
         settlement or city building actions, road building actions, and trade actions.
@@ -58,8 +63,6 @@ class AIPlayer(Player):
         actions += self._get_road_actions(adjacent_nodes[0])
         # Adds all possible trade actions for each resource the player has
         return actions
-    
-
 
     def _get_settlement_actions(self, all_nodes):
         """
@@ -95,7 +98,7 @@ class AIPlayer(Player):
             actions.append(action)
         return actions
 
-    #Random Action
+    # Random Action
     def choose_action(self, actions):
         """
         Chooses an action randomly from a list of possible actions.
@@ -107,7 +110,7 @@ class AIPlayer(Player):
         """
         return random.choice(actions)
 
-    #String Representation
+    # String Representation
     def __str__(self):
         """
         Returns the string representation of the AI player.
@@ -116,4 +119,3 @@ class AIPlayer(Player):
         :rtype: str
         """
         return f"AI Player {self.name}"
-

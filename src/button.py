@@ -9,7 +9,7 @@ class ButtonRect:
     """
     A class representing a rectangular button.
 
-    :param x_y_pos: A tuple representing the x and y 
+    :param x_y_pos: A tuple representing the x and y
     coordinates of the top-left corner of the button.
     :type x_y_pos: Tuple[int, int]
     :param width_height: A tuple representing the width and height of the button.
@@ -19,11 +19,8 @@ class ButtonRect:
     :param colors: A tuple containing the colors of the button and its highlight when hovered over.
     :type colors: Tuple[Tuple[int, int, int], Tuple[int, int, int]]
     """
-    def __init__(self,
-                 x_y_pos,
-                 width_height,
-                 text,
-                 colors):
+
+    def __init__(self, x_y_pos, width_height, text, colors):
         """
         Initializes a ButtonRect object with the given properties.
 
@@ -100,11 +97,8 @@ class ButtonHex:
     :param is_filled: Whether or not the button should be filled in. Defaults to True.
     :type is_filled: bool
     """
-    def __init__(self,
-                 x_y_pos,
-                 radius,
-                 color,
-                 is_filled=True):
+
+    def __init__(self, x_y_pos, radius, color, is_filled=True):
         """Create a hexagonal button with a specified position, radius, color, and fill.
 
         :param x_y_pos: The x and y coordinates of the center of the button.
@@ -131,14 +125,18 @@ class ButtonHex:
         :type surface: pygame.Surface
         """
         if self.is_filled:
-            pygame.draw.polygon(surface, self.color, [
-                (self.x_pos + self.radius, self.y_pos),
-                (self.x_pos + self.radius / 2, self.y_pos + self.radius),
-                (self.x_pos - self.radius / 2, self.y_pos + self.radius),
-                (self.x_pos - self.radius, self.y_pos),
-                (self.x_pos - self.radius / 2, self.y_pos - self.radius),
-                (self.x_pos + self.radius / 2, self.y_pos - self.radius)
-            ])
+            pygame.draw.polygon(
+                surface,
+                self.color,
+                [
+                    (self.x_pos + self.radius, self.y_pos),
+                    (self.x_pos + self.radius / 2, self.y_pos + self.radius),
+                    (self.x_pos - self.radius / 2, self.y_pos + self.radius),
+                    (self.x_pos - self.radius, self.y_pos),
+                    (self.x_pos - self.radius / 2, self.y_pos - self.radius),
+                    (self.x_pos + self.radius / 2, self.y_pos - self.radius),
+                ],
+            )
 
     def is_hovered_over(self, mouse_pos):
         """Returns True if the mouse is currently hovering over the button, False otherwise.
@@ -150,9 +148,9 @@ class ButtonHex:
         """
         # returns true if mouse hovers over button
 
-        x_pos = (self.x_pos - mouse_pos[0])**2
-        y_pos = (self.y_pos - mouse_pos[1])**2
-        if (x_pos + y_pos)**0.5 < self.radius and not self.cursor_set:
+        x_pos = (self.x_pos - mouse_pos[0]) ** 2
+        y_pos = (self.y_pos - mouse_pos[1]) ** 2
+        if (x_pos + y_pos) ** 0.5 < self.radius and not self.cursor_set:
             return True
         return False
 
@@ -164,7 +162,7 @@ class ButtonHex:
         :return: Whether or not the button is currently being clicked.
         :rtype: bool
         """
-        x_pos = (self.x_pos - mouse_pos[0])**2
-        y_pos = (self.y_pos - mouse_pos[1])**2
+        x_pos = (self.x_pos - mouse_pos[0]) ** 2
+        y_pos = (self.y_pos - mouse_pos[1]) ** 2
 
-        return bool((x_pos + y_pos)**0.5 < self.radius)
+        return bool((x_pos + y_pos) ** 0.5 < self.radius)

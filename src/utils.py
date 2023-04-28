@@ -4,11 +4,11 @@ import abc
 from rembg import remove
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-ASSET_DIR = os.path.join(ROOT_DIR, 'assets')
-RESOURCE_CARDS_DIR = os.path.join(ASSET_DIR, 'resource')
-DEVELOPMENT_CARDS_DIR = os.path.join(ASSET_DIR, 'development')
-TILE_CARDS_DIR = os.path.join(ASSET_DIR, 'tiles')
-BUILDINGS_DIR = os.path.join(ASSET_DIR, 'buildings')
+ASSET_DIR = os.path.join(ROOT_DIR, "assets")
+RESOURCE_CARDS_DIR = os.path.join(ASSET_DIR, "resource")
+DEVELOPMENT_CARDS_DIR = os.path.join(ASSET_DIR, "development")
+TILE_CARDS_DIR = os.path.join(ASSET_DIR, "tiles")
+BUILDINGS_DIR = os.path.join(ASSET_DIR, "buildings")
 FILE_EXTENSIONS = [".jpg", ".png", ".gif", ".jpeg"]
 
 
@@ -21,7 +21,7 @@ def prepare_assets(directory):
     :raises: ValueError if the directory does not exist.
 
     This method prepares all asset files in the given directory by applying the `remove` function
-    to their contents and writing the results to new 
+    to their contents and writing the results to new
     files with the prefix "new_". The original files
     are deleted, and the new files are renamed to match the names of the original files.
     """
@@ -34,10 +34,10 @@ def prepare_assets(directory):
 
             print(input_path)
 
-            output_path = os.path.join(directory, f'new_{file}')
+            output_path = os.path.join(directory, f"new_{file}")
 
-            with open(input_path, 'rb') as input_file:
-                with open(output_path, 'wb') as output_file:
+            with open(input_path, "rb") as input_file:
+                with open(output_path, "wb") as output_file:
                     fileinput = input_file.read()
                     output = remove(fileinput)
                     output_file.write(output)
@@ -62,6 +62,7 @@ class Abstract(abc.ABC):  # pylint: disable=too-few-public-methods
     of the current class. If a match is found, the full path to the asset file is returned.
     If no matches are found, a NotImplementedError is raised.
     """
+
     def get_asset(self, directory):
         """
         Retrieve the asset file for the current class.
@@ -72,8 +73,11 @@ class Abstract(abc.ABC):  # pylint: disable=too-few-public-methods
         :rtype: str
         :raises: NotImplementedError if no asset files are found for the current class.
         """
-        found_files = [file for file in os.listdir(
-            directory) if self.__class__.__name__.lower() in file]
+        found_files = [
+            file
+            for file in os.listdir(directory)
+            if self.__class__.__name__.lower() in file
+        ]
         if found_files:
             for file in found_files:
                 extension = f".{file.split('.')[1]}"
@@ -82,5 +86,6 @@ class Abstract(abc.ABC):  # pylint: disable=too-few-public-methods
 
         act_class = self.__class__.__name__.lower()
         base_class = self.__class__.__bases__[0].__name__.lower()
-        raise NotImplementedError(f"no asset files found for "
-                                  f"'{act_class}' {base_class}")
+        raise NotImplementedError(
+            f"no asset files found for " f"'{act_class}' {base_class}"
+        )
