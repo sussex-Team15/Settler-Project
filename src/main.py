@@ -151,13 +151,33 @@ board_mapping = {'tiles': {
 }}
 
 def create_adjacent_nodes(nodes_dict, adjacent_nodes):
-        for node1_id, node1_pos in nodes_dict.items():
-            for node2_id, node2_pos in nodes_dict.items():
-                if node1_id != node2_id:  # Skip comparison of a node with itself
-                    if is_adjacent(node1_id, node2_id):
-                        adjacent_nodes.append((node1_id, node2_id))
+    """
+    Create a list of adjacent node pairs based on the given nodes_dict.
+
+    :param nodes_dict: A dictionary of nodes, where the keys are node IDs and the values are tuples of (x, y) positions.
+    :type nodes_dict: dict
+    :param adjacent_nodes: The list to append the adjacent node pairs to.
+    :type adjacent_nodes: list
+    :return: None
+    :rtype: None
+    """
+    for node1_id, node1_pos in nodes_dict.items():
+        for node2_id, node2_pos in nodes_dict.items():
+            if node1_id != node2_id:  # Skip comparison of a node with itself
+                if is_adjacent(node1_id, node2_id):
+                    adjacent_nodes.append((node1_id, node2_id))
 
 def is_adjacent(node1, node2):
+    """
+    Determine if two nodes are adjacent to each other on a game board.
+
+    :param node1: The ID of the first node.
+    :type node1: str
+    :param node2: The ID of the second node.
+    :type node2: str
+    :return: True if the two nodes are adjacent to each other, False otherwise.
+    :rtype: bool
+    """
     x1_pos, y1_pos = board_mapping['nodes'][node1]
     x2_pos, y2_pos = board_mapping['nodes'][node2]
     x_diff = abs(x1_pos - x2_pos)
@@ -357,7 +377,7 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
                                 built_roads.append(((self.road_1[0], self.road_1[1], self.current_player)))
                             elif self.road_2[0] is None:
                                 self.road_2[0] = node_button
-                            elif self.road_2[1] is None:
+                            elif self.road_2[1] is None and self.is_adjacent(self.road_2[0], node_button):
                                 self.road_2[1] = node_button
                                 self.current_player.build_road(self.road_2[0], self.road_2[1], is_special_round=True)
                                 built_roads.append(((self.road_2[0], self.road_2[1], self.current_player)))
@@ -419,8 +439,8 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
             button.draw(screen)
             self.node_buttons.append(button)
 
-        prompt_text = WORD_FONT.render(f'{self.current_player.name}: Pick a node to build a Settlement', True, BLACK)
-        prompt_rect = pygame.Rect(800, 200, 100, 100)
+        prompt_text = WORD_FONT.render(f'{self.current_player.name}: build two settlements and two roads', True, BLACK)
+        prompt_rect = pygame.Rect(700, 200, 100, 100)
         screen.blit(prompt_text, prompt_rect)
 
         for settlement in built_settlements:
@@ -443,6 +463,8 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
 
     def is_adjacent(self, node1, node2):
 
+        adjacent_to_building = False
+
         x1_pos, y1_pos = node1.x_pos, node1.y_pos
         x2_pos, y2_pos = node2.x_pos, node2.y_pos
 
@@ -450,10 +472,13 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
         y_diff = abs(y1_pos - y2_pos)
         max_road_len = 100  # road lens are diff so this is maximum road len
 
-
+        for settlement in built_settlements:
+            node = settlement[0]
+            if (node.x_pos == node1.x_pos and node.y_pos == node1.y_pos) or (node.x_pos == node2.x_pos and node.y_pos == node2.y_pos):
+                adjacent_to_building = True
 
         # return true if x_diff and y_diff is less than radius of tiles
-        return (x_diff <= max_road_len) and (y_diff <= max_road_len)
+        return (x_diff <= max_road_len) and (y_diff <= max_road_len) and adjacent_to_building
     
     def should_transition(self):
         return self.current_state is not None
@@ -627,17 +652,19 @@ class MainGameState:
 
 
         
-        for player in self.players:
-            highlighted_img = pygame.Surface(settlement_img.get_size(), pygame.SRCALPHA)
-            highlighted_img.fill(player.color)
-            highlighted_img.blit(settlement_img, (0, 0), None, pygame.BLEND_RGBA_MULT)
-            player_colors[player] = highlighted_img
-        
         for settlement in built_settlements:
+            highlighted_img = pygame.Surface(settlement_img.get_size(), pygame.SRCALPHA)
+            highlighted_img.fill(settlement[1].color)
+            highlighted_img.blit(settlement_img, (0, 0), None, pygame.BLEND_RGBA_MULT)
+            player_colors[settlement[1]] = highlighted_img
             screen.blit(player_colors[settlement[1]], (settlement[0].x_pos-25, settlement[0].y_pos-25))
     
-        for settlement in built_settlements:
-            screen.blit(player_colors[settlement[1]], (settlement[0].x_pos-25, settlement[0].y_pos-25))
+        for city in built_cities:
+            highlighted_img = pygame.Surface(city_img.get_size(), pygame.SRCALPHA)
+            highlighted_img.fill(city[1].color)
+            highlighted_img.blit(city_img, (0, 0), None, pygame.BLEND_RGBA_MULT)
+            player_colors[city[1]] = highlighted_img
+            screen.blit(player_colors[city[1]], (city[0].x_pos-25, city[0].y_pos-25))
 
 
 
@@ -1094,9 +1121,11 @@ class ChooseDesiredResources:
                     else:
                         resource_names = [Resource.WOOD.name(), Resource.WOOL.name(), Resource.GRAIN.name(), Resource.BRICK.name(), Resource.ORE.name()]
                         resources_trade= dict(zip(resource_names, self.desired_resources))
-                        print(resources_trade)
-                        self.current_state = AcceptTradeState(self.player, self.trade_partner, self.offered_resources, resources_trade)
-
+                        if self.has_enough_resources(self.trade_partner.resources, resources_trade):
+                    
+                            self.current_state = AcceptTradeState(self.player, self.trade_partner, self.offered_resources, resources_trade)
+                        else:
+                            self.current_state = NotEnoughResources(self.player)
 
     def draw(self, screen):
         screen.fill(BACKGROUND)
@@ -1168,6 +1197,14 @@ class ChooseDesiredResources:
         screen.blit(BIG_FONT.render('Back', True, BLACK, RED), self.back_button)
         screen.blit(BIG_FONT.render('Submit Resources', True, BLACK), self.submit_button)
 
+    def has_enough_resources(self, player_resources, offered_resources):
+        for resource, quantity in offered_resources.items(): # check to see if player has enough resources
+
+            if resource not in player_resources or player_resources[resource] < quantity:
+                return False
+        return True
+            
+
     def should_transition(self):
         return self.current_state is not None
     def transition(self):
@@ -1193,27 +1230,32 @@ class BankTrade:
                         if i == 0:
                            self.player.add_resource(Resource.BRICK.name())
                            self.bank.resources[Resource.BRICK.name()]-=1
-                           self.player.remove_resources(self.offered_resources)
+                           for resource in self.offered_resources.keys():
+                            self.player.remove_resource(resource)
                            self.current_state = MainGameState(self.player)
                         elif i == 1:
                             self.player.add_resource(Resource.WOOD.name())
                             self.bank.resources[Resource.WOOD.name()]-=1
-                            self.player.remove_resources(self.offered_resources)
+                            for resource in self.offered_resources.keys():
+                                self.player.remove_resource(resource)
                             self.current_state = MainGameState(self.player)
                         elif i == 2:
                             self.player.add_resource(Resource.WOOL.name())
                             self.bank.resources[Resource.WOOL.name()]-=1
-                            self.player.remove_resources(self.offered_resources)
+                            for resource in self.offered_resources.keys():
+                                self.player.remove_resource(resource)
                             self.current_state = MainGameState(self.player)
                         elif i == 3:
                             self.player.add_resource(Resource.GRAIN.name())
                             self.bank.resources[Resource.GRAIN.name()]-=1
-                            self.player.remove_resources(self.offered_resources)
+                            for resource in self.offered_resources.keys():
+                                self.player.remove_resource(resource)
                             self.current_state = MainGameState(self.player)
                         elif i == 4:
                             self.player.add_resource(Resource.ORE.name())
                             self.bank.resources[Resource.ORE.name()]-=1
-                            self.player.remove_resources(self.offered_resources)
+                            for resource in self.offered_resources.keys():
+                                self.player.remove_resource(resource)
                             self.current_state = MainGameState(self.player)
                     elif self.back_button.collidepoint(mouse_pos):
                         self.current_state = MainGameState(self.player)
@@ -1266,8 +1308,7 @@ class DevelopmentCardState:
         self.card_bought = False
         self.card_image = False
         self.current_state = None
-        self.card_images = {DevelopmentCards.KNIGHT: (pygame.image.load(os.path.join('src','assets','Development','knight.jpg')), pygame.Rect(300, 50, 100, 150)),
-                            DevelopmentCards.VP: (pygame.image.load(os.path.join('src','assets','Development','palace.jpg')), pygame.Rect(700, 50, 100, 150))}                                                            
+        self.card_images = {DevelopmentCards.KNIGHT: (pygame.image.load(os.path.join('src','assets','Development','knight.jpg')), pygame.Rect(300, 50, 100, 150))}                                                
         self.back_button_rect = pygame.Rect(1100, 600, 400, 200)
     
     def handle_events(self, events):
@@ -1426,9 +1467,16 @@ class RoadBuildState:
         return True
     
     def is_adjacent(self, node1, node2):
+        adjacent_to_building = False
 
         x1_pos, y1_pos = node1.x_pos, node1.y_pos
         x2_pos, y2_pos = node2.x_pos, node2.y_pos
+
+        for settlement in built_settlements:
+            node = settlement[0]
+            if (node.x_pos == node1.x_pos and node.y_pos == node1.y_pos) or (node.x_pos == node2.x_pos and node.y_pos == node2.y_pos):
+                adjacent_to_building = True
+            
 
         x_diff = abs(x1_pos - x2_pos)
         y_diff = abs(y1_pos - y2_pos)
@@ -1436,7 +1484,7 @@ class RoadBuildState:
 
 
         # return true if x_diff and y_diff is less than radius of tiles
-        return (x_diff <= max_road_len) and (y_diff <= max_road_len)
+        return (x_diff <= max_road_len) and (y_diff <= max_road_len) and adjacent_to_building
     
     def draw(self, screen):
         prompt_text = WORD_FONT.render('click two adjacent nodes to build a road!', True, BLACK, RED)
@@ -1543,15 +1591,21 @@ class AcceptTradeState:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.accept_rect.collidepoint(event.pos):
                     for resource in self.player_resources.keys():
-                        print(f'before: {resource} : {self.player.resources[resource]}')
-        
-                        self.player.resources[resource]-=1
-                        self.trade_partner.resources[resource]+=1
-
-                        print(f'after: {resource} : {self.player.resources[resource]}')
+                        if self.player_resources[resource] == 0:
+                            continue
+                        else:
+                            quantity = self.player_resources[resource]
+                            print(quantity)
+                            self.player.resources[resource]-=quantity
+                            self.trade_partner.resources[resource]+=quantity
+                            
                     for resource in self.trade_partner_resources:
-                        self.player.resources[resource]+=1
-                        self.trade_partner.resources[resource]-=1
+                        if self.trade_partner_resources[resource]==0:
+                            continue
+                        else:
+                            quantity = self.trade_partner_resources[resource]
+                            self.player.resources[resource]+=quantity
+                            self.trade_partner.resources[resource]-=quantity
                     self.current_state =  MainGameState(self.player)
                 
 
