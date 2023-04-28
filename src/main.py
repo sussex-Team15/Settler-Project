@@ -744,6 +744,15 @@ class MainGameState:
         self.invent_button_rect = pygame.Rect(1030, 760, 190, 40)
 
     def handle_events(self, events):
+        """
+        Handles the events of the game, updating the current game state based on player interactions with the screen.
+
+        Args:
+        - events: list of pygame events
+
+        Returns:
+        None
+        """
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.make_trade_rect.collidepoint(event.pos):
@@ -917,6 +926,15 @@ class MainGameState:
                             5)
             
     def draw_scoreboard(self, player_turn):
+        """
+        Draws the scoreboard on the screen.
+
+        Args:
+        player_turn (Player): The current player whose turn it is.
+
+        Returns:
+        None
+        """
         rect_width = DISPLAY_WIDTH - 800
         rect_height = DISPLAY_HEIGHT
 
