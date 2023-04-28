@@ -84,14 +84,7 @@ class ButtonRect:
         :rtype: bool
         """
         if self.rect.collidepoint(mouse_pos) and not self.cursor_set:
-            pygame.mouse.set_cursor(
-                pygame.SYSTEM_CURSOR_HAND)  # pylint: disable=no-member
-            self.cursor_set = True
             return True
-
-        pygame.mouse.set_cursor(
-            pygame.SYSTEM_CURSOR_ARROW)  # pylint: disable=no-member
-        self.cursor_set = False
         return False
 
 
@@ -128,6 +121,8 @@ class ButtonHex:
         self.color = color
         self.cursor_set = False
         self.is_filled = is_filled
+        self.has_settlement = False
+        self.has_city = False
 
     def draw(self, surface):
         """Draws the hexagonal button onto the specified pygame surface.
@@ -158,16 +153,7 @@ class ButtonHex:
         x_pos = (self.x_pos - mouse_pos[0])**2
         y_pos = (self.y_pos - mouse_pos[1])**2
         if (x_pos + y_pos)**0.5 < self.radius and not self.cursor_set:
-            pygame.mouse.set_cursor(
-                pygame.SYSTEM_CURSOR_HAND)  # pylint: disable=no-member
-            self.cursor_set = True
-
             return True
-
-        pygame.mouse.set_cursor(
-            pygame.SYSTEM_CURSOR_ARROW)  # pylint: disable=no-member
-        self.cursor_set = False
-
         return False
 
     def is_clicked(self, mouse_pos):

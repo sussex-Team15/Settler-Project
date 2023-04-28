@@ -4,7 +4,7 @@ import abc
 
 from enum import Enum
 from src.utils import DEVELOPMENT_CARDS_DIR, Abstract
-
+from src.resource_ import Resource
 
 class DevelopmentCard(Abstract):
     """Abstract class template for development cards 
@@ -53,6 +53,23 @@ class DevelopmentCard(Abstract):
         :rtype: str
         """
         return self.get_asset(DEVELOPMENT_CARDS_DIR)
+    
+    def cost(self):
+        """
+        Returns cost of development card
+
+        :return: An interger representing the cost of the card
+        :rtype: int
+        """
+        return 0
+
+
+class VictoryPointCard(DevelopmentCard):
+    def description(self):
+        return "+1 Victory Point"
+
+    def vp_awarded(self):
+        return 1
 
 
 class Chapel(DevelopmentCard):
@@ -94,6 +111,9 @@ class Knight(DevelopmentCard):
         :rtype: int
         """
         return 0
+    
+    def cost(self):
+        return {Resource.WOOL.name(): 1, Resource.GRAIN.name(): 1, Resource.ORE.name(): 1}
 
 
 class LargestArmy(DevelopmentCard):
@@ -292,11 +312,13 @@ class DevelopmentCards(Enum):
     :return: The DevelopmentCards object with corresponding card object.
     :rtype: DevelopmentCards
     """
+    
     CHAPEL = Chapel()
     KNIGHT = Knight()
     LARGEST_ARMY = LargestArmy()
     LIBRARY = Library()
     LONGEST_ROAD = LongestRoad()
+    VP = VictoryPointCard()
     MARKET = Market()
     MONOPLY = Monopoly()
     PALACE = Palace()
@@ -346,6 +368,6 @@ class DevelopmentCards(Enum):
         :rtype: str
         """
         return self.card.asset()
+    def cost(self):
+        return self.card.cost()
 
-
-print(DevelopmentCards.CHAPEL.name())

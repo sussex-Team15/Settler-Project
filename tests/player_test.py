@@ -2,10 +2,16 @@
 # pylint: disable=wrong-import-position
 # pylint: disable=missing-module-docstring
 # pylint: disable=fixme
+
 import pytest
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 
 from src.player import Player
 from src.resource_ import Resource
+from src.button import ButtonHex
+
 
 
 @pytest.fixture
@@ -32,9 +38,50 @@ def test_roll_dice(player):
     assert 1 <= dice_1 <= 6
     assert 1 <= dice_2 <= 6
 
-# TODO: test building a settlement
 
-# TODO: test building a city
+def test_build_settlement(player):
+    """
+    Test the build_settlement method of the Player class.
+
+    This test checks that once a settlement is built, the player's resources have decreased.
+
+    :param player: A Player object representing a player in the game.
+    :type player: Player
+    """
+    player.resources = {Resource.BRICK.name(): 2,
+                        Resource.WOOD.name(): 2,
+                        Resource.WOOL.name(): 2,
+                        Resource.GRAIN.name(): 2}
+    player.build_settlement(False)
+    assert {Resource.BRICK.name(): 2,
+            Resource.WOOD.name(): 2,
+            Resource.WOOL.name(): 2,
+            Resource.GRAIN.name(): 2} != player.resources
+
+
+def test_build_city(player):
+    """
+    Test the build_city method of the Player class.
+
+    This test checks that once a city is built, the player's resources have decreased.
+
+    :param player: A Player object representing a player in the game.
+    :type player: Player
+    """
+    player.resources = {Resource.ORE.name(): 3,
+                        Resource.GRAIN.name(): 2}
+
+    node_point = (621, 318)
+    node = ButtonHex(
+            (node_point[0], node_point[1]),
+            10,
+            (255,255,255), False)
+    
+    player.build_city(node)
+
+    assert {Resource.ORE.name(): 3,
+             Resource.GRAIN.name(): 2} != player.resources
+
 
 
 def test_build_road(player):
@@ -48,29 +95,13 @@ def test_build_road(player):
     :type player: Player
     """
     road_count = len(player.roads)
-    player.resources = [Resource.WOOD, Resource.BRICK]
-    player.build_road(1, 2)
+    player.resources = {Resource.WOOD.name():1, Resource.BRICK.name():1}
+    player.build_road(1, 2, is_special_round=False)
     assert len(player.roads) == road_count + 1
     assert player.roads[-1] == (1, 2)
 
 
 def test_get_resources(player):
-    """
-    Test the get_resources method of the Player class.
-
-    This test checks that the get_resources method returns 
-    the correct list of resources of the player.
-
-    :param player: A Player object representing a player in the game.
-    :type player: Player
-    """
-    player.resources = [Resource.WOOD,
-                        Resource.BRICK, Resource.GRAIN, Resource.WOOL]
-    assert player.get_resources() == [
-        Resource.WOOD, Resource.BRICK, Resource.GRAIN, Resource.WOOL]
-
-
-def test_add_resources(player):
     """
     Test the add_resources method of the Player class.
 
@@ -80,9 +111,28 @@ def test_add_resources(player):
     :param player: A Player object representing a player in the game.
     :type player: Player
     """
-    player.add_resources(Resource.WOOD)
-    player.add_resources(Resource.BRICK)
-    assert player.resources == [Resource.WOOD, Resource.BRICK]
+    player.resources = {Resource.WOOD:1,
+                        Resource.BRICK:1, Resource.GRAIN:1, Resource.WOOL:1}
+    assert player.get_resources() == {
+        Resource.WOOD:1, Resource.BRICK:1, Resource.GRAIN:1, Resource.WOOL:1}
+
+
+def test_add_resources(player):
+    player.resources = {Resource.WOOD.name():0, Resource.BRICK.name():0, Resource.GRAIN.name():0, Resource.NONE.name():0, Resource.ORE.name():0, Resource.WOOL.name():0}
+    player.add_resource(Resource.WOOD.name())
+    player.add_resource(Resource.BRICK.name())
+    assert player.resources == {Resource.WOOD.name():1, Resource.BRICK.name():1, 
+                                Resource.GRAIN.name():0, Resource.NONE.name():0,
+                                Resource.ORE.name():0, Resource.WOOL.name():0}
+    
+def test_remove_resources(player):
+    player.resources = {Resource.WOOD.name():4, Resource.BRICK.name():4, Resource.GRAIN.name():4, Resource.NONE.name():4, Resource.ORE.name():4, Resource.WOOL.name():4}
+    player.remove_resource(Resource.WOOD.name())
+    player.remove_resource(Resource.WOOD.name())
+    player.remove_resource(Resource.BRICK.name())
+    player.remove_resource(Resource.GRAIN.name())
+
+    assert player.resources == {Resource.WOOD.name():2, Resource.BRICK.name():3, Resource.GRAIN.name():3, Resource.NONE.name():4, Resource.ORE.name():4, Resource.WOOL.name():4}
 
 
 def test_get_victory_points(player):
