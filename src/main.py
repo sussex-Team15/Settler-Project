@@ -453,6 +453,12 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
             draw(screen): Draws the game state on the screen.
         """
     def __init__(self, player):
+        """
+        Initializes a new instance of the SpecialRoundGameState class.
+
+        Args:
+        - player (Player): The current player.
+        """
         self.current_player = player
         self.players = players
         self.current_turn_number = 0 # when this hits len(players)*2 it means everyone has had 2 free rounds - move to maingamestate
@@ -467,6 +473,12 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
         
 
     def handle_events(self, events):
+        """
+        Handles user input events.
+
+        Args:
+        - events (List): A list of pygame events.
+        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -522,6 +534,12 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
 
 
     def draw(self, screen):
+        """
+        Draws the game state on the screen.
+
+        Args:
+        - screen (pygame.Surface): The surface on which to draw the game state.
+        """
         screen.fill(self.current_player.color)
         WORD_FONT = pygame.font.SysFont('arial', 40)
         for img, rect in tile_sprites:
@@ -576,7 +594,16 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
                 5)
 
     def is_adjacent(self, node1, node2):
+        """
+        Determines whether two nodes are adjacent.
 
+        Args:
+        - node1 (ButtonHex): The first node.
+        - node2 (ButtonHex): The second node.
+
+        Returns:
+        - bool: True if the nodes are adjacent, False otherwise.
+        """
         adjacent_to_building = False
 
         x1_pos, y1_pos = node1.x_pos, node1.y_pos
@@ -595,11 +622,27 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
         return (x_diff <= max_road_len) and (y_diff <= max_road_len) and adjacent_to_building
     
     def should_transition(self):
+        """Checks whether the current state is not None.
+
+        Returns:
+            bool: True if the current state is not None, False otherwise.
+        """
         return self.current_state is not None
     def transition(self):
+        """Returns the current state of the game.
+
+        Returns:
+            obj: The current state of the game.
+        """
         return self.current_state
     
     def draw_lines(self):
+        """Draws the lines between the nodes on the game board.
+
+        This method iterates over all tiles on the board and draws the six lines 
+        that connect the nodes of each tile. The lines are drawn in white with a 
+        thickness of 5 pixels.
+        """
         for tile in board:
             pygame.draw.line(screen,
                             'white',
