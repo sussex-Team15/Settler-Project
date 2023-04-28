@@ -411,11 +411,47 @@ class StartMenu:
         pygame.display.flip()
 
     def should_transition(self):
+        """
+        Check whether the current state should transition to a new state.
+
+        Returns:
+            A boolean indicating whether the current state should transition to a new state.
+        """
         return self.current_state is not None
+    
     def transition(self):
+        """
+        Transition to a new state.
+
+        Returns:
+            The new state.
+        """
         return self.current_state
         
 class SpecialRoundGameState: # gamestate for the first 2 turns of the game (players can build 1 road and settlement free)
+        """
+        Represents the game state for the first 2 turns of the game, during which players can build 1 road and settlement for free.
+
+        Args:
+            player (Player): The player whose turn it is.
+
+        Attributes:
+            current_player (Player): The player whose turn it is.
+            players (list): A list of all players in the game.
+            current_turn_number (int): The number of turns that have been played so far.
+            player_turn_index (int): The index of the player whose turn it currently is.
+            current_state (GameState): The current game state.
+            node_buttons (list): A list of all the node buttons on the board.
+            settlement_node1 (ButtonHex): The first node where the player has built a settlement.
+            settlement_node2 (ButtonHex): The second node where the player has built a settlement.
+            road_1 (list): The first road built by the player, represented as a list of two ButtonHex objects.
+            road_2 (list): The second road built by the player, represented as a list of two ButtonHex objects.
+            settlement_img (pygame.Surface): The image of a settlement.
+
+        Methods:
+            handle_events(events): Handles events in the game.
+            draw(screen): Draws the game state on the screen.
+        """
     def __init__(self, player):
         self.current_player = player
         self.players = players
