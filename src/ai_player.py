@@ -1,95 +1,54 @@
 import random
 from src.action import BuildRoadAction, BuildSettlementAction
 from src.resource_ import Resource
-from src.main_refactored import adjacent_nodes, board_mapping
 
-class AIPlayer():
+from src.player import Player
+
+class AIPlayer(Player):
     """
     AIPlayer Class that controls the behavior of an AI player in the game.
-    Attributes:
+    Attributes
 
-    - name : str
-        String representing the name of the player
-
-    - victory_points: int
-        Integer representing the number of victory points the player has received.
-
-    - color: tuple
-        A tuple with an r,g,b value representing the color that the player has.
-
-    - resources: dict
-        a dictionary of resource type string mapped to the amount the player has
-
-    - settlements: list
-        a list of settlements the player has
-
-    - cities: list
-        a list of cities the player has
-
-    - roads: list
-        a list of roads the player has (all of type Road)
-
-    - isTurn: boolean
-        a boolean indicating if it is the players turn in the gameloop.
-
-    - hasLongestRoad: boolean
-        a boolean indicating if the player has the longest road.
-
-    - has_largest_army: boolean
-        a boolean indicating if the player has the largest army
-
-    - trade_offers: list
-        a list of trade_offers that the player has received (of type Trade)
-
-    Methods:
-    -take_turn(self, game_state)
-        The aiplayer will take its turn
-
-    -get_possible_actions(self, game_state)
-        Given the current game state, generates all possible actions the player can take
-
-    -_get_settlement_actions(self, settlement, game_state)
-        returns all possible actions on a vertex adjacent to the settlement
-
-    -_get_city_actions(self, settlement, game_state)
-        Returns all possible actions that upgrade a settlement into a city
-
-    -_get_trade_actions(self, resource, available_resources, game_state)
-        Returns all possible actions for trading a resource given with another resource the player has
-
-    -choose_action(self, action)
-        Randomly chooses an action from the array0
-
-    -__str__(self)
-        Returns a string representation of the AIPlayer
-
+    :param name : String representing the name of the player
+    :type name: str
+    :param victory_points: Integer representing the number of victory points the player has received.
+    :type victory_points: int
+    :param color: A tuple with an r,g,b value representing the color that the player has.
+    :type color: tuple
+    :param resources: a dictionary of resource type string mapped to the amount the player has
+    :type resources: dict
+    :param settlements: a list of settlements the player has
+    :type settlements: list
+    :param cities: a list of cities the player has
+    :type cities: list
+    :param roads: a list of roads the player has (all of type Road)
+    :type roads: list
+    :param isTurn: a boolean indicating if it is the players turn in the gameloop.
+    :type isTurn: boolean
+    :param hasLongestRoad: a boolean indicating if the player has the longest road.
+    :type hasLongestRoad: boolean
+    :param has_largest_army: a boolean indicating if the player has the largest army
+    :type has_largest_army: boolean
+    :param trade_offers: a list of trade_offers that the player has received (of type Trade)
+    :type trade_offers: list
     """
-    def __init__(self, name, color):
-        # Initializes AI player with a name, color, victory points, and various game state attributes
-        self.name = name
-        self.victory_points = 0
-        self.color = color
-        self.resources = {resource.name(): 0 for resource in Resource if not resource.name() == None}
-        self.settlements = []
-        self.roads = []
-        self.has_longest_road = False
-        self.total_road_num = 0
-        self.has_largest_army = False
-
-    def add_road(self, road):
-        self.roads.append(road)
-
-    def add_settlement(self, settlement):
-        self.settlements.append(settlement)
-
-    def take_turn(self):
+    def take_turn(self, adjacent_nodes, board_mapping):
+        """Constructor Class
+        """
         # Given the current game state, generates all possible actions and chooses one to take
-        actions = self.get_possible_actions()
+        actions = self.get_possible_actions(adjacent_nodes, board_mapping)
         if not actions:
             return None
         return self.choose_action(actions)
 
-    def get_possible_actions(self):
+    def get_possible_actions(self, adjacent_nodes, board_mapping):
+        """
+        Given the current game state, generates all possible actions the player can take. This includes
+        settlement or city building actions, road building actions, and trade actions.
+
+        :return: A list of possible actions.
+        :rtype: list[Action]
+        """
         # Given the current game state, generates all possible actions the player can take
         actions = []
         # Adds all possible settlement or city building actions for each settlement
@@ -101,6 +60,14 @@ class AIPlayer():
         return actions
 
     def _get_settlement_actions(self, all_nodes):
+        """
+        Given a settlement and current game state, returns all possible actions to build a settlement on a vertex adjacent to the settlement.
+
+        :param all_nodes: A list of all nodes on the board.
+        :type all_nodes: list[Node]
+        :return: A list of possible actions to build a settlement.
+        :rtype: list[BuildSettlementAction]
+        """
         # Given a settlement and current game state, returns all possible actions to build a settlement on a vertex adjacent to the settlement
         actions = []
         for node in all_nodes:
@@ -109,6 +76,14 @@ class AIPlayer():
         return actions
 
     def _get_road_actions(self, all_roads):
+        """
+        Given a road and current game state, returns all possible actions to build a road on an edge adjacent to the road.
+
+        :param all_roads: A list of all roads on the board.
+        :type all_roads: list[Road]
+        :return: A list of possible actions to build a road.
+        :rtype: list[BuildRoadAction]
+        """
         # Given a road and current game state, returns all possible actions to build a road on an edge adjacent to the road
         actions = []
         for road in all_roads.adjacent_edges:
@@ -120,9 +95,23 @@ class AIPlayer():
 
     #Random Action
     def choose_action(self, actions):
+        """
+        Chooses an action randomly from a list of possible actions.
+
+        :param actions: A list of possible actions.
+        :type actions: list[Action]
+        :return: The chosen action.
+        :rtype: Action
+        """
         return random.choice(actions)
 
     #String Representation
     def __str__(self):
+        """
+        Returns the string representation of the AI player.
+
+        :return: The string representation of the AI player.
+        :rtype: str
+        """
         return f"AI Player {self.name}"
 

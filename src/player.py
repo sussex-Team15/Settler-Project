@@ -69,7 +69,7 @@ class Player:  # pylint: disable=too-many-instance-attributes
         """
         return tuple(random.randint(1, 6) for i in range(num_dice))
 
-    def build_settlement(self, is_special_round):
+    def build_settlement(self, settlement, is_special_round):
         """
         Builds a settlement at specified node, Can only build if player has enough resources
         """
@@ -79,6 +79,7 @@ class Player:  # pylint: disable=too-many-instance-attributes
             self.resources[Resource.WOOD.name()]-=1
             self.resources[Resource.WOOL.name()]-=1
             self.resources[Resource.GRAIN.name()]-=1
+        self.settlements.append(settlement)
         
     
        
