@@ -1135,8 +1135,21 @@ class MainGameState:
         
 
     def should_transition(self):
+        """
+        Determines whether a transition to a new game state should occur.
+
+        :return: True if a transition should occur, False otherwise
+        :rtype: bool
+        """
         return self.current_state is not None
+    
     def transition(self):
+        """
+        Returns the new game state to transition to.
+
+        :return: the new game state to transition to
+        :rtype: GameState
+        """
         return self.current_state
             
 class InventoryGameState:
