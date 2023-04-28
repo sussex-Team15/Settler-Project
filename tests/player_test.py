@@ -2,8 +2,11 @@
 # pylint: disable=wrong-import-position
 # pylint: disable=missing-module-docstring
 # pylint: disable=fixme
+
 import pytest
-import pygame
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 
 from src.player import Player
 from src.resource_ import Resource
@@ -37,15 +40,19 @@ def test_roll_dice(player):
 
 
 def test_build_settlement(player):
-    # TODO: DocString
+    """
+    Test the build_settlement method of the Player class.
+
+    This test checks that once a settlement is built, the player's resources have decreased.
+
+    :param player: A Player object representing a player in the game.
+    :type player: Player
+    """
     player.resources = {Resource.BRICK.name(): 2,
                         Resource.WOOD.name(): 2,
                         Resource.WOOL.name(): 2,
                         Resource.GRAIN.name(): 2}
-    
-    
     player.build_settlement(False)
-
     assert {Resource.BRICK.name(): 2,
             Resource.WOOD.name(): 2,
             Resource.WOOL.name(): 2,
