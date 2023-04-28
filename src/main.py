@@ -349,7 +349,18 @@ class StartMenu:
                     self.text += event.unicode
     
     def draw(self, screen):
-        
+        """
+        Draws the StartMenu screen onto the given screen.
+
+        vbnet
+
+        Args:
+            screen: The screen to draw the StartMenu onto.
+
+        Returns:
+            None
+
+        """
         WELCOME_FONT = pygame.font.SysFont("Algerian", 100, True)
         WORD_FONT = pygame.font.SysFont('Palatino', 40)
 
