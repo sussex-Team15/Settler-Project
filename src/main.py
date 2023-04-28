@@ -1675,6 +1675,15 @@ class EndMenu:
 
 
 def main_game_loop(**kwargs):  # pylint: disable=unused-argument
+    """
+    The main game loop that runs the game until the user quits.
+
+    :param kwargs: Additional keyword arguments (unused).
+    :type kwargs: dict
+
+    :return: None
+    :rtype: None
+    """
     game_running = True
     player_turn_index = 0
     current_turn_number = 0
