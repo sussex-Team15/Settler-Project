@@ -639,8 +639,8 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
     def transition(self):
         """Returns the current state of the game.
 
-        Returns:
-            obj: The current state of the game.
+        :return: The current state of the game.
+        :rtype: CurrentGameState
         """
         return self.current_state
     
@@ -648,8 +648,7 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
         """Draws the lines between the nodes on the game board.
 
         This method iterates over all tiles on the board and draws the six lines 
-        that connect the nodes of each tile. The lines are drawn in white with a 
-        thickness of 5 pixels.
+        that connect the nodes of each tile. The lines are drawn in white with a thickness of 5 pixels.
         """
         for tile in board:
             pygame.draw.line(screen,
