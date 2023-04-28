@@ -830,10 +830,10 @@ class MainGameState:
                         self.current_state = PlaceRobberState(self.current_player)
     def draw(self, screen):
         """
-        Draws the pygame display
+        Draws the game board, including the tiles, numbers, settlements, cities, roads, dice, scoreboard, and buttons on the given screen.
+
+        :param screen: The pygame screen to draw on.
         """
-       
-        
         screen.fill(BACKGROUND)
         robber_img = pygame.image.load(os.path.join('src','assets','Tiles','robber.jpg'))
         robber_img = pygame.transform.scale(robber_img, (robber_img.get_width()*0.05, robber_img.get_height()*0.05))
@@ -894,6 +894,9 @@ class MainGameState:
 
 
     def draw_lines(self):
+        """
+        Draws the lines connecting the nodes of the tiles on the game board.
+        """
         for tile in board:
             pygame.draw.line(screen,
                             'white',
