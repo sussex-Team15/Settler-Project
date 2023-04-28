@@ -1192,11 +1192,11 @@ class InventoryGameState:
         """
         Draw the inventory screen with the current state of the player's resources.
 
-        Parameters:
-        screen (pygame.Surface): The game screen to draw on.
+        :param screen: The game screen to draw on.
+        :type screen: screen (pygame.Surface): 
 
-        Returns:
-        None
+        :return: None
+        :rtype: none
         """
         screen.fill(BACKGROUND)
         images = []
