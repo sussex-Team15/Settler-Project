@@ -1618,7 +1618,32 @@ class RoadBuildState:
         
 
 class ChooseTradePartner:
+    """
+    Represents the state of the game where the player can choose who to trade with.
+
+    :param player: The Player object representing the current player.
+    :type player: Player
+    :param current_state: The current state of the game (unused in this class).
+    :type current_state: None
+    :param trade_partner: The Player object representing the player who the current player will trade with.
+    :type trade_partner: Player
+    :param available_players: A list of tuples containing the pygame.Rect objects and Player objects representing
+        the available trade partners for the current player.
+    :type available_players: list
+    :param screen_width: The width of the game screen.
+    :type screen_width: int
+    :param screen_height: The height of the game screen.
+    :type screen_height: int
+    :param font: The font to use for displaying text on the screen.
+    :type font: pygame.font.Font
+    :param back_button_text: The text to be displayed on the "Back" button.
+    :type back_button_text: pygame.Surface
+    :param back_button_rect: A rectangular area where the "Back" button will be displayed.
+    :type back_button_rect: pygame.Rect
+    """
     def __init__(self, player):
+        """Constructor Method
+        """
         self.player = player
         self.current_state = None
         self.trade_partner = None
@@ -1631,6 +1656,12 @@ class ChooseTradePartner:
 
 
     def draw(self, screen):
+        """
+        Draws the choose trade partner screen on the given screen.
+
+        :param screen: The pygame screen to draw the choose trade partner screen on.
+        :type screen: pygame.Surface
+        """
         screen.fill(BACKGROUND)
         x_offset = 150
 
@@ -1653,6 +1684,12 @@ class ChooseTradePartner:
 
 
     def handle_events(self, events):
+        """
+        Handles the given events for the choose trade partner state of the game.
+
+        :param events: The list of pygame events to handle.
+        :type events: list
+        """
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1666,8 +1703,20 @@ class ChooseTradePartner:
                         self.current_state = ChooseResources(self.player, self.trade_partner)
 
     def should_transition(self):
+        """
+        Returns True if the game should transition to a new state, False otherwise.
+
+        :return: True if the game should transition to a new state, False otherwise.
+        :rtype: bool
+        """
         return self.current_state is not None
     def transition(self):
+        """
+        Returns the new state of the game after transitioning.
+
+        :return: The new state of the game after transitioning.
+        :rtype: None
+        """
         return self.current_state  
 
                 
