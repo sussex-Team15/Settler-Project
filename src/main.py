@@ -423,8 +423,8 @@ class StartMenu:
         """
         Transition to a new state.
 
-        Returns:
-            The new state.
+        :return: The new state.
+        :rtype: GameState
         """
         return self.current_state
         
