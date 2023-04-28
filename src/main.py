@@ -1616,7 +1616,33 @@ class AcceptTradeState:
 
 
 class BuildState:
+    """
+    Represents the state of the game where the player is building a settlement or a city.
+
+    :param is_city: A boolean that is True if the player is building a city, False if building a settlement.
+    :type is_city: bool
+    :param player: The Player object representing the current player.
+    :type player: Player
+    :param current_state: The current state of the game (unused in this class).
+    :type current_state: None
+    :param settlement_cost: A dictionary containing the cost of building a settlement.
+    :type settlement_cost: dict
+    :param city_cost: A dictionary containing the cost of building a city.
+    :type city_cost: dict
+    :param has_enough_resources: A boolean that is True if the player has enough resources to build the settlement or city.
+    :type has_enough_resources: bool
+    """
+
     def __init__(self, is_city, player):
+        """
+        Initializes a new instance of the BuildState class.
+
+        :param is_city: A boolean that is True if the player is building a city, False if building a settlement.
+        :type is_city: bool
+
+        :param player: The Player object representing the current player.
+        :type player: Player
+        """
         self.is_city = is_city
         self.player = player
         self.current_state = None
@@ -1630,6 +1656,12 @@ class BuildState:
         self.has_enough_resources = False
 
     def has_enough_resources(self):
+        """
+        Checks if the player has enough resources to build the settlement or city.
+
+        :return: None
+        :rtype: None
+        """
         if self.is_city:
             for resource, quantity in self.city_cost.items():
                     
@@ -1648,7 +1680,12 @@ class BuildState:
                     self.has_enough_resources = True
 
     def handle_events(self, events):
+        """
+        Handles the given events for the build state of the game.
 
+        :param events: The list of pygame events to handle.
+        :type events: list
+        """
         for event in events:
             for node_button in node_buttons:
                 if node_button.is_clicked(event.pos):
@@ -1662,8 +1699,20 @@ class BuildState:
             
     
     def should_transition(self):
+        """
+        Returns True if the game should transition to a new state, False otherwise.
+
+        :return: True if the game should transition to a new state, False otherwise
+        :rtype: bool
+        """
         return self.current_state is not None
     def transition(self):
+        """
+        Returns the new state of the game after transitioning.
+
+        :return: The new state of the game after transitioning.
+        :rtype: None
+        """
         return self.current_state
     
 class NotEnoughResources:
