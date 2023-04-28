@@ -479,57 +479,143 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
         Args:
         - events (List): A list of pygame events.
         """
+
+        for _node_id, node_point in board_mapping['nodes'].items():
+            button = ButtonHex(
+                (node_point[0], node_point[1]),
+                10,
+                GRAY)
+            self.node_buttons.append(button)
+
+
         for event in events:
-            mouse_pos = pygame.mouse.get_pos()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for node_button in self.node_buttons:
-                    if node_button.is_clicked(mouse_pos):
-                        if self.settlement_node1 == None:
-                            self.settlement_node1 = node_button
-                            self.current_player.build_settlement(self.settlement_node1, is_special_round=True)
-                            built_settlements.append((self.settlement_node1, self.current_player))
+            if self.current_player.__class__.__name__ is not "AIPlayer":
+                mouse_pos = pygame.mouse.get_pos()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    for node_button in self.node_buttons:
+                        if node_button.is_clicked(mouse_pos):
+                            if self.settlement_node1 == None:
+                                self.settlement_node1 = node_button
+                                self.current_player.build_settlement(self.settlement_node1, is_special_round=True)
+                                built_settlements.append((self.settlement_node1, self.current_player))
+                                return
+                            elif self.settlement_node2 == None:
+                                self.settlement_node2 = node_button
+                                self.current_player.build_settlement(self.settlement_node2, is_special_round=True)
+                                built_settlements.append((self.settlement_node2, self.current_player))
+                                return
+                            else:
+                                if self.road_1[0] is None:
+                                    self.road_1[0] = node_button
+                                elif self.road_1[1] is None and self.is_adjacent(self.road_1[0], node_button):
+                                    self.road_1[1] = node_button
+                                    self.current_player.build_road(self.road_1[0], self.road_1[1], is_special_round=True)
+                                    built_roads.append(((self.road_1[0], self.road_1[1], self.current_player)))
+                                elif self.road_2[0] is None:
+                                    self.road_2[0] = node_button
+                                elif self.road_2[1] is None and self.is_adjacent(self.road_2[0], node_button):
+                                    self.road_2[1] = node_button
+                                    self.current_player.build_road(self.road_2[0], self.road_2[1], is_special_round=True)
+                                    built_roads.append(((self.road_2[0], self.road_2[1], self.current_player)))
                             return
-                        elif self.settlement_node2 == None:
-                            self.settlement_node2 = node_button
-                            self.current_player.build_settlement(self.settlement_node2, is_special_round=True)
-                            built_settlements.append((self.settlement_node2, self.current_player))
-                            return
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        if self.current_turn_number == len(players)-1:
+                            self.current_state = MainGameState(self.current_player)
+                        if self.player_turn_index == len(self.players) - 1:
+                            self.player_turn_index = 0
+                            self.current_player = self.players[self.player_turn_index]
+                            self.current_turn_number +=1
                         else:
-                            if self.road_1[0] is None:
-                                self.road_1[0] = node_button
-                            elif self.road_1[1] is None and self.is_adjacent(self.road_1[0], node_button):
-                                self.road_1[1] = node_button
-                                self.current_player.build_road(self.road_1[0], self.road_1[1], is_special_round=True)
-                                built_roads.append(((self.road_1[0], self.road_1[1], self.current_player)))
-                            elif self.road_2[0] is None:
-                                self.road_2[0] = node_button
-                            elif self.road_2[1] is None and self.is_adjacent(self.road_2[0], node_button):
-                                self.road_2[1] = node_button
-                                self.current_player.build_road(self.road_2[0], self.road_2[1], is_special_round=True)
-                                built_roads.append(((self.road_2[0], self.road_2[1], self.current_player)))
-                        return
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    if self.current_turn_number == len(players)-1:
-                        self.current_state = MainGameState(self.current_player)
-                    if self.player_turn_index == len(self.players) - 1:
-                        self.player_turn_index = 0
-                        self.current_player = self.players[self.player_turn_index]
-                        self.current_turn_number +=1
-                    else:
-                        self.player_turn_index += 1
-                        self.current_player = self.players[self.player_turn_index]
-                        self.current_turn_number +=1
-                
-                    self.current_player.settlements.append(self.settlement_node1)
-                    self.current_player.settlements.append(self.settlement_node2)
-                    self.current_player.roads.append(self.road_1)
-                    self.current_player.roads.append(self.road_2)
-                            
-                    self.settlement_node1 = None
-                    self.settlement_node2 = None
-                    self.road_1 = [None, None]
-                    self.road_2 = [None, None]
+                            self.player_turn_index += 1
+                            self.current_player = self.players[self.player_turn_index]
+                            self.current_turn_number +=1
+                    
+                        self.current_player.settlements.append(self.settlement_node1)
+                        self.current_player.settlements.append(self.settlement_node2)
+                        self.current_player.roads.append(self.road_1)
+                        self.current_player.roads.append(self.road_2)
+                                
+                        self.settlement_node1 = None
+                        self.settlement_node2 = None
+                        self.road_1 = [None, None]
+                        self.road_2 = [None, None]
+            # it is an AI player!
+
+            # Build 2 Settlements
+            settlement_choices = self.node_buttons
+
+            if self.settlement_node1 == None:
+                self.settlement_node1 = random.choice(settlement_choices)
+                settlement_choices.remove(self.settlement_node1)
+                self.current_player.build_settlement(self.settlement_node1, is_special_round=True)
+                built_settlements.append((self.settlement_node1, self.current_player))
+                return
+            if self.settlement_node2 == None:
+                self.settlement_node2 = random.choice(settlement_choices)
+                settlement_choices.remove(self.settlement_node2)
+                self.current_player.build_settlement(self.settlement_node2, is_special_round=True)
+                built_settlements.append((self.settlement_node2, self.current_player))
+                return
+
+            #Build 2 Roads
+            print(adjacent_nodes)
+            inverse_board_mapping = {v: k for k, v in board_mapping['nodes'].items()}
+            settlement_node_1_coords = (self.settlement_node1.x_pos, self.settlement_node1.y_pos)
+            settlement_node_2_coords = (self.settlement_node1.x_pos, self.settlement_node1.y_pos)
+            settlement_node_1_id = inverse_board_mapping[settlement_node_1_coords]
+            settlement_node_2_id = inverse_board_mapping[settlement_node_2_coords]
+
+            if self.road_1[0] is None and self.road_1[1] is None:
+                road_choices = []
+                for pair in adjacent_nodes:
+                    if pair[0] == settlement_node_1_id:
+                        road_choices.append(pair)
+
+                road_choice = random.choice(road_choices)
+
+
+
+                self.road_1[0] = ButtonHex(board_mapping['nodes'][road_choice[0]], 10, GRAY)
+                self.road_1[1] = ButtonHex(board_mapping['nodes'][road_choice[1]], 10, GRAY)
+
+                self.current_player.build_road(self.road_1[0], self.road_1[1], is_special_round=True)
+                built_roads.append(((self.road_1[0], self.road_1[1], self.current_player)))
+            if self.road_2[0] is None and self.road_2[1] is None:
+                road_choices = []
+                for pair in adjacent_nodes:
+                    if pair[0] == settlement_node_2_id:
+                        road_choices.append(pair)
+
+                road_choice = random.choice(road_choices)
+                self.road_2[0] = ButtonHex(board_mapping['nodes'][road_choice[0]], 10, GRAY)
+                self.road_2[1] = ButtonHex(board_mapping['nodes'][road_choice[1]], 10, GRAY)
+
+                self.current_player.build_road(self.road_2[0], self.road_2[1], is_special_round=True)
+                built_roads.append(((self.road_2[0], self.road_2[1], self.current_player)))
+
+
+                if self.current_turn_number == len(players)-1:
+                    self.current_state = MainGameState(self.current_player)
+                if self.player_turn_index == len(self.players) - 1:
+                    self.player_turn_index = 0
+                    self.current_player = self.players[self.player_turn_index]
+                    self.current_turn_number +=1
+                else:
+                    self.player_turn_index += 1
+                    self.current_player = self.players[self.player_turn_index]
+                    self.current_turn_number +=1
+            
+                self.current_player.settlements.append(self.settlement_node1)
+                self.current_player.settlements.append(self.settlement_node2)
+                self.current_player.roads.append(self.road_1)
+                self.current_player.roads.append(self.road_2)
+                        
+                self.settlement_node1 = None
+                self.settlement_node2 = None
+                self.road_1 = [None, None]
+                self.road_2 = [None, None]
+
                 
 
 
@@ -586,6 +672,7 @@ class SpecialRoundGameState(): # gamestate for the first 2 turns of the game (pl
             
 
         for line in built_roads:
+            # import pdb;pdb.set_trace()
             pygame.draw.line(
                 screen,
                 line[2].color,
@@ -742,6 +829,9 @@ class MainGameState:
         self.dice_rolled = [1,1]
         self.robber_coords = robber_coords
         self.invent_button_rect = pygame.Rect(1030, 760, 190, 40)
+        self.node_buttons = []
+        self.settlement_node1 = None
+        self.road_1 = [None, None]
 
     def handle_events(self, events):
         """
@@ -753,73 +843,156 @@ class MainGameState:
         Returns:
         None
         """
+
+        for _node_id, node_point in board_mapping['nodes'].items():
+            button = ButtonHex(
+                (node_point[0], node_point[1]),
+                10,
+                GRAY)
+            self.node_buttons.append(button)
+
+
         for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if self.make_trade_rect.collidepoint(event.pos):
-                    self.current_state = ChooseTradePartner(self.current_player)
-                if self.build_settlement_rect.collidepoint(event.pos):
-                    self.current_state = Build(self.current_player, is_city=False)
-                if self.dev_card_rect.collidepoint(event.pos):
-                    
-                    self.current_state = DevelopmentCardState(self.current_player)
-                if self.bank_inventory_rect.collidepoint(event.pos):
-                    
-                    self.current_state = ChooseResources(self.current_player, None)
-                if self.build_city_rect.collidepoint(event.pos):
-                    
-                    self.current_state = Build(self.current_player,is_city=True)
-                if self.build_road_rect.collidepoint(event.pos):
+            if self.current_player.__class__.__name__ is not "AIPlayer":
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.make_trade_rect.collidepoint(event.pos):
+                        self.current_state = ChooseTradePartner(self.current_player)
+                    if self.build_settlement_rect.collidepoint(event.pos):
+                        self.current_state = Build(self.current_player, is_city=False)
+                    if self.dev_card_rect.collidepoint(event.pos):
+                        
+                        self.current_state = DevelopmentCardState(self.current_player)
+                    if self.bank_inventory_rect.collidepoint(event.pos):
+                        
+                        self.current_state = ChooseResources(self.current_player, None)
+                    if self.build_city_rect.collidepoint(event.pos):
+                        
+                        self.current_state = Build(self.current_player,is_city=True)
+                    if self.build_road_rect.collidepoint(event.pos):
 
-                    self.current_state = RoadBuildState(self.current_player)
-                if self.invent_button_rect.collidepoint(event.pos):
-                    self.current_state = InventoryGameState(self.current_player)
-                for node_button in node_buttons:
-                    if node_button.is_clicked(event.pos):
-                        pass
-                for tile_button in tile_buttons:
-                    if tile_button.is_clicked(event.pos):
-                        pass
-            elif event.type == pygame.KEYDOWN:
+                        self.current_state = RoadBuildState(self.current_player)
+                    if self.invent_button_rect.collidepoint(event.pos):
+                        self.current_state = InventoryGameState(self.current_player)
+                    for node_button in node_buttons:
+                        if node_button.is_clicked(event.pos):
+                            pass
+                    for tile_button in tile_buttons:
+                        if tile_button.is_clicked(event.pos):
+                            pass
+                elif event.type == pygame.KEYDOWN:
             
-                if event.key == pygame.K_SPACE:
+                    if event.key == pygame.K_SPACE:
 
-                    for player in players:
-                        if player.victory_points >9:
-                            self.current_state = EndMenu(players, )
-                    if self.player_turn_index == len(self.players) - 1:
-                        self.player_turn_index = 0
-                        self.current_player = self.players[self.player_turn_index]
-                        self.current_turn_number +=1
-                    else:
-                        self.player_turn_index += 1
-                        self.current_player = self.players[self.player_turn_index]
-                        self.current_turn_number +=1
-                
-                    dice_roll1, dice_roll2 = self.current_player.roll_dice(2)
-                    self.dice_rolled[0]= dice_roll1
-                    self.dice_rolled[1] = dice_roll2
-                    for game_tile in board:
-                        if dice_roll1 + dice_roll2 == game_tile.real_number:
+                        for player in players:
+                            if player.victory_points >9:
+                                self.current_state = EndMenu(players, )
+                        if self.player_turn_index == len(self.players) - 1:
+                            self.player_turn_index = 0
+                            self.current_player = self.players[self.player_turn_index]
+                            self.current_turn_number +=1
+                        else:
+                            self.player_turn_index += 1
+                            self.current_player = self.players[self.player_turn_index]
+                            self.current_turn_number +=1
+                    
+                        dice_roll1, dice_roll2 = self.current_player.roll_dice(2)
+                        self.dice_rolled[0]= dice_roll1
+                        self.dice_rolled[1] = dice_roll2
+                        for game_tile in board:
+                            if dice_roll1 + dice_roll2 == game_tile.real_number:
+                                    
+                                self.current_player.add_resource(game_tile.tile.generate_resource().name())
                                 
-                            self.current_player.add_resource(game_tile.tile.generate_resource().name())
-                            
+                                card = game_tile.tile.generate_resource().name()
+                               
+                                game_log_txt = ''.join(
+                                        f'{self.current_player.name} just rolled a '
+                                        f'{dice_roll1+dice_roll2}. Added '
+                                        f'{card} to inventory'
+                                    )
+                                game_log.append(game_log_txt)
+                        if dice_roll1+dice_roll2 == 7: # player can add robber to tile
                             card = game_tile.tile.generate_resource().name()
-                           
                             game_log_txt = ''.join(
-                                    f'{self.current_player.name} just rolled a '
-                                    f'{dice_roll1+dice_roll2}. Added '
-                                    f'{card} to inventory'
-                                )
+                                        f'{self.current_player.name} just rolled a '
+                                        f'{dice_roll1+dice_roll2}. Added '
+                                        f'{card} to inventory'
+                                    )
                             game_log.append(game_log_txt)
-                    if dice_roll1+dice_roll2 == 7: # player can add robber to tile
+                            self.current_state = PlaceRobberState(self.current_player)
+
+            choices = [
+                "build settlement",
+                "build road"
+            ]
+
+
+            choice = random.choice(choices)
+
+            if choice == "build settlement":
+                print('AI build settlement')
+                settlement_choices = self.node_buttons
+
+                if self.settlement_node1 == None:
+                    self.settlement_node1 = random.choice(settlement_choices)
+                    settlement_choices.remove(self.settlement_node1)
+                    self.current_player.build_settlement(self.settlement_node1, is_special_round=True)
+                    built_settlements.append((self.settlement_node1, self.current_player))
+                for player in players:
+                    if player.victory_points >9:
+                        self.current_state = EndMenu(players, )
+                if self.player_turn_index == len(self.players) - 1:
+                    self.player_turn_index = 0
+                    self.current_player = self.players[self.player_turn_index]
+                    self.current_turn_number +=1
+                else:
+                    self.player_turn_index += 1
+                    self.current_player = self.players[self.player_turn_index]
+                    self.current_turn_number +=1
+            
+                dice_roll1, dice_roll2 = self.current_player.roll_dice(2)
+                self.dice_rolled[0]= dice_roll1
+                self.dice_rolled[1] = dice_roll2
+                for game_tile in board:
+                    if dice_roll1 + dice_roll2 == game_tile.real_number:
+                            
+                        self.current_player.add_resource(game_tile.tile.generate_resource().name())
+                        
                         card = game_tile.tile.generate_resource().name()
+                       
                         game_log_txt = ''.join(
-                                    f'{self.current_player.name} just rolled a '
-                                    f'{dice_roll1+dice_roll2}. Added '
-                                    f'{card} to inventory'
-                                )
+                                f'{self.current_player.name} just rolled a '
+                                f'{dice_roll1+dice_roll2}. Added '
+                                f'{card} to inventory'
+                            )
                         game_log.append(game_log_txt)
-                        self.current_state = PlaceRobberState(self.current_player)
+
+            if choice == "build road":
+                if self.settlement_node1 is not None:
+                    print('AI build Road')
+                    inverse_board_mapping = {v: k for k, v in board_mapping['nodes'].items()}
+                    settlement_node_1_coords = (self.settlement_node1.x_pos, self.settlement_node1.y_pos)
+                    settlement_node_2_coords = (self.settlement_node1.x_pos, self.settlement_node1.y_pos)
+                    settlement_node_1_id = inverse_board_mapping[settlement_node_1_coords]
+                    settlement_node_2_id = inverse_board_mapping[settlement_node_2_coords]
+
+                    # if self.road_1[0] is None and self.road_1[1] is None:
+                    road_choices = []
+                    for pair in adjacent_nodes:
+                        if pair[0] == settlement_node_1_id:
+                            road_choices.append(pair)
+
+                    road_choice = random.choice(road_choices)
+
+
+
+                    self.road_1[0] = ButtonHex(board_mapping['nodes'][road_choice[0]], 10, GRAY)
+                    self.road_1[1] = ButtonHex(board_mapping['nodes'][road_choice[1]], 10, GRAY)
+
+                    self.current_player.build_road(self.road_1[0], self.road_1[1], is_special_round=True)
+                    built_roads.append(((self.road_1[0], self.road_1[1], self.current_player)))
+                    print(built_roads)
+
     def draw(self, screen):
         """
         Draws the pygame display
