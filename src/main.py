@@ -16,7 +16,7 @@ from src.resource_ import Resource
 
 from src.tiles import GameTile, ResourceTile
 from src.utils import ASSET_DIR
-from src.aiplayer import AIPlayer
+from src.ai_player import AIPlayer
 
 # pylint: disable=redefined-outer-name
 
@@ -44,6 +44,7 @@ node_buttons = []  # list of ButtonHex objects for nodes
 tile_buttons = []  # list of ButtonHex object for tiles
 built_roads = []  # list of roads built (s_node, e_node, player_owner)
 built_settlements = []  # list of settlements built (node, player_owner)
+
 built_cities = []  # list of cities built(node, player_owner)
 player_colors = {} 
 game_log = []  # list for storing game events as strings
@@ -156,9 +157,9 @@ def create_adjacent_nodes(nodes_dict, adjacent_nodes):
                     if is_adjacent(node1_id, node2_id):
                         adjacent_nodes.append((node1_id, node2_id))
 
-def is_adjacent(self, node1, node2):
-    x1_pos, y1_pos = node1.x_pos, node1.y_pos
-    x2_pos, y2_pos = node2.x_pos, node2.y_pos
+def is_adjacent(node1, node2):
+    x1_pos, y1_pos = board_mapping['nodes'][node1]
+    x2_pos, y2_pos = board_mapping['nodes'][node2]
     x_diff = abs(x1_pos - x2_pos)
     y_diff = abs(y1_pos - y2_pos)
     max_road_len = 100  # road lens are diff so this is maximum road len
@@ -339,12 +340,12 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
                     if node_button.is_clicked(mouse_pos):
                         if self.settlement_node1 == None:
                             self.settlement_node1 = node_button
-                            self.current_player.build_settlement(is_special_round=True)
+                            self.current_player.build_settlement(self.settlement_node1, is_special_round=True)
                             built_settlements.append((self.settlement_node1, self.current_player))
                             return
                         elif self.settlement_node2 == None:
                             self.settlement_node2 = node_button
-                            self.current_player.build_settlement(is_special_round=True)
+                            self.current_player.build_settlement(self.settlement_node2, is_special_round=True)
                             built_settlements.append((self.settlement_node2, self.current_player))
                             return
                         else:
@@ -382,7 +383,7 @@ class SpecialRoundGameState: # gamestate for the first 2 turns of the game (play
                     self.settlement_node1 = None
                     self.settlement_node2 = None
                     self.road_1 = [None, None]
-                    self.road_2 = [None, None]   
+                    self.road_2 = [None, None]
                 
 
 
@@ -1335,7 +1336,7 @@ class Build:
                                 built_cities.append((self.node, self.player))
                                 self.current_state = MainGameState(self.player)
                             else:
-                                self.player.build_settlement(False)
+                                self.player.build_settlement(self.node, False)
                                 self.player.victory_points +=1
                                 built_settlements.append((self.node, self.player))
                                 self.current_state =  MainGameState(self.player)
