@@ -936,11 +936,8 @@ class MainGameState:
         using Pygame's `draw.line` method. The color of the line is set to the color of the player
         who built the road. The line thickness is set to 5 pixels.
 
-        Args:
-            self: The Game object itself.
-
-        Returns:
-            None
+        :return: None
+        :rtype: None
         """
         for road in built_roads:
             pygame.draw.line(screen,
@@ -953,11 +950,11 @@ class MainGameState:
         """
         Draws the scoreboard on the screen.
 
-        Args:
-        player_turn (Player): The current player whose turn it is.
+        :param player_turn: The current player whose turn it is.
+        :type player_turn: Player
 
-        Returns:
-        None
+        :return: None
+        :rtype: None
         """
         rect_width = DISPLAY_WIDTH - 800
         rect_height = DISPLAY_HEIGHT
